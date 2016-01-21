@@ -67,6 +67,7 @@ import org.b3log.symphony.service.TagQueryService;
 import org.b3log.symphony.service.UserMgmtService;
 import org.b3log.symphony.service.UserQueryService;
 import org.b3log.symphony.util.Filler;
+import org.b3log.symphony.util.Symphonys;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -314,6 +315,9 @@ public class AdminProcessor {
         renderer.setTemplateName("admin/add-user.ftl");
         final Map<String, Object> dataModel = renderer.getDataModel();
 
+        final String teamsStr = Symphonys.get("teams");
+        dataModel.put(Common.TEAMS, teamsStr.split(","));
+
         filler.fillHeaderAndFooter(request, response, dataModel);
     }
 
@@ -334,6 +338,7 @@ public class AdminProcessor {
         final String email = request.getParameter(User.USER_EMAIL);
         final String password = request.getParameter(User.USER_PASSWORD);
         final String appRole = request.getParameter(UserExt.USER_APP_ROLE);
+        final String team = request.getParameter(UserExt.USER_TEAM);
 
         final boolean nameInvalid = UserRegisterValidation.invalidUserName(userName);
         final boolean emailInvalid = !Strings.isEmail(email);
@@ -365,6 +370,7 @@ public class AdminProcessor {
             user.put(User.USER_EMAIL, email);
             user.put(User.USER_PASSWORD, MD5.hash(password));
             user.put(UserExt.USER_APP_ROLE, appRole);
+            user.put(UserExt.USER_TEAM, team);
             user.put(UserExt.USER_STATUS, UserExt.USER_STATUS_C_VALID);
 
             userId = userMgmtService.addUser(user);
