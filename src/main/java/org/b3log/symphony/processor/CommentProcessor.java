@@ -40,8 +40,6 @@ import org.b3log.symphony.processor.advice.CSRFCheck;
 import org.b3log.symphony.processor.advice.LoginCheck;
 import org.b3log.symphony.processor.advice.validate.CommentAddValidation;
 import org.b3log.symphony.service.ArticleQueryService;
-import org.b3log.symphony.service.ClientMgmtService;
-import org.b3log.symphony.service.ClientQueryService;
 import org.b3log.symphony.service.CommentMgmtService;
 import org.b3log.symphony.service.UserQueryService;
 import org.json.JSONObject;
@@ -60,7 +58,7 @@ import org.json.JSONObject;
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.2.1.10, Jan 2, 2016
+ * @version 2.2.1.10, Jan 21, 2016
  * @since 0.2.0
  */
 @RequestProcessor
@@ -82,18 +80,6 @@ public class CommentProcessor {
      */
     @Inject
     private CommentMgmtService commentMgmtService;
-
-    /**
-     * Client management service.
-     */
-    @Inject
-    private ClientMgmtService clientMgmtService;
-
-    /**
-     * Client query service.
-     */
-    @Inject
-    private ClientQueryService clientQueryService;
 
     /**
      * Article query service.

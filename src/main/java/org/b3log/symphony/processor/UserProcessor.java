@@ -56,7 +56,6 @@ import org.b3log.symphony.processor.advice.stopwatch.StopwatchStartAdvice;
 import org.b3log.symphony.processor.advice.validate.PointTransferValidation;
 import org.b3log.symphony.processor.advice.validate.UpdatePasswordValidation;
 import org.b3log.symphony.processor.advice.validate.UpdateProfilesValidation;
-import org.b3log.symphony.processor.advice.validate.UpdateSyncB3Validation;
 import org.b3log.symphony.service.ArticleQueryService;
 import org.b3log.symphony.service.CommentQueryService;
 import org.b3log.symphony.service.FollowQueryService;
@@ -88,14 +87,13 @@ import org.json.JSONObject;
  * <li>Settings (/settings), GET</li>
  * <li>Profiles (/settings/profiles), POST</li>
  * <li>Geo status (/settings/geo/status), POST</li>
- * <li>Sync (/settings/sync/b3), POST</li>
  * <li>Password (/settings/password), POST</li>
  * <li>Lists usernames (/users/names), GET</li>
  * </ul>
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.12.7.15, Jan 20, 2016
+ * @version 2.12.7.15, Jan 21, 2016
  * @since 0.2.0
  */
 @RequestProcessor
@@ -857,47 +855,6 @@ public class UserProcessor {
             notification.put(Notification.NOTIFICATION_DATA_ID, transferId);
 
             notificationMgmtService.addPointTransferNotification(notification);
-        }
-    }
-
-    /**
-     * Updates user B3log sync.
-     *
-     * @param context the specified context
-     * @param request the specified request
-     * @param response the specified response
-     * @throws Exception exception
-     */
-    @RequestProcessing(value = "/settings/sync/b3", method = HTTPRequestMethod.POST)
-    @Before(adviceClass = {LoginCheck.class, CSRFCheck.class, UpdateSyncB3Validation.class})
-    public void updateSyncB3(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response)
-            throws Exception {
-        context.renderJSON();
-
-        final JSONObject requestJSONObject = (JSONObject) request.getAttribute(Keys.REQUEST);
-
-        final String b3Key = requestJSONObject.optString(UserExt.USER_B3_KEY);
-        final String addArticleURL = requestJSONObject.optString(UserExt.USER_B3_CLIENT_ADD_ARTICLE_URL);
-        final String updateArticleURL = requestJSONObject.optString(UserExt.USER_B3_CLIENT_UPDATE_ARTICLE_URL);
-        final String addCommentURL = requestJSONObject.optString(UserExt.USER_B3_CLIENT_ADD_COMMENT_URL);
-        final boolean syncWithSymphonyClient = requestJSONObject.optBoolean(UserExt.SYNC_TO_CLIENT, false);
-
-        final JSONObject user = userQueryService.getCurrentUser(request);
-        user.put(UserExt.USER_B3_KEY, b3Key);
-        user.put(UserExt.USER_B3_CLIENT_ADD_ARTICLE_URL, addArticleURL);
-        user.put(UserExt.USER_B3_CLIENT_UPDATE_ARTICLE_URL, updateArticleURL);
-        user.put(UserExt.USER_B3_CLIENT_ADD_COMMENT_URL, addCommentURL);
-        user.put(UserExt.SYNC_TO_CLIENT, syncWithSymphonyClient);
-
-        try {
-            userMgmtService.updateSyncB3(user);
-
-            context.renderTrueResult();
-        } catch (final ServiceException e) {
-            final String msg = langPropsService.get("updateFailLabel") + " - " + e.getMessage();
-            LOGGER.log(Level.ERROR, msg, e);
-
-            context.renderMsg(msg);
         }
     }
 

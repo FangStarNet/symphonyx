@@ -280,11 +280,6 @@ var Article = {
      * @description 解析语法高亮
      */
     parseLanguage: function () {
-        $(".content-reset pre").each(function () { // 兼容从 Solo 同步过来的文章
-            $(this).wrapInner('<code></code>');
-            $(this).removeAttr('class');
-        });
-
         hljs.initHighlightingOnLoad();
     },
     /**

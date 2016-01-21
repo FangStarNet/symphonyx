@@ -19,16 +19,11 @@ package org.b3log.symphony.model;
  * This class defines ext of user model relevant keys.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.14.1.9, Sep 9, 2015
+ * @version 3.14.1.9, Jan 21, 2016
  * @since 0.2.0
  * @see org.b3log.latke.model.User
  */
 public final class UserExt {
-
-    /**
-     * Key of sync to client.
-     */
-    public static final String SYNC_TO_CLIENT = "syncWithSymphonyClient";
 
     /**
      * Key of user geo status.
@@ -146,26 +141,6 @@ public final class UserExt {
     public static final String USER_AVATAR_URL = "userAvatarURL";
 
     /**
-     * Key of user B3log key.
-     */
-    public static final String USER_B3_KEY = "userB3Key";
-
-    /**
-     * Key of user B3log client add article URL.
-     */
-    public static final String USER_B3_CLIENT_ADD_ARTICLE_URL = "userB3ClientAddArticleURL";
-
-    /**
-     * Key of user B3log client update article URL.
-     */
-    public static final String USER_B3_CLIENT_UPDATE_ARTICLE_URL = "userB3ClientUpdateArticleURL";
-
-    /**
-     * Key of user B3log client add comment URL.
-     */
-    public static final String USER_B3_CLIENT_ADD_COMMENT_URL = "userB3ClientAddCommentURL";
-
-    /**
      * Key of online flag.
      */
     public static final String USER_ONLINE_FLAG = "userOnlineFlag";
@@ -194,6 +169,11 @@ public final class UserExt {
      * Key of app role.
      */
     public static final String USER_APP_ROLE = "userAppRole";
+
+    /**
+     * Key of team.
+     */
+    public static final String USER_TEAM = "userTeam";
 
     //// Transient ////
     /**
@@ -245,20 +225,6 @@ public final class UserExt {
     public static final int USER_GEO_STATUS_C_PRIVATE = 1;
 
     //// Avatar type constants
-    /**
-     * User avatar type - Gravatar.
-     *
-     * @deprecated only upload allowed since 1.3.0
-     */
-    public static final int USER_AVATAR_TYPE_C_GRAVATAR = 0;
-
-    /**
-     * User avatar type - External Link.
-     *
-     * @deprecated only upload allowed since 1.3.0
-     */
-    public static final int USER_AVATAR_TYPE_C_EXTERNAL_LINK = 1;
-
     /**
      * User avatar type - Upload.
      */

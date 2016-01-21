@@ -82,7 +82,7 @@ import org.json.JSONObject;
  * User management service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.10.11.6, Jan 20, 2016
+ * @version 2.10.11.6, Jan 21, 2016
  * @since 0.2.0
  */
 @Service
@@ -322,52 +322,6 @@ public class UserMgmtService {
     }
 
     /**
-     * Updates a user's sync B3log settings by the specified request json object.
-     *
-     * @param requestJSONObject the specified request json object (user), for example,      <pre>
-     * {
-     *     "oId": "",
-     *     "userB3Key": "",
-     *     "userB3ClientAddArticleURL": "",
-     *     "userB3ClientUpdateArticleURL": "",
-     *     "userB3ClientAddCommentURL": "",
-     *     "syncWithSymphonyClient": boolean
-     * }
-     * </pre>
-     *
-     * @throws ServiceException service exception
-     */
-    public void updateSyncB3(final JSONObject requestJSONObject) throws ServiceException {
-        final Transaction transaction = userRepository.beginTransaction();
-
-        try {
-            final String oldUserId = requestJSONObject.optString(Keys.OBJECT_ID);
-            final JSONObject oldUser = userRepository.get(oldUserId);
-
-            if (null == oldUser) {
-                throw new ServiceException(langPropsService.get("updateFailLabel"));
-            }
-
-            // Update
-            oldUser.put(UserExt.USER_B3_KEY, requestJSONObject.optString(UserExt.USER_B3_KEY));
-            oldUser.put(UserExt.USER_B3_CLIENT_ADD_ARTICLE_URL, requestJSONObject.optString(UserExt.USER_B3_CLIENT_ADD_ARTICLE_URL));
-            oldUser.put(UserExt.USER_B3_CLIENT_UPDATE_ARTICLE_URL, requestJSONObject.optString(UserExt.USER_B3_CLIENT_UPDATE_ARTICLE_URL));
-            oldUser.put(UserExt.USER_B3_CLIENT_ADD_COMMENT_URL, requestJSONObject.optString(UserExt.USER_B3_CLIENT_ADD_COMMENT_URL));
-            oldUser.put(UserExt.SYNC_TO_CLIENT, requestJSONObject.optBoolean(UserExt.SYNC_TO_CLIENT, false));
-
-            userRepository.update(oldUserId, oldUser);
-            transaction.commit();
-        } catch (final RepositoryException e) {
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
-
-            LOGGER.log(Level.ERROR, "Updates user sync b3log settings failed", e);
-            throw new ServiceException(e);
-        }
-    }
-
-    /**
      * Updates a user's password by the specified request json object.
      *
      * @param requestJSONObject the specified request json object (user), for example,      <pre>
@@ -400,7 +354,7 @@ public class UserMgmtService {
                 transaction.rollback();
             }
 
-            LOGGER.log(Level.ERROR, "Updates user sync b3log settings failed", e);
+            LOGGER.log(Level.ERROR, "Updates user password failed", e);
             throw new ServiceException(e);
         }
     }
@@ -466,10 +420,6 @@ public class UserMgmtService {
             user.put(UserExt.USER_COMMENT_COUNT, 0);
             user.put(UserExt.USER_TAG_COUNT, 0);
             user.put(UserExt.USER_STATUS, 0);
-            user.put(UserExt.USER_B3_KEY, "");
-            user.put(UserExt.USER_B3_CLIENT_ADD_ARTICLE_URL, "");
-            user.put(UserExt.USER_B3_CLIENT_UPDATE_ARTICLE_URL, "");
-            user.put(UserExt.USER_B3_CLIENT_ADD_COMMENT_URL, "");
             user.put(UserExt.USER_INTRO, "");
             user.put(UserExt.USER_AVATAR_TYPE, UserExt.USER_AVATAR_TYPE_C_UPLOAD);
             user.put(UserExt.USER_QQ, "");
@@ -490,9 +440,9 @@ public class UserMgmtService {
             user.put(UserExt.USER_COUNTRY, "");
             user.put(UserExt.USER_PROVINCE, "");
             user.put(UserExt.USER_CITY, "");
+            user.put(UserExt.USER_TEAM, "");
             user.put(UserExt.USER_UPDATE_TIME, 0L);
             user.put(UserExt.USER_GEO_STATUS, UserExt.USER_GEO_STATUS_C_PUBLIC);
-            user.put(UserExt.SYNC_TO_CLIENT, false);
             final int status = requestJSONObject.optInt(UserExt.USER_STATUS, UserExt.USER_STATUS_C_NOT_VERIFIED);
             user.put(UserExt.USER_STATUS, status);
 

@@ -16,7 +16,6 @@
 package org.b3log.symphony;
 
 import java.util.List;
-import java.util.Random;
 import java.util.ResourceBundle;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletRequestEvent;
@@ -61,7 +60,7 @@ import org.json.JSONObject;
  * Symphony servlet listener.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.8.3.5, Jan 21, 2016
+ * @version 2.8.3.5, Jan 21, 2016
  * @since 0.2.0
  */
 public final class SymphonyServletListener extends AbstractServletListener {
@@ -292,7 +291,6 @@ public final class SymphonyServletListener extends AbstractServletListener {
             article.put(Article.ARTICLE_EDITOR_TYPE, 0);
             article.put(Article.ARTICLE_AUTHOR_EMAIL, admin.optString(User.USER_EMAIL));
             article.put(Article.ARTICLE_AUTHOR_ID, admin.optString(Keys.OBJECT_ID));
-            article.put(Article.ARTICLE_T_IS_BROADCAST, false);
             articleMgmtService.addArticle(article);
 
             LOGGER.info("Initialized Sym");

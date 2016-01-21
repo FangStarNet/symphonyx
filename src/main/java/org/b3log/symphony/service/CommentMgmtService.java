@@ -33,7 +33,6 @@ import org.b3log.latke.util.Ids;
 import org.b3log.symphony.event.EventTypes;
 import org.b3log.symphony.model.Article;
 import org.b3log.symphony.model.Comment;
-import org.b3log.symphony.model.Common;
 import org.b3log.symphony.model.Notification;
 import org.b3log.symphony.model.Option;
 import org.b3log.symphony.model.Pointtransfer;
@@ -53,7 +52,7 @@ import org.json.JSONObject;
  * Comment management service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.7.5.16, Sep 19, 2015
+ * @version 2.7.5.16, Jan 21, 2016
  * @since 0.2.0
  */
 @Service
@@ -216,8 +215,6 @@ public class CommentMgmtService {
      *     "commentAuthorEmail": "",
      *     "commentOnArticleId": "",
      *     "commentOriginalCommentId": "", // optional
-     *     "clientCommentId": "" // optional,
-     *     "commentAuthorName": "" // If from client
      *     "commenter": {
      *         // User model
      *     },
@@ -232,7 +229,6 @@ public class CommentMgmtService {
         final long currentTimeMillis = System.currentTimeMillis();
         final JSONObject commenter = requestJSONObject.optJSONObject(Comment.COMMENT_T_COMMENTER);
         final String commentAuthorId = requestJSONObject.optString(Comment.COMMENT_AUTHOR_ID);
-        final boolean fromClient = requestJSONObject.has(Comment.COMMENT_CLIENT_COMMENT_ID);
         final String articleId = requestJSONObject.optString(Comment.COMMENT_ON_ARTICLE_ID);
         final String ip = requestJSONObject.optString(Comment.COMMENT_IP);
 
@@ -253,20 +249,18 @@ public class CommentMgmtService {
 
             article = articleRepository.get(articleId);
 
-            if (!fromClient) {
-                int pointSum = Pointtransfer.TRANSFER_SUM_C_ADD_COMMENT;
+            int pointSum = Pointtransfer.TRANSFER_SUM_C_ADD_COMMENT;
 
-                // Point
-                final String articleAuthorId = article.optString(Article.ARTICLE_AUTHOR_ID);
-                if (articleAuthorId.equals(commentAuthorId)) {
-                    pointSum = Pointtransfer.TRANSFER_SUM_C_ADD_SELF_ARTICLE_COMMENT;
-                }
+            // Point
+            final String articleAuthorId = article.optString(Article.ARTICLE_AUTHOR_ID);
+            if (articleAuthorId.equals(commentAuthorId)) {
+                pointSum = Pointtransfer.TRANSFER_SUM_C_ADD_SELF_ARTICLE_COMMENT;
+            }
 
-                final int balance = commenter.optInt(UserExt.USER_POINT);
+            final int balance = commenter.optInt(UserExt.USER_POINT);
 
-                if (balance - pointSum < 0) {
-                    throw new ServiceException(langPropsService.get("insufficientBalanceLabel"));
-                }
+            if (balance - pointSum < 0) {
+                throw new ServiceException(langPropsService.get("insufficientBalanceLabel"));
             }
         } catch (final RepositoryException e) {
             throw new ServiceException(e);
@@ -282,19 +276,11 @@ public class CommentMgmtService {
             final JSONObject comment = new JSONObject();
             comment.put(Keys.OBJECT_ID, ret);
 
-            String content = requestJSONObject.optString(Comment.COMMENT_CONTENT).
-                    replace("_esc_enter_88250_", "<br/>"); // Solo client escape
+            String content = requestJSONObject.optString(Comment.COMMENT_CONTENT);
 
             comment.put(Comment.COMMENT_AUTHOR_EMAIL, requestJSONObject.optString(Comment.COMMENT_AUTHOR_EMAIL));
             comment.put(Comment.COMMENT_AUTHOR_ID, commentAuthorId);
             comment.put(Comment.COMMENT_ON_ARTICLE_ID, articleId);
-            if (fromClient) {
-                comment.put(Comment.COMMENT_CLIENT_COMMENT_ID, requestJSONObject.optString(Comment.COMMENT_CLIENT_COMMENT_ID));
-
-                // Appends original commenter name
-                final String authorName = requestJSONObject.optString(Comment.COMMENT_T_AUTHOR_NAME);
-                content += " <i class='ft-small'>by " + authorName + "</i>";
-            }
             comment.put(Comment.COMMENT_ORIGINAL_COMMENT_ID, requestJSONObject.optString(Comment.COMMENT_ORIGINAL_COMMENT_ID));
 
             content = Emotions.toAliases(content);
@@ -331,24 +317,21 @@ public class CommentMgmtService {
 
             transaction.commit();
 
-            if (!fromClient) {
-                // Point
-                final String articleAuthorId = article.optString(Article.ARTICLE_AUTHOR_ID);
-                if (articleAuthorId.equals(commentAuthorId)) {
-                    pointtransferMgmtService.transfer(commentAuthorId, Pointtransfer.ID_C_SYS,
-                            Pointtransfer.TRANSFER_TYPE_C_ADD_COMMENT, Pointtransfer.TRANSFER_SUM_C_ADD_SELF_ARTICLE_COMMENT,
-                            commentId);
-                } else {
-                    pointtransferMgmtService.transfer(commentAuthorId, articleAuthorId,
-                            Pointtransfer.TRANSFER_TYPE_C_ADD_COMMENT, Pointtransfer.TRANSFER_SUM_C_ADD_COMMENT,
-                            commentId);
-                }
+            // Point
+            final String articleAuthorId = article.optString(Article.ARTICLE_AUTHOR_ID);
+            if (articleAuthorId.equals(commentAuthorId)) {
+                pointtransferMgmtService.transfer(commentAuthorId, Pointtransfer.ID_C_SYS,
+                        Pointtransfer.TRANSFER_TYPE_C_ADD_COMMENT, Pointtransfer.TRANSFER_SUM_C_ADD_SELF_ARTICLE_COMMENT,
+                        commentId);
+            } else {
+                pointtransferMgmtService.transfer(commentAuthorId, articleAuthorId,
+                        Pointtransfer.TRANSFER_TYPE_C_ADD_COMMENT, Pointtransfer.TRANSFER_SUM_C_ADD_COMMENT,
+                        commentId);
             }
 
             // Event
             final JSONObject eventData = new JSONObject();
             eventData.put(Comment.COMMENT, comment);
-            eventData.put(Common.FROM_CLIENT, fromClient);
             eventData.put(Article.ARTICLE, article);
 
             try {

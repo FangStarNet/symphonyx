@@ -75,7 +75,7 @@ import org.jsoup.safety.Whitelist;
  * Article query service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.11.8.15, Dec 17, 2015
+ * @version 2.11.8.15, Jan 21, 2016
  * @since 0.2.0
  */
 @Service
@@ -208,40 +208,6 @@ public class ArticleQueryService {
             return ret;
         } catch (final RepositoryException e) {
             LOGGER.log(Level.ERROR, "Gets relevant articles failed", e);
-            throw new ServiceException(e);
-        }
-    }
-
-    /**
-     * Gets broadcasts (articles permalink equals to "aBroadcast").
-     *
-     * @param currentPageNum the specified page number
-     * @param pageSize the specified page size
-     * @return articles, return an empty list if not found
-     * @throws ServiceException service exception
-     */
-    public List<JSONObject> getBroadcasts(final int currentPageNum, final int pageSize) throws ServiceException {
-        try {
-            final Query query = new Query().setCurrentPageNum(currentPageNum).setPageSize(pageSize).setFilter(
-                    new PropertyFilter(Article.ARTICLE_CLIENT_ARTICLE_ID, FilterOperator.EQUAL, "aBroadcast")).
-                    addSort(Article.ARTICLE_CREATE_TIME, SortDirection.DESCENDING);
-
-            final JSONObject result = articleRepository.get(query);
-            final JSONArray articles = result.optJSONArray(Keys.RESULTS);
-
-            if (0 == articles.length()) {
-                return Collections.emptyList();
-            }
-
-            final List<JSONObject> ret = CollectionUtils.<JSONObject>jsonArrayToList(articles);
-            for (final JSONObject article : ret) {
-                article.put(Article.ARTICLE_PERMALINK, Latkes.getServePath() + article.optString(Article.ARTICLE_PERMALINK));
-                article.remove(Article.ARTICLE_CONTENT);
-            }
-
-            return ret;
-        } catch (final RepositoryException e) {
-            LOGGER.log(Level.ERROR, "Gets broadcasts [currentPageNum=" + currentPageNum + ", pageSize=" + pageSize + "] failed", e);
             throw new ServiceException(e);
         }
     }
@@ -500,35 +466,6 @@ public class ArticleQueryService {
             return ret;
         } catch (final RepositoryException e) {
             LOGGER.log(Level.ERROR, "Gets articles by tag [tagTitle=" + tag.optString(Tag.TAG_TITLE) + "] failed", e);
-            throw new ServiceException(e);
-        }
-    }
-
-    /**
-     * Gets an article by the specified client article id.
-     *
-     * @param authorId the specified author id
-     * @param clientArticleId the specified client article id
-     * @return article, return {@code null} if not found
-     * @throws ServiceException service exception
-     */
-    public JSONObject getArticleByClientArticleId(final String authorId, final String clientArticleId) throws ServiceException {
-        final List<Filter> filters = new ArrayList<Filter>();
-        filters.add(new PropertyFilter(Article.ARTICLE_CLIENT_ARTICLE_ID, FilterOperator.EQUAL, clientArticleId));
-        filters.add(new PropertyFilter(Article.ARTICLE_AUTHOR_ID, FilterOperator.EQUAL, authorId));
-
-        final Query query = new Query().setFilter(new CompositeFilter(CompositeFilterOperator.AND, filters));
-        try {
-            final JSONObject result = articleRepository.get(query);
-            final JSONArray array = result.optJSONArray(Keys.RESULTS);
-
-            if (0 == array.length()) {
-                return null;
-            }
-
-            return array.optJSONObject(0);
-        } catch (final RepositoryException e) {
-            LOGGER.log(Level.ERROR, "Gets article [clientArticleId=" + clientArticleId + "] failed", e);
             throw new ServiceException(e);
         }
     }

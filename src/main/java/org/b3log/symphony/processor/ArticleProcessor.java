@@ -64,8 +64,6 @@ import org.b3log.symphony.processor.advice.validate.ArticleAddValidation;
 import org.b3log.symphony.processor.advice.validate.ArticleUpdateValidation;
 import org.b3log.symphony.service.ArticleMgmtService;
 import org.b3log.symphony.service.ArticleQueryService;
-import org.b3log.symphony.service.ClientMgmtService;
-import org.b3log.symphony.service.ClientQueryService;
 import org.b3log.symphony.service.CommentQueryService;
 import org.b3log.symphony.service.FollowQueryService;
 import org.b3log.symphony.service.RewardQueryService;
@@ -102,7 +100,7 @@ import org.jsoup.safety.Whitelist;
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.13.11.26, Jan 20, 2016
+ * @version 2.13.11.26, Jan 21, 2016
  * @since 0.2.0
  */
 @RequestProcessor
@@ -142,18 +140,6 @@ public class ArticleProcessor {
      */
     @Inject
     private UserQueryService userQueryService;
-
-    /**
-     * Client management service.
-     */
-    @Inject
-    private ClientMgmtService clientMgmtService;
-
-    /**
-     * Client query service.
-     */
-    @Inject
-    private ClientQueryService clientQueryService;
 
     /**
      * Language service.
@@ -516,8 +502,6 @@ public class ArticleProcessor {
             }
 
             article.put(Article.ARTICLE_TAGS, articleTags);
-
-            article.put(Article.ARTICLE_T_IS_BROADCAST, false);
 
             articleMgmtService.addArticle(article);
 

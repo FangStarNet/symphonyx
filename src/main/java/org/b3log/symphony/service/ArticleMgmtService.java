@@ -64,7 +64,7 @@ import org.json.JSONObject;
  * Article management service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.5.14.12, Jan 13, 2016
+ * @version 2.5.14.12, Jan 21, 2016
  * @since 0.2.0
  */
 @Service
@@ -202,9 +202,6 @@ public class ArticleMgmtService {
      *     "articleAuthorEmail": "",
      *     "articleAuthorId": "",
      *     "articleCommentable": boolean, // optional, default to true
-     *     "syncWithSymphonyClient": boolean, // optional
-     *     "clientArticleId": "" // optional
-     *     "isBroadcast": boolean, // Client broadcast
      *     "articleType": int, // optional, default to 0
      *     "articleRewardContent": "", // optional, default to ""
      *     "articleRewardPoint": int, // optional, default to 0
@@ -217,7 +214,6 @@ public class ArticleMgmtService {
      */
     public synchronized String addArticle(final JSONObject requestJSONObject) throws ServiceException {
         final long currentTimeMillis = System.currentTimeMillis();
-        final boolean fromClient = requestJSONObject.has(Article.ARTICLE_CLIENT_ARTICLE_ID);
         final String authorId = requestJSONObject.optString(Article.ARTICLE_AUTHOR_ID);
         JSONObject author = null;
 
@@ -243,19 +239,16 @@ public class ArticleMgmtService {
                 throw new ServiceException(langPropsService.get("tooFrequentArticleLabel"));
             }
 
-            if (!fromClient) {
-                // Point
-                final long followerCnt = followQueryService.getFollowerCount(authorId, Follow.FOLLOWING_TYPE_C_USER);
-                final int addition = (int) Math.round(Math.sqrt(followerCnt));
+            // Point
+            final long followerCnt = followQueryService.getFollowerCount(authorId, Follow.FOLLOWING_TYPE_C_USER);
+            final int addition = (int) Math.round(Math.sqrt(followerCnt));
 
-                final int sum = Pointtransfer.TRANSFER_SUM_C_ADD_ARTICLE + addition + rewardPoint;
-                final int balance = author.optInt(UserExt.USER_POINT);
+            final int sum = Pointtransfer.TRANSFER_SUM_C_ADD_ARTICLE + addition + rewardPoint;
+            final int balance = author.optInt(UserExt.USER_POINT);
 
-                if (balance - sum < 0) {
-                    throw new ServiceException(langPropsService.get("insufficientBalanceLabel"));
-                }
+            if (balance - sum < 0) {
+                throw new ServiceException(langPropsService.get("insufficientBalanceLabel"));
             }
-
         } catch (final RepositoryException e) {
             throw new ServiceException(e);
         }
@@ -266,9 +259,6 @@ public class ArticleMgmtService {
             final String ret = Ids.genTimeMillisId();
             final JSONObject article = new JSONObject();
             article.put(Keys.OBJECT_ID, ret);
-
-            final String clientArticleId = requestJSONObject.optString(Article.ARTICLE_CLIENT_ARTICLE_ID, ret);
-            final boolean isBroadcast = requestJSONObject.optBoolean(Article.ARTICLE_T_IS_BROADCAST);
 
             String articleTitle = requestJSONObject.optString(Article.ARTICLE_TITLE);
             articleTitle = Emotions.toAliases(articleTitle);
@@ -284,7 +274,6 @@ public class ArticleMgmtService {
 
             article.put(Article.ARTICLE_EDITOR_TYPE, requestJSONObject.optString(Article.ARTICLE_EDITOR_TYPE));
             article.put(Article.ARTICLE_AUTHOR_EMAIL, requestJSONObject.optString(Article.ARTICLE_AUTHOR_EMAIL));
-            article.put(Article.ARTICLE_SYNC_TO_CLIENT, fromClient ? true : author.optBoolean(UserExt.SYNC_TO_CLIENT));
             article.put(Article.ARTICLE_AUTHOR_ID, authorId);
             article.put(Article.ARTICLE_COMMENT_CNT, 0);
             article.put(Article.ARTICLE_VIEW_CNT, 0);
@@ -296,11 +285,6 @@ public class ArticleMgmtService {
             article.put(Article.ARTICLE_UPDATE_TIME, currentTimeMillis);
             article.put(Article.ARTICLE_LATEST_CMT_TIME, currentTimeMillis);
             article.put(Article.ARTICLE_PERMALINK, "/article/" + ret);
-            if (isBroadcast) {
-                article.put(Article.ARTICLE_CLIENT_ARTICLE_ID, "aBroadcast");
-            } else {
-                article.put(Article.ARTICLE_CLIENT_ARTICLE_ID, clientArticleId);
-            }
             article.put(Article.ARTICLE_RANDOM_DOUBLE, Math.random());
             article.put(Article.REDDIT_SCORE, 0);
             article.put(Article.ARTICLE_STATUS, Article.ARTICLE_STATUS_C_VALID);
@@ -355,30 +339,27 @@ public class ArticleMgmtService {
             // Grows the tag graph
             tagMgmtService.relateTags(article.optString(Article.ARTICLE_TAGS));
 
-            if (!fromClient) {
-                // Point
-                final long followerCnt = followQueryService.getFollowerCount(authorId, Follow.FOLLOWING_TYPE_C_USER);
-                final int addition = (int) Math.round(Math.sqrt(followerCnt));
+            // Point
+            final long followerCnt = followQueryService.getFollowerCount(authorId, Follow.FOLLOWING_TYPE_C_USER);
+            final int addition = (int) Math.round(Math.sqrt(followerCnt));
 
+            pointtransferMgmtService.transfer(authorId, Pointtransfer.ID_C_SYS,
+                    Pointtransfer.TRANSFER_TYPE_C_ADD_ARTICLE,
+                    Pointtransfer.TRANSFER_SUM_C_ADD_ARTICLE + addition, articleId);
+
+            if (rewardPoint > 0) { // Enabe reward
                 pointtransferMgmtService.transfer(authorId, Pointtransfer.ID_C_SYS,
-                        Pointtransfer.TRANSFER_TYPE_C_ADD_ARTICLE,
-                        Pointtransfer.TRANSFER_SUM_C_ADD_ARTICLE + addition, articleId);
+                        Pointtransfer.TRANSFER_TYPE_C_ADD_ARTICLE_REWARD, rewardPoint, articleId);
+            }
 
-                if (rewardPoint > 0) { // Enabe reward
-                    pointtransferMgmtService.transfer(authorId, Pointtransfer.ID_C_SYS,
-                            Pointtransfer.TRANSFER_TYPE_C_ADD_ARTICLE_REWARD, rewardPoint, articleId);
-                }
-
-                if (Article.ARTICLE_TYPE_C_CITY_BROADCAST == articleType) {
-                    pointtransferMgmtService.transfer(authorId, Pointtransfer.ID_C_SYS,
-                            Pointtransfer.TRANSFER_TYPE_C_ADD_ARTICLE_BROADCAST,
-                            Pointtransfer.TRANSFER_SUM_C_ADD_ARTICLE_BROADCAST, articleId);
-                }
+            if (Article.ARTICLE_TYPE_C_CITY_BROADCAST == articleType) {
+                pointtransferMgmtService.transfer(authorId, Pointtransfer.ID_C_SYS,
+                        Pointtransfer.TRANSFER_TYPE_C_ADD_ARTICLE_BROADCAST,
+                        Pointtransfer.TRANSFER_SUM_C_ADD_ARTICLE_BROADCAST, articleId);
             }
 
             // Event
             final JSONObject eventData = new JSONObject();
-            eventData.put(Common.FROM_CLIENT, fromClient);
             eventData.put(Article.ARTICLE, article);
             try {
                 eventManager.fireEventAsynchronously(new Event<JSONObject>(EventTypes.ADD_ARTICLE, eventData));
@@ -440,8 +421,6 @@ public class ArticleMgmtService {
             processTagsForArticleUpdate(oldArticle, requestJSONObject, author);
             userRepository.update(author.optString(Keys.OBJECT_ID), author);
 
-            final boolean fromClient = requestJSONObject.has(Article.ARTICLE_CLIENT_ARTICLE_ID);
-
             String articleTitle = requestJSONObject.optString(Article.ARTICLE_TITLE);
             articleTitle = Emotions.toAliases(articleTitle);
             oldArticle.put(Article.ARTICLE_TITLE, articleTitle);
@@ -474,27 +453,24 @@ public class ArticleMgmtService {
 
             transaction.commit();
 
-            if (!fromClient) {
-                if (currentTimeMillis - createTime > 1000 * 60 * 5) {
-                    final long followerCnt = followQueryService.getFollowerCount(authorId, Follow.FOLLOWING_TYPE_C_USER);
-                    int addition = (int) Math.round(Math.sqrt(followerCnt));
-                    final long collectCnt = followQueryService.getFollowerCount(articleId, Follow.FOLLOWING_TYPE_C_ARTICLE);
-                    addition += collectCnt * 2;
-                    
-                    pointtransferMgmtService.transfer(authorId, Pointtransfer.ID_C_SYS,
-                            Pointtransfer.TRANSFER_TYPE_C_UPDATE_ARTICLE,
-                            Pointtransfer.TRANSFER_SUM_C_UPDATE_ARTICLE + addition, articleId);
-                }
-                
-                if (enableReward) {
-                    pointtransferMgmtService.transfer(authorId, Pointtransfer.ID_C_SYS,
-                            Pointtransfer.TRANSFER_TYPE_C_ADD_ARTICLE_REWARD, rewardPoint, articleId);
-                }
+            if (currentTimeMillis - createTime > 1000 * 60 * 5) {
+                final long followerCnt = followQueryService.getFollowerCount(authorId, Follow.FOLLOWING_TYPE_C_USER);
+                int addition = (int) Math.round(Math.sqrt(followerCnt));
+                final long collectCnt = followQueryService.getFollowerCount(articleId, Follow.FOLLOWING_TYPE_C_ARTICLE);
+                addition += collectCnt * 2;
+
+                pointtransferMgmtService.transfer(authorId, Pointtransfer.ID_C_SYS,
+                        Pointtransfer.TRANSFER_TYPE_C_UPDATE_ARTICLE,
+                        Pointtransfer.TRANSFER_SUM_C_UPDATE_ARTICLE + addition, articleId);
+            }
+
+            if (enableReward) {
+                pointtransferMgmtService.transfer(authorId, Pointtransfer.ID_C_SYS,
+                        Pointtransfer.TRANSFER_TYPE_C_ADD_ARTICLE_REWARD, rewardPoint, articleId);
             }
 
             // Event
             final JSONObject eventData = new JSONObject();
-            eventData.put(Common.FROM_CLIENT, fromClient);
             eventData.put(Article.ARTICLE, oldArticle);
             try {
                 eventManager.fireEventAsynchronously(new Event<JSONObject>(EventTypes.UPDATE_ARTICLE, eventData));
@@ -526,7 +502,6 @@ public class ArticleMgmtService {
             final JSONObject author = userRepository.get(authorId);
 
             article.put(Article.ARTICLE_COMMENTABLE, Boolean.valueOf(article.optBoolean(Article.ARTICLE_COMMENTABLE)));
-            article.put(Article.ARTICLE_SYNC_TO_CLIENT, author.optBoolean(UserExt.SYNC_TO_CLIENT));
 
             final JSONObject oldArticle = articleRepository.get(articleId);
 

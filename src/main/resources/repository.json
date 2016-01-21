@@ -1,6 +1,6 @@
 {
     "description": "Description of repository structures, for generation (DDL: http://en.wikipedia.org/wiki/Data_Definition_Language) of the relational database table and persistence validation.",
-    "version": "2.12.4.3, Sep 19, 2015",
+    "version": "3.12.4.3, Jan 21, 2016",
     "authors": ["Liang Ding"],
     "since": "0.2.0",
     "repositories": [
@@ -198,12 +198,6 @@
                     "name": "oId",
                     "type": "String",
                     "length": 19
-                },
-                {
-                    "name": "clientCommentId",
-                    "type": "String",
-                    "length": 32,
-                    "nullable": true
                 },
                 {
                     "name": "commentContent",
@@ -458,26 +452,6 @@
                     "type": "boolean"
                 },
                 {
-                    "name": "userB3Key",
-                    "type": "String",
-                    "length": 20
-                },
-                {
-                    "name": "userB3ClientAddArticleURL",
-                    "type": "String",
-                    "length": 150
-                },
-                {
-                    "name": "userB3ClientUpdateArticleURL",
-                    "type": "String",
-                    "length": 150
-                },
-                {
-                    "name": "userB3ClientAddCommentURL",
-                    "type": "String",
-                    "length": 150
-                },
-                {
                     "name": "userRole",
                     "type": "String",
                     "length": 20
@@ -578,8 +552,9 @@
                     "description": "0: public, 1: private"
                 },
                 {
-                    "name": "syncWithSymphonyClient",
-                    "type": "boolean"
+                    "name": "userTeam",
+                    "type": "String",
+                    "length": 32
                 }
             ]
         },
@@ -659,16 +634,6 @@
                     "type": "boolean"
                 },
                 {
-                    "name": "syncWithSymphonyClient",
-                    "type": "boolean"
-                },
-                {
-                    "name": "clientArticleId",
-                    "type": "String",
-                    "length": 32,
-                    "nullable": true
-                },
-                {
                     "name": "articleEditorType",
                     "type": "int",
                     "description": "0: CodeMirror-Markdown"
@@ -710,49 +675,6 @@
                     "name": "articleIP",
                     "type": "String",
                     "length": 128
-                }
-            ]
-        },
-        {
-            "name": "client",
-            "keys": [
-                {
-                    "name": "oId",
-                    "type": "String",
-                    "length": 19
-                },
-                {
-                    "name": "clientName",
-                    "type": "String",
-                    "length": 10
-                },
-                {
-                    "name": "clientVersion",
-                    "type": "String",
-                    "length": 10
-                },
-                {
-                    "name": "clientHost",
-                    "type": "String",
-                    "length": 50
-                },
-                {
-                    "name": "clientRuntimeEnv",
-                    "type": "String",
-                    "length": 10
-                },
-                {
-                    "name": "clientLatestAddArticleTime",
-                    "type": "long"
-                },
-                {
-                    "name": "clientLatestAddCommentTime",
-                    "type": "long"
-                },
-                {
-                    "name": "clientAdminEmail",
-                    "type": "String",
-                    "length": 255
                 }
             ]
         }

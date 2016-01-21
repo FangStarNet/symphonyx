@@ -97,7 +97,7 @@ import org.json.JSONObject;
  * </ul>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.9.2.1, Jan 19, 2016
+ * @version 2.9.2.1, Jan 21, 2016
  * @since 1.1.0
  */
 @RequestProcessor
@@ -417,8 +417,6 @@ public class AdminProcessor {
                 if (!oldPwd.equals(value) && !Strings.isEmptyOrNull(value)) {
                     user.put(name, MD5.hash(value));
                 }
-            } else if (name.equals(UserExt.SYNC_TO_CLIENT)) {
-                user.put(UserExt.SYNC_TO_CLIENT, Boolean.valueOf(value));
             } else {
                 user.put(name, value);
             }

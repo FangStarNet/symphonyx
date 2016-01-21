@@ -93,21 +93,6 @@
 
                 <label for="userStatus">${userStatusLabel}</label>
                 <input type="text" id="userStatus" name="userStatus" value="${user.userStatus}" />
-                
-                <label for="syncWithSymphonyClient">${syncWithSymphonyClientLabel}</label>
-                <input type="text" id="syncWithSymphonyClient" name="syncWithSymphonyClient" value="${user.syncWithSymphonyClient?c}"/>
-
-                <label for="userB3Key">B3 Key</label>
-                <input type="text" id="userB3Key" name="userB3Key" value="${user.userB3Key}" />
-
-                <label for="userB3ClientAddArticleURL">${clientArticleLabel}</label>
-                <input type="text" id="userB3ClientAddArticleURL" name="userB3ClientAddArticleURL" value="${user.userB3ClientAddArticleURL}" />
-
-                <label for="userB3ClientUpdateArticleURL">${clientUpdateArticleLabel}</label>
-                <input type="text" id="userB3ClientUpdateArticleURL" name="userB3ClientUpdateArticleURL" value="${user.userB3ClientUpdateArticleURL}" />
-
-                <label for="userB3ClientAddCommentURL">${clientCmtLabel}</label>
-                <input type="text" id="userB3ClientAddCommentURL" name="userB3ClientAddCommentURL" value="${user.userB3ClientAddCommentURL}" />
 
                 <br/><br/>
                 <button type="submit" class="green fn-right">${submitLabel}</button>
