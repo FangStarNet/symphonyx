@@ -29,13 +29,27 @@
         <schedule>every 30 minutes</schedule>
     </cron>
     
-    <!-- Disabled on Dev environment -->
-    <!--
+    <cron>
+        <url>/journal/gen/section?key=dev_key</url>
+        <description>Generates today's journal section</description>
+        <schedule>every 10 minutes</schedule>
+    </cron>
+    
+    <cron>
+        <url>/journal/gen/chapter?key=dev_key</url>
+        <description>Generates journal chapter this week</description>
+        <schedule>every 10 minutes</schedule>
+    </cron>
+    
+    
     <cron>
         <url>/status?key=dev_key</url>
         <description>Checks running status</description>
         <schedule>every 2 hours</schedule>
     </cron>
+    
+    <!-- Disabled on Dev environment -->
+    <!--
 
     <cron>
         <url>/verifycode/email?key=dev_key</url>
