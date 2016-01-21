@@ -1,0 +1,519 @@
+/**
+ * Copyright (c) 2012-2016, b3log.org & hacpai.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * 前台样式.
+ *
+ * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
+ * @version 1.2.5.10, Jan 5, 2016
+ */
+/* start module */
+.index-module .index-module-list > li {
+    margin: 3px 0;
+}
+
+.index-module li {
+    list-style: none;
+}
+
+.index-module .module-line li {
+    border-bottom: 1px dotted #ccc;
+    padding-bottom: 6px;
+}
+
+.index-module .module-line li.last {
+    border-bottom-width: 0;
+    padding-bottom: 0;
+}
+
+.index-module .module-line li > .fn-left {
+    width: 25px;
+}
+
+.index-module .avatar-small {
+    margin-top: 4px;
+}
+
+.index-module .comment-content {
+    float: left; 
+    margin-left: 5px;
+    width: 228px;
+    color: #999;
+}
+/* end module */
+
+/* start article */
+#voteUp,
+#voteDown {
+    border: 1px solid #e0e0e0;
+    padding: 3px 6px 0;
+    border-radius: 3px;
+}
+
+#heatBar {
+    position: fixed;
+    top: 2px;
+    right: 0px;
+    width: 100%;
+}
+
+.article-title {
+    margin: 10px 0;
+}
+
+.article-title h2 {
+    word-break: break-all;
+    font-size: 18px;
+    font-weight: normal;
+}
+
+.article-title > span {
+    margin-top: 4px;
+    display: block;
+}
+
+.article-info > .fn-right a {
+    text-decoration: none;
+}
+
+.article-info > .fn-right a:hover {
+    color: #4183C4;
+}
+
+.article-info .tag {
+    margin-top: 0;
+}
+
+#thoughtProgress {
+    height: 2px;
+    position: relative;
+    margin-bottom: 6px;
+}
+
+#thoughtProgress div {
+    position: absolute;
+    background-color: #e0e0e0;
+    height: 2px
+}
+
+.comment-submit {
+    margin-top: 20px;
+}
+
+#comments > h2 {
+    padding-bottom: 5px;
+    border-bottom: 1px solid #CCCCCC;
+    margin: 20px 0 0;
+}
+
+#comments .comment-content {
+    width: 610px; /* TODO:检测safari，没有问题可删除 */
+}
+
+#comments li:hover .thx {
+    display: initial;
+}
+
+#comments .comment > p {
+    margin-top: 13px;
+}
+
+.comment-login {
+    border: 1px solid #D9D9D9;
+    border-top-color: #C0C0C0;
+    border-left-color: #C0C0C0;
+    margin: 10px 0;
+    padding: 3px;
+    background-color: #FAFAFA;
+    box-sizing: border-box;
+}
+
+.comment-login > a {
+    text-align: center; 
+    display: block; 
+    padding: 21px 0px 21px;
+}
+
+#articleRewardContent {
+    margin-top: 20px;
+    padding: 10px;
+    background-image: -webkit-gradient(linear, 0 0, 100% 100%, color-stop(.25, rgba(255, 255, 255, .9)), color-stop(.25, transparent), color-stop(.5, transparent), color-stop(.5, rgba(255, 255, 255, .9)), color-stop(.75, rgba(255, 255, 255, .9)), color-stop(.75, transparent), to(transparent));
+    background-image: -o-linear-gradient(-45deg, rgba(255, 255, 255, .9) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .9) 50%, rgba(255, 255, 255, .9) 75%, transparent 75%, transparent);
+    background-image: linear-gradient(-45deg, rgba(255, 255, 255, .9) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .9) 50%, rgba(255, 255, 255, .9) 75%, transparent 75%, transparent);
+    background-color: #f5f5f5;
+    background-size: 45px 45px;
+}
+
+#articleRewardContent.reward {
+    text-align: center;
+}
+
+#articleRewardContent.reward > span {
+    margin: 20px;
+    display: inline-block;
+}
+
+#commentContent {
+    background-color: #FAFAFA;
+    margin: 20px 0;
+    overflow: hidden;
+    padding: 4px;
+    height: 67px;
+}
+
+.share {
+    margin-top: 1em;
+}
+
+.share [class^="icon-"] {
+    cursor: pointer;
+    transition: all 0.2s ease-out 0s;
+    -webkit-transition: all 0.2s ease-out 0s;
+    display: inline-block;
+    font-size: 16px;
+}
+
+.share [class^="icon-"]:hover {
+    transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    color: #4183c4;
+}
+
+.grammar dl {
+    float: left;
+    height: 70px;
+    width: 206px;
+}
+
+.CodeMirror {
+    border-radius: 3px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.075) inset;
+    border: 1px solid #CCCCCC;
+    margin: 20px 0;
+    height: auto !important;
+}
+
+.CodeMirror-scroll {
+    min-height: 65px;
+}
+/* end article */
+
+/* start article list */
+.article-list li .commenters {
+    display: none;
+    top: 32%;
+    position: absolute;
+    right: 10px;
+}
+
+.article-list li .commenters > a {
+    float: left;
+    margin-left: 4px;
+    width: 25px;
+    text-decoration: none;
+    color: #999;
+}
+
+.article-list li .commenters > a:hover {
+    color: #4183c4;
+}
+
+.article-list li:hover .cmts {
+    display: none;
+}
+
+.article-list li:hover .commenters {
+    display: block;
+}
+
+.article-list .preview {
+    position: absolute;
+    left: 65px;
+    z-index: 1;
+    top: 40px;
+    background-color: #FFF;
+    border: 1px solid #DDDDDD;
+    border-radius: 3px 3px 3px 3px;
+    padding: 5px 10px;
+    opacity: 0.9;
+    filter: alpha(opacity=90);
+    width: 70%;
+    min-width: 130px;
+    min-height: 36px;
+}
+
+.article-list .preview .ico-arrow {
+    width: 0px;
+    height: 0px;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid rgba(256, 256, 256, 0.9);
+    position: absolute;
+    top: -10px;
+    z-index: 1;
+    left: 11px;
+}
+
+.article-list .preview .ico-arrowborder {
+    width: 0px;
+    height: 0px;
+    border-left: 11px solid transparent;
+    border-right: 11px solid transparent;
+    border-bottom: 11px solid #DDDDDD;
+    position: absolute;
+    top: -11px;
+    left: 10px;
+}
+
+.heat {
+    position: absolute;
+    height: 5px;
+    background-color: #911;
+    z-index: 1;
+    bottom: -3px;
+    right: 0;
+}
+
+.point,
+.point-remove {
+    position: absolute;
+    height: 5px;
+    background-color: #911;
+    z-index: 1;
+    bottom: -3px;
+    right: 0px;
+    width: 5px;
+    -webkit-animation-duration: 2s;
+    animation-duration: 2s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    -webkit-animation-name: slideInRight;
+    animation-name: slideInRight;
+}
+
+.point-remove {
+    animation-name: slideInLeft;
+    -webkit-animation-name: slideInLeft;
+}
+
+@keyframes slideInLeft {
+    0% {
+        right: 0;
+    }
+
+    100% {
+        right: 100%;
+    }
+}
+
+@-webkit-keyframes slideInLeft {
+    0% {
+        right: 0;
+    }
+
+    100% {
+        right: 100%;
+    }
+}
+
+@keyframes slideInRight {
+    0% {
+        right: 100%;
+    }
+
+    100% {
+        right: 0;
+    }
+}
+
+@-webkit-keyframes slideInRight {
+    0% {
+        right: 100%;
+    }
+
+    100% {
+        right: 0;
+    }
+}
+/* end article list */
+
+/* start register */
+.register .intro {
+    border-left: 1px dashed #C0C0C0;
+    margin-left: 50px;
+    min-height: 200px;
+    padding-left: 30px;
+}
+
+.register .form input[type="text"],
+.register .form input[type="password"], 
+.register .form textarea {
+    margin: 10px 0;
+    width: 200px;
+}
+
+#securityCode {
+    margin-right: 10px;
+    width: 131px;
+}
+/* end register */
+
+/* start side tags */
+.module-panel .tags {
+    margin: 10px;
+}
+
+.tags > li {
+    float: left;
+    position: relative;
+    list-style: none;
+}
+
+.tags > li:hover > div {
+    display: block;
+}
+
+.tags > li > span {
+    float: left;
+    padding: 3px 10px;
+    border: 1px solid transparent;
+    position: relative;
+    height: 20px;
+    white-space: nowrap;
+    word-wrap: normal;
+}
+
+.tags > li > span > a {
+    text-decoration: none;
+}
+
+.tags > li:hover > span {
+    background-color: #F7F7F7;
+    border-color: #DDDDDD;
+    border-bottom-style: dotted;
+    border-radius: 3px 3px 0 0;
+    opacity: 0.9;
+    filter: alpha(opacity=90);
+    z-index: 3;
+}
+
+.tags.tags-no-desc > li:hover > span {
+    border-bottom-style: solid;
+    border-radius: 3px;
+}
+
+.tags > li > span > img {
+    border-radius: 2px 2px 2px 2px;
+    height: 16px;
+    width: 16px;
+    margin: -2px 2px 0 0;
+}
+
+.tags > li > div {
+    background-color: #F7F7F7;
+    border: 1px solid #DDDDDD;
+    border-radius: 3px 0 3px 3px;
+    display: none;
+    right: 0;
+    margin-left: 3px;
+    padding: 5px 10px;
+    position: absolute;
+    top: 27px;
+    z-index: 2;
+    opacity: 0.9;
+    filter: alpha(opacity=90);
+    width: 260px;
+    min-width: 130px;
+}
+
+.tag-articles .tags > li > div {
+    left: -3px;
+    border-radius: 0 3px 3px 3px;
+}
+
+.tag-articles h1.fn-inline {
+    line-height: 37px;
+}
+
+.tag-articles p.description {
+    text-indent: 60px;
+}
+
+.tag-articles .title .fn-right {
+    margin-top: 15px;
+}
+/* end side tags */
+
+/* start tags.html */
+.tags-trend a,
+.tags-trend li h2 {
+    color: #cf7e7e;
+    display: inline;
+}
+
+.tags-trend .ft-small {
+    color: #e4b6b6;
+    line-height: 21px;
+} 
+
+.tags-cold .ft-small {
+    color: #a2be9e;
+    line-height: 21px;
+} 
+
+.tags-cold a,
+.tags-cold li h2 {
+    color: #85A980;
+    display: inline;
+}
+/* end tags.html */
+
+/* start tag-article.html */
+.tag-artile-user {
+    margin-left: 20px;
+    margin-top: 35px;
+    flex: 3;
+    -webkit-box-flex: 3;
+}
+/* end tag-article.html */
+
+/* start overwrite prettify.css */
+code.prettyprint {
+    display: inline;
+    border: none;
+    background-color: initial;
+    border-radius: initial;
+    padding: initial;
+}
+
+code .str { color: initial; } /* string  - green */
+code .kwd { color: initial; } /* keyword - dark pink */
+code .com { color: initial; font-style: italic; } /* comment - gray */
+code .typ { color: initial; } /* type - light blue */
+code .lit { color: initial; } /* literal - blue */
+code .pun { color: initial; } /* punctuation - white */
+code .pln { color: initial; } /* plaintext - white */
+code .tag { color: initial; } /* html/xml tag    - light blue */
+code .atn { color: initial; } /* html/xml attribute name  - khaki */
+code .atv { color: initial; } /* html/xml attribute value - green */
+code .dec { color: initial; } /* decimal - blue */
+/* end overwrite prettify.css */
+
+/* start activity */
+.activity {
+    min-height: 300px;
+}
+/* end activity */

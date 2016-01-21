@@ -1,0 +1,760 @@
+{
+    "description": "Description of repository structures, for generation (DDL: http://en.wikipedia.org/wiki/Data_Definition_Language) of the relational database table and persistence validation.",
+    "version": "2.12.4.3, Sep 19, 2015",
+    "authors": ["Liang Ding"],
+    "since": "0.2.0",
+    "repositories": [
+        {
+            "name": "vote",
+            "keys": [
+                {
+                    "name": "oId",
+                    "type": "String",
+                    "length": 19
+                },
+                {
+                    "name": "userId",
+                    "type": "String",
+                    "length": 19
+                }, {
+                    "name": "type",
+                    "type": "int",
+                    "description": "0: up, 1: down"
+                }, {
+                    "name": "dataType",
+                    "type": "int",
+                    "description": "0: article, 1: comment, 2: user, 3: tag"
+                }, {
+                    "name": "dataId",
+                    "type": "String",
+                    "length": 19
+                }
+            ]
+        },
+        {
+            "name": "verifycode",
+            "keys": [
+                {
+                    "name": "oId",
+                    "type": "String",
+                    "length": 19
+                },
+                {
+                    "name": "userId",
+                    "type": "String",
+                    "length": 19
+                }, {
+                    "name": "type",
+                    "type": "int"
+                }, {
+                    "name": "bizType",
+                    "type": "int"
+                }, {
+                    "name": "receiver",
+                    "type": "String",
+                    "length": 64
+                }, {
+                    "name": "code",
+                    "type": "String",
+                    "length": 64
+                }, {
+                    "name": "status",
+                    "type": "int"
+                }, {
+                    "name": "expired",
+                    "type": "long"
+                }
+            ]
+        },
+        {
+            "name": "reward",
+            "keys": [
+                {
+                    "name": "oId",
+                    "type": "String",
+                    "length": 19
+                },
+                {
+                    "name": "senderId",
+                    "type": "String",
+                    "length": 19
+                },
+                {
+                    "name": "dataId",
+                    "type": "String",
+                    "length": 19
+                },
+                {
+                    "name": "type",
+                    "type": "int",
+                    "description": "0: article, 1: comment, 2: user"
+                }
+            ]
+        },
+        {
+            "name": "pointtransfer",
+            "keys": [
+                {
+                    "name": "oId",
+                    "type": "String",
+                    "length": 19
+                },
+                {
+                    "name": "fromId",
+                    "type": "String",
+                    "length": 19
+                },
+                {
+                    "name": "toId",
+                    "type": "String",
+                    "length": 19
+                },
+                {
+                    "name": "sum",
+                    "type": "int"
+                },
+                {
+                    "name": "fromBalance",
+                    "type": "int"
+                },
+                {
+                    "name": "toBalance",
+                    "type": "int"
+                },
+                {
+                    "name": "time",
+                    "type": "long"
+                },
+                {
+                    "name": "type",
+                    "type": "int"
+                },
+                {
+                    "name": "dataId",
+                    "type": "String",
+                    "length": 19
+                }
+            ]
+        },
+        {
+            "name": "notification",
+            "keys": [
+                {
+                    "name": "oId",
+                    "type": "String",
+                    "length": 19
+                },
+                {
+                    "name": "userId",
+                    "type": "String",
+                    "length": 19
+                },
+                {
+                    "name": "dataId",
+                    "type": "String",
+                    "length": 19
+                },
+                {
+                    "name": "dataType",
+                    "type": "int",
+                    "description": "0: article, 1: comment, 2: at, 3: commented, 4: followingUseer"
+                },
+                {
+                    "name": "hasRead",
+                    "type": "boolean",
+                    "desription": "has read or not"
+                }
+            ]
+        },
+        {
+            "name": "follow",
+            "keys": [
+                {
+                    "name": "oId",
+                    "type": "String",
+                    "length": 19
+                },
+                {
+                    "name": "followerId",
+                    "type": "String",
+                    "length": 19
+                },
+                {
+                    "name": "followingId",
+                    "type": "String",
+                    "length": 19
+                },
+                {
+                    "name": "followingType",
+                    "type": "int",
+                    "description": "0: user, 1: tag"
+                }
+            ]
+        },
+        {
+            "name": "comment",
+            "keys": [
+                {
+                    "name": "oId",
+                    "type": "String",
+                    "length": 19
+                },
+                {
+                    "name": "clientCommentId",
+                    "type": "String",
+                    "length": 32,
+                    "nullable": true
+                },
+                {
+                    "name": "commentContent",
+                    "type": "String",
+                    "length": 2000
+                },
+                {
+                    "name": "commentCreateTime",
+                    "type": "long"
+                },
+                {
+                    "name": "commentAuthorEmail",
+                    "type": "String",
+                    "length": 255
+                },
+                {
+                    "name": "commentAuthorId",
+                    "type": "String",
+                    "length": 19
+                },
+                {
+                    "name": "commentOnArticleId",
+                    "type": "String",
+                    "length": 19
+                },
+                {
+                    "name": "commentSharpURL",
+                    "type": "String",
+                    "length": 255
+                },
+                {
+                    "name": "commentOriginalCommentId",
+                    "type": "String",
+                    "length": 19
+                },
+                {
+                    "name": "commentStatus",
+                    "type": "int",
+                    "description": "0: valid, 1: invalid"
+                },
+                {
+                    "name": "commentIP",
+                    "type": "String",
+                    "length": 128
+                }
+            ]
+        },
+        {
+            "name": "tag",
+            "keys": [
+                {
+                    "name": "oId",
+                    "type": "String",
+                    "length": 19
+                },
+                {
+                    "name": "tagReferenceCount",
+                    "type": "int"
+                },
+                {
+                    "name": "tagCommentCount",
+                    "type": "int"
+                },
+                {
+                    "name": "tagFollowerCount",
+                    "type": "int"
+                },
+                {
+                    "name": "tagTitle",
+                    "type": "String",
+                    "length": 50
+                },
+                {
+                    "name": "tagDescription",
+                    "type": "String",
+                    "length": 512
+                },
+                {
+                    "name": "tagIconPath",
+                    "type": "String",
+                    "length": 128
+                },
+                {
+                    "name": "tagStatus",
+                    "type": "int",
+                    "description": "0: valid, 1: invalid"
+                },
+                {
+                    "name": "tagGoodCnt",
+                    "description": "Favour count",
+                    "type": "int"
+                },
+                {
+                    "name": "tagBadCnt",
+                    "description": "Oppose count",
+                    "type": "int"
+                }
+            ]
+        },
+        {
+            "name": "tag_tag",
+            "keys": [
+                {
+                    "name": "oId",
+                    "type": "String",
+                    "length": 19
+                },
+                {
+                    "name": "tag1_oId",
+                    "type": "String",
+                    "length": 19
+                },
+                {
+                    "name": "tag2_oId",
+                    "type": "String",
+                    "length": 19
+                },
+                {
+                    "name": "weight",
+                    "type": "int"
+                }
+            ]
+        },
+        {
+            "name": "option",
+            "keys": [
+                {
+                    "name": "oId",
+                    "type": "String",
+                    "length": 64
+                },
+                {
+                    "name": "optionValue",
+                    "type": "String",
+                    "length": 512
+                },
+                {
+                    "name": "optionCategory",
+                    "type": "String",
+                    "legnth": 20
+                }
+            ]
+        },
+        {
+            "name": "tag_article",
+            "keys": [
+                {
+                    "name": "oId",
+                    "type": "String",
+                    "length": 19
+                },
+                {
+                    "name": "article_oId",
+                    "type": "String",
+                    "length": 19
+                },
+                {
+                    "name": "tag_oId",
+                    "type": "String",
+                    "length": 19
+                }
+            ]
+        },
+        {
+            "name": "user_tag",
+            "keys": [
+                {
+                    "name": "oId",
+                    "type": "String",
+                    "length": 19
+                },
+                {
+                    "name": "user_oId",
+                    "type": "String",
+                    "length": 19
+                },
+                {
+                    "name": "tag_oId",
+                    "type": "String",
+                    "length": 19
+                },
+                {
+                    "name": "type",
+                    "type": "int",
+                    "description": "0: creator, 1: article, 2: user self"
+                }
+            ]
+        },
+        {
+            "name": "user",
+            "keys": [
+                {
+                    "name": "oId",
+                    "type": "String",
+                    "length": 19
+                },
+                {
+                    "name": "userNo",
+                    "type": "int"
+                },
+                {
+                    "name": "userEmail",
+                    "type": "String",
+                    "length": 256
+                },
+                {
+                    "name": "userName",
+                    "description": "Belongs to User Profiles",
+                    "type": "String",
+                    "length": 20
+                },
+                {
+                    "name": "userPassword",
+                    "type": "String",
+                    "length": 32
+                },
+                {
+                    "name": "userTags",
+                    "type": "String",
+                    "length": 128
+                },
+                {
+                    "name": "userURL",
+                    "description": "Belongs to User Profiles",
+                    "type": "String",
+                    "length": 100
+                },
+                {
+                    "name": "userQQ",
+                    "description": "Belongs to User Profiles",
+                    "type": "String",
+                    "length": 12
+                },
+                {
+                    "name": "userIntro",
+                    "description": "Belongs to User Profiles",
+                    "type": "String",
+                    "length": 255
+                },
+                {
+                    "name": "userAvatarType",
+                    "description": "0: Gravatar, 1: External Link",
+                    "type": "int"
+                },
+                {
+                    "name": "userAvatarURL",
+                    "type": "String",
+                    "length": 255
+                },
+                {
+                    "name": "userOnlineFlag",
+                    "type": "boolean"
+                },
+                {
+                    "name": "userB3Key",
+                    "type": "String",
+                    "length": 20
+                },
+                {
+                    "name": "userB3ClientAddArticleURL",
+                    "type": "String",
+                    "length": 150
+                },
+                {
+                    "name": "userB3ClientUpdateArticleURL",
+                    "type": "String",
+                    "length": 150
+                },
+                {
+                    "name": "userB3ClientAddCommentURL",
+                    "type": "String",
+                    "length": 150
+                },
+                {
+                    "name": "userRole",
+                    "type": "String",
+                    "length": 20
+                },
+                {
+                    "name": "userArticleCount",
+                    "type": "int"
+                },
+                {
+                    "name": "userCommentCount",
+                    "type": "int"
+                },
+                {
+                    "name": "userTagCount",
+                    "type": "int"
+                },
+                {
+                    "name": "userStatus",
+                    "type": "int",
+                    "description": "0: valid, 1: invalid"
+                },
+                {
+                    "name": "userPoint",
+                    "type": "int"
+                },
+                {
+                    "name": "userLatestArticleTime",
+                    "type": "long"
+                },
+                {
+                    "name": "userLatestCmtTime",
+                    "type": "long"
+                },
+                {
+                    "name": "userLatestLoginTime",
+                    "type": "long"
+                },
+                {
+                    "name": "userLatestLoginIP",
+                    "type": "String",
+                    "length": 128
+                },
+                {
+                    "name": "userAppRole",
+                    "type": "int"
+                },
+                {
+                    "name": "userLongestCheckinStreakStart",
+                    "type": "int"
+                },
+                {
+                    "name": "userLongestCheckinStreakEnd",
+                    "type": "int"
+                },
+                {
+                    "name": "userCurrentCheckinStreakStart",
+                    "type": "int"
+                },
+                {
+                    "name": "userCurrentCheckinStreakEnd",
+                    "type": "int"
+                },
+                {
+                    "name": "userLongestCheckinStreak",
+                    "type": "int"
+                },
+                {
+                    "name": "userCurrentCheckinStreak",
+                    "type": "int"
+                },
+                {
+                    "name": "userSkin",
+                    "type": "String",
+                    "length": 32
+                },
+                {
+                    "name": "userCountry",
+                    "type": "String",
+                    "length": 32
+                },
+                {
+                    "name": "userProvince",
+                    "type": "String",
+                    "length": 32
+                },
+                {
+                    "name": "userCity",
+                    "type": "String",
+                    "length": 32
+                },
+                {
+                    "name": "userUpdateTime",
+                    "type": "long"
+                },
+                {
+                    "name": "userGeoStatus",
+                    "type": "int",
+                    "description": "0: public, 1: private"
+                },
+                {
+                    "name": "syncWithSymphonyClient",
+                    "type": "boolean"
+                }
+            ]
+        },
+        {
+            "name": "article",
+            "keys": [
+                {
+                    "name": "oId",
+                    "type": "String",
+                    "length": 19
+                },
+                {
+                    "name": "articleTitle",
+                    "type": "String",
+                    "length": 255
+                },
+                {
+                    "name": "articleTags",
+                    "type": "String",
+                    "length": 255
+                },
+                {
+                    "name": "articleAuthorEmail",
+                    "type": "String",
+                    "length": 255
+                },
+                {
+                    "name": "articleAuthorId",
+                    "type": "String",
+                    "length": 19
+                },
+                {
+                    "name": "articleCommentCount",
+                    "type": "int"
+                },
+                {
+                    "name": "articleViewCount",
+                    "type": "int"
+                },
+                {
+                    "name": "articleContent",
+                    "type": "String",
+                    "length": 1048576
+                },
+                {
+                    "name": "articleRewardContent",
+                    "type": "String",
+                    "length": 1048576
+                },
+                {
+                    "name": "articleRewardPoint",
+                    "type": "int"
+                },
+                {
+                    "name": "articlePermalink",
+                    "type": "String",
+                    "length": 255
+                },
+                {
+                    "name": "articleCreateTime",
+                    "type": "long"
+                },
+                {
+                    "name": "articleUpdateTime",
+                    "type": "long"
+                },
+                {
+                    "name": "articleLatestCmtTime",
+                    "type": "long"
+                },
+                {
+                    "name": "articleRandomDouble",
+                    "type": "double"
+                },
+                {
+                    "name": "articleCommentable",
+                    "type": "boolean"
+                },
+                {
+                    "name": "syncWithSymphonyClient",
+                    "type": "boolean"
+                },
+                {
+                    "name": "clientArticleId",
+                    "type": "String",
+                    "length": 32,
+                    "nullable": true
+                },
+                {
+                    "name": "articleEditorType",
+                    "type": "int",
+                    "description": "0: CodeMirror-Markdown"
+                },
+                {
+                    "name": "articleStatus",
+                    "type": "int",
+                    "description": "0: valid, 1: invalid"
+                },
+                {
+                    "name": "articleType",
+                    "type": "int",
+                    "description": "0: normal article, 1: discussion"
+                },
+                {
+                    "name": "articleGoodCnt",
+                    "description": "Favour count",
+                    "type": "int"
+                },
+                {
+                    "name": "articleBadCnt",
+                    "description": "Oppose count",
+                    "type": "int"
+                },
+                {
+                    "name": "articleCollectCnt",
+                    "type": "int"
+                },
+                {
+                    "name": "redditScore",
+                    "type": "double"
+                },
+                {
+                    "name": "articleCity",
+                    "type": "String",
+                    "length": 32
+                },
+                {
+                    "name": "articleIP",
+                    "type": "String",
+                    "length": 128
+                }
+            ]
+        },
+        {
+            "name": "client",
+            "keys": [
+                {
+                    "name": "oId",
+                    "type": "String",
+                    "length": 19
+                },
+                {
+                    "name": "clientName",
+                    "type": "String",
+                    "length": 10
+                },
+                {
+                    "name": "clientVersion",
+                    "type": "String",
+                    "length": 10
+                },
+                {
+                    "name": "clientHost",
+                    "type": "String",
+                    "length": 50
+                },
+                {
+                    "name": "clientRuntimeEnv",
+                    "type": "String",
+                    "length": 10
+                },
+                {
+                    "name": "clientLatestAddArticleTime",
+                    "type": "long"
+                },
+                {
+                    "name": "clientLatestAddCommentTime",
+                    "type": "long"
+                },
+                {
+                    "name": "clientAdminEmail",
+                    "type": "String",
+                    "length": 255
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /settings
+Disallow: /timeline
+Disallow: /admin/
+Disallow: /member/
+Disallow: /city

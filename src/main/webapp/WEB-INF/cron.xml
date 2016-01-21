@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2012-2016, b3log.org & hacpai.com
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<!--
+    Description: Cron job configurations. 
+    Version: 1.5.0.4, Jan 8, 2016
+    Author: Liang Ding
+-->
+<cronentries>
+    
+    <cron>
+        <url>/users/load-names?key=dev_key</url>
+        <description>Loads usernames</description>
+        <schedule>every 30 minutes</schedule>
+    </cron>
+    
+    <!-- Disabled on Dev environment -->
+    <!--
+    <cron>
+        <url>/status?key=dev_key</url>
+        <description>Checks running status</description>
+        <schedule>every 2 hours</schedule>
+    </cron>
+
+    <cron>
+        <url>/verifycode/email?key=dev_key</url>
+        <description>Sends email verifycodes</description>
+        <schedule>every 5 seconds</schedule>
+    </cron>
+    
+    <cron>
+        <url>/verifycode/remove-expired?key=dev_key</url>
+        <description>Removes expired verifycodes</description>
+        <schedule>every 1 hours</schedule>
+    </cron>
+    
+    <cron>
+        <url>/users/reset-unverified?key=dev_key</url>
+        <description>Resets unverified users</description>
+        <schedule>every 24 hours</schedule>
+    </cron>
+    -->
+</cronentries>
