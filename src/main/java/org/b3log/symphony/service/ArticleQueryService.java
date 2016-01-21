@@ -22,8 +22,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.time.DateFormatUtils;
@@ -139,6 +141,12 @@ public class ArticleQueryService {
      */
     @Inject
     private ShortLinkQueryService shortLinkQueryService;
+
+    /**
+     * Journal query service.
+     */
+    @Inject
+    private JournalQueryService journalQueryService;
 
     /**
      * Language service.
@@ -1067,6 +1075,67 @@ public class ArticleQueryService {
 
                 return;
             }
+        }
+
+        if (Article.ARTICLE_TYPE_C_JOURNAL_SECTION == article.optInt(Article.ARTICLE_TYPE)) {
+            // Append journal section content
+
+            final List<JSONObject> paragraphs = journalQueryService.getParagraphsToday();
+
+            // <team, List<paragraph>>
+            final Map<String, List<JSONObject>> logs = new TreeMap<String, List<JSONObject>>();
+
+            for (final JSONObject paragraph : paragraphs) {
+                final String pAuthorId = paragraph.optString(Article.ARTICLE_AUTHOR_ID);
+                final JSONObject pAuthor = userQueryService.getUser(pAuthorId);
+                final String team = pAuthor.optString(UserExt.USER_TEAM);
+
+                if (!logs.containsKey(team)) {
+                    logs.put(team, new ArrayList());
+                }
+
+                final List<JSONObject> teamParas = logs.get(team);
+
+                teamParas.add(paragraph);
+            }
+
+            final StringBuilder contentBuilder = new StringBuilder("\n\n");
+            for (final Map.Entry<String, List<JSONObject>> entry : logs.entrySet()) {
+                final String team = entry.getKey();
+                final List<JSONObject> teamParas = entry.getValue();
+
+                contentBuilder.append("####").append(team).append("\n\n");
+
+                for (final JSONObject paragraph : teamParas) {
+                    final String pAuthorId = paragraph.optString(Article.ARTICLE_AUTHOR_ID);
+                    final JSONObject pAuthor = userQueryService.getUser(pAuthorId);
+                    final String pAuthorName = pAuthor.optString(User.USER_NAME);
+
+                    contentBuilder.append("#####").append(pAuthorName).append("\n\n").append(paragraph.optString(Article.ARTICLE_CONTENT))
+                            .append("\n\n");
+                }
+            }
+
+            articleContent += contentBuilder.toString();
+        } else if (Article.ARTICLE_TYPE_C_JOURNAL_CHAPTER == article.optInt(Article.ARTICLE_TYPE)) {
+            // Append journal chapter content
+
+            final List<JSONObject> sections = journalQueryService.getSectionsWeek();
+
+            // <team, List<paragraph>>
+            final Map<String, List<JSONObject>> logs = new TreeMap<String, List<JSONObject>>();
+
+            final StringBuilder contentBuilder = new StringBuilder("\n\n###详细日志\n\n");
+            for (final JSONObject section : sections) {
+                final String date = DateFormatUtils.format(section.optLong(Keys.OBJECT_ID), "yyyyMMdd");
+                final String dayWeek = DateFormatUtils.format(section.optLong(Keys.OBJECT_ID), "E", Locale.US);
+
+                contentBuilder.append(" * [").append(section.optString(Article.ARTICLE_TITLE)).append("]").append("(").
+                        append(Latkes.getServePath()).append(section.optString(Article.ARTICLE_PERMALINK)).
+                        append(" \"").append(date).append(" ").append(dayWeek).append("\")\n");
+            }
+
+            articleContent += contentBuilder.toString();
         }
 
         for (final String userName : userNames) {

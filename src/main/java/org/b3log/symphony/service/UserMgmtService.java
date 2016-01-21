@@ -370,7 +370,8 @@ public class UserMgmtService {
      *     "userEmail": "",
      *     "userAppRole": int,
      *     "userPassword": "", // Hashed
-     *     "userRole": "", // optional, uses {@value Role#DEFAULT_ROLE} instead if not speciffied
+     *     "userTeam": "", // optional, uses "" if not specified
+     *     "userRole": "", // optional, uses {@value Role#DEFAULT_ROLE} instead if not specified
      *     "userStatus": int // optional, uses {@value UserExt#USER_STATUS_C_NOT_VERIFIED} instead if not specified
      * }
      * </pre>,see {@link User} for more details
@@ -442,7 +443,7 @@ public class UserMgmtService {
             user.put(UserExt.USER_COUNTRY, "");
             user.put(UserExt.USER_PROVINCE, "");
             user.put(UserExt.USER_CITY, "");
-            user.put(UserExt.USER_TEAM, "");
+            user.put(UserExt.USER_TEAM, requestJSONObject.optString(UserExt.USER_TEAM));
             user.put(UserExt.USER_UPDATE_TIME, 0L);
             user.put(UserExt.USER_GEO_STATUS, UserExt.USER_GEO_STATUS_C_PUBLIC);
             final int status = requestJSONObject.optInt(UserExt.USER_STATUS, UserExt.USER_STATUS_C_NOT_VERIFIED);

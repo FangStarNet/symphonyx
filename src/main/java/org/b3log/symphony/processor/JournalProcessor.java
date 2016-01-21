@@ -118,7 +118,7 @@ public class JournalProcessor {
             final String title = DateFormatUtils.format(new Date(), "yyyyMMdd E", Locale.US);
             section.put(Article.ARTICLE_TITLE, title);
             section.put(Article.ARTICLE_TAGS, "航海日记,节");
-            section.put(Article.ARTICLE_CONTENT, "");
+            section.put(Article.ARTICLE_CONTENT, "###大事记\n\n\n----");
             section.put(Article.ARTICLE_EDITOR_TYPE, 0);
             section.put(Article.ARTICLE_AUTHOR_EMAIL, admin.optString(User.USER_EMAIL));
             section.put(Article.ARTICLE_AUTHOR_ID, admin.optString(Keys.OBJECT_ID));
@@ -177,7 +177,7 @@ public class JournalProcessor {
             final String title = from + " - " + df.format(cal.getTime());
             chapter.put(Article.ARTICLE_TITLE, title);
             chapter.put(Article.ARTICLE_TAGS, "航海日记,章");
-            chapter.put(Article.ARTICLE_CONTENT, "");
+            chapter.put(Article.ARTICLE_CONTENT, "###大事记\n\n\n----");
             chapter.put(Article.ARTICLE_EDITOR_TYPE, 0);
             chapter.put(Article.ARTICLE_AUTHOR_EMAIL, admin.optString(User.USER_EMAIL));
             chapter.put(Article.ARTICLE_AUTHOR_ID, admin.optString(Keys.OBJECT_ID));

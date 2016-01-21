@@ -15,7 +15,9 @@
  */
 package org.b3log.symphony.service;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import javax.inject.Inject;
@@ -23,6 +25,9 @@ import org.apache.commons.lang.time.DateUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
+import org.b3log.latke.repository.CompositeFilter;
+import org.b3log.latke.repository.CompositeFilterOperator;
+import org.b3log.latke.repository.Filter;
 import org.b3log.latke.repository.FilterOperator;
 import org.b3log.latke.repository.PropertyFilter;
 import org.b3log.latke.repository.Query;
@@ -54,6 +59,87 @@ public class JournalQueryService {
      */
     @Inject
     private ArticleRepository articleRepository;
+
+    /**
+     * Gets today's paragraphs.
+     *
+     * @return paragraphs
+     */
+    public List<JSONObject> getParagraphsToday() {
+        try {
+            final Query query = new Query().addSort(Keys.OBJECT_ID, SortDirection.DESCENDING).
+                    setCurrentPageNum(1);
+
+            final List<Filter> filters = new ArrayList<Filter>();
+            filters.add(new PropertyFilter(Article.ARTICLE_TYPE, FilterOperator.EQUAL, Article.ARTICLE_TYPE_C_JOURNAL_PARAGRAPH));
+
+            filters.add(new PropertyFilter(Article.ARTICLE_CREATE_TIME, FilterOperator.GREATER_THAN_OR_EQUAL, getTodayStartTime()));
+            filters.add(new PropertyFilter(Article.ARTICLE_CREATE_TIME, FilterOperator.LESS_THAN_OR_EQUAL, getTodayEndTime()));
+
+            query.setFilter(new CompositeFilter(CompositeFilterOperator.AND, filters));
+
+            final JSONObject result = articleRepository.get(query);
+            return CollectionUtils.<JSONObject>jsonArrayToList(result.optJSONArray(Keys.RESULTS));
+        } catch (final RepositoryException e) {
+            LOGGER.log(Level.ERROR, "Gets today's paragraphs failed", e);
+
+            return Collections.emptyList();
+        }
+    }
+
+    /**
+     * Gets sections this week.
+     *
+     * @return paragraphs
+     */
+    public List<JSONObject> getSectionsWeek() {
+        try {
+            final Query query = new Query().addSort(Keys.OBJECT_ID, SortDirection.DESCENDING).
+                    setCurrentPageNum(1);
+
+            final List<Filter> filters = new ArrayList<Filter>();
+            filters.add(new PropertyFilter(Article.ARTICLE_TYPE, FilterOperator.EQUAL, Article.ARTICLE_TYPE_C_JOURNAL_SECTION));
+
+            filters.add(new PropertyFilter(Article.ARTICLE_CREATE_TIME, FilterOperator.GREATER_THAN_OR_EQUAL, getWeekStartTime()));
+            filters.add(new PropertyFilter(Article.ARTICLE_CREATE_TIME, FilterOperator.LESS_THAN_OR_EQUAL, getWeekEndTime()));
+
+            query.setFilter(new CompositeFilter(CompositeFilterOperator.AND, filters));
+
+            final JSONObject result = articleRepository.get(query);
+            return CollectionUtils.<JSONObject>jsonArrayToList(result.optJSONArray(Keys.RESULTS));
+        } catch (final RepositoryException e) {
+            LOGGER.log(Level.ERROR, "Gets week's sections failed", e);
+
+            return Collections.emptyList();
+        }
+    }
+
+    /**
+     * Gets paragraphs this week.
+     *
+     * @return paragraphs
+     */
+    public List<JSONObject> getParagraphsWeek() {
+        try {
+            final Query query = new Query().addSort(Keys.OBJECT_ID, SortDirection.DESCENDING).
+                    setCurrentPageNum(1);
+
+            final List<Filter> filters = new ArrayList<Filter>();
+            filters.add(new PropertyFilter(Article.ARTICLE_TYPE, FilterOperator.EQUAL, Article.ARTICLE_TYPE_C_JOURNAL_PARAGRAPH));
+
+            filters.add(new PropertyFilter(Article.ARTICLE_CREATE_TIME, FilterOperator.GREATER_THAN_OR_EQUAL, getWeekStartTime()));
+            filters.add(new PropertyFilter(Article.ARTICLE_CREATE_TIME, FilterOperator.LESS_THAN_OR_EQUAL, getWeekEndTime()));
+
+            query.setFilter(new CompositeFilter(CompositeFilterOperator.AND, filters));
+
+            final JSONObject result = articleRepository.get(query);
+            return CollectionUtils.<JSONObject>jsonArrayToList(result.optJSONArray(Keys.RESULTS));
+        } catch (final RepositoryException e) {
+            LOGGER.log(Level.ERROR, "Gets week's paragraphs failed", e);
+
+            return Collections.emptyList();
+        }
+    }
 
     /**
      * Section generated today?
@@ -130,5 +216,48 @@ public class JournalQueryService {
         return cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA)
                 && cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
                 && cal1.get(Calendar.WEEK_OF_YEAR) == cal2.get(Calendar.WEEK_OF_YEAR);
+    }
+
+    private Long getTodayStartTime() {
+        final Calendar todayStart = Calendar.getInstance();
+        todayStart.set(Calendar.HOUR, 0);
+        todayStart.set(Calendar.MINUTE, 0);
+        todayStart.set(Calendar.SECOND, 0);
+        todayStart.set(Calendar.MILLISECOND, 0);
+
+        return todayStart.getTime().getTime();
+    }
+
+    private Long getTodayEndTime() {
+        final Calendar todayEnd = Calendar.getInstance();
+        todayEnd.set(Calendar.HOUR, 23);
+        todayEnd.set(Calendar.MINUTE, 59);
+        todayEnd.set(Calendar.SECOND, 59);
+        todayEnd.set(Calendar.MILLISECOND, 999);
+
+        return todayEnd.getTime().getTime();
+    }
+
+    private Long getWeekStartTime() {
+        final Calendar start = Calendar.getInstance();
+        start.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        start.set(Calendar.HOUR, 0);
+        start.set(Calendar.MINUTE, 0);
+        start.set(Calendar.SECOND, 0);
+        start.set(Calendar.MILLISECOND, 0);
+
+        return start.getTime().getTime();
+    }
+
+    private Long getWeekEndTime() {
+        final Calendar end = Calendar.getInstance();
+        end.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+        end.add(Calendar.WEEK_OF_YEAR, 1);
+        end.set(Calendar.HOUR, 23);
+        end.set(Calendar.MINUTE, 59);
+        end.set(Calendar.SECOND, 59);
+        end.set(Calendar.MILLISECOND, 999);
+
+        return end.getTime().getTime();
     }
 }
