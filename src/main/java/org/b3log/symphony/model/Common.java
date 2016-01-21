@@ -23,6 +23,11 @@ package org.b3log.symphony.model;
  * @since 0.2.0
  */
 public final class Common {
+    
+    /**
+     * Key of teams.
+     */
+    public static String TEAMS = "teams";
 
     /**
      * Key of broadcast point.

@@ -11,6 +11,13 @@
         <label>${selfTagLabel}</label><br/>
         <input id="userTags" type="text" value="${currentUser.userTags}" placeholder="${selfDescriptionLabel}"/>
 
+        <label>${teamLabel}</label><br/><br/>
+        <select id="userTeam">
+            <#list teams as team>
+            <option value="${team}"<#if team == currentUser.userTeam>selected</#if>>${team}</option>
+            </#list>
+        </select><br/><br/>
+
         <label>URL</label><br/>
         <input id="userURL" type="text" value="${currentUser.userURL}"/>
 
@@ -52,17 +59,6 @@
 
 <div class="module">
     <div class="module-header">
-        <h2>${inviteLabel}</h2>
-    </div>
-
-    <div class="module-panel form fn-clear">
-        ${inviteTipLabel}<br><br>
-        <input type="text" value="${serverScheme}://${serverHost}/register?r=${currentUser.userName}" onclick="this.select()"/>
-    </div>
-</div>
-
-<div class="module">
-    <div class="module-header">
         <h2>${pointTransferLabel}</h2>
     </div>
 
@@ -76,6 +72,7 @@
     </div>
 </div>
 
+<!--
 <div class="module">
     <div class="module-header">
         <h2>${geoLable}</h2>
@@ -84,16 +81,10 @@
     <div class="module-panel form fn-clear">
         ${geoInfoTipLabel}<br><br>
         <input id="cityName" type="text" placeholder="${geoInfoPlaceholderLabel}" value="${user.userCity}" 
-               readonly="readonly"/><!--<br/><br/>
-
-        <select id="geoStatus" onchange="Settings.changeGeoStatus('${csrfToken}')">
-            <option name="public" value="0" <#if 0 == user.userGeoStatus>selected</#if>>${publicLabel}</option>
-            <option name="private" value="1" <#if 1 == user.userGeoStatus>selected</#if>>${privateLabel}</option>
-        </select>
-        ${geoInfoLabel}
-        -->
+               readonly="readonly"/>
     </div>
 </div>
+-->
 
 <div class="module">
     <div class="module-header">

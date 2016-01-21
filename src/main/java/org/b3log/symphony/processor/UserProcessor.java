@@ -725,6 +725,9 @@ public class UserProcessor {
         String pointTransferTipLabel = (String) dataModel.get("pointTransferTipLabel");
         pointTransferTipLabel = pointTransferTipLabel.replace("{point}", Symphonys.get("pointTransferMin"));
         dataModel.put("pointTransferTipLabel", pointTransferTipLabel);
+
+        final String teamsStr = Symphonys.get("teams");
+        dataModel.put(Common.TEAMS, teamsStr.split(","));
     }
 
     /**
@@ -790,6 +793,7 @@ public class UserProcessor {
         final String userQQ = requestJSONObject.optString(UserExt.USER_QQ);
         final String userIntro = requestJSONObject.optString(UserExt.USER_INTRO);
         final String userAvatarURL = requestJSONObject.optString(UserExt.USER_AVATAR_URL);
+        final String userTeam = requestJSONObject.optString(UserExt.USER_TEAM);
 
         final JSONObject user = userQueryService.getCurrentUser(request);
 
@@ -798,6 +802,7 @@ public class UserProcessor {
         user.put(UserExt.USER_QQ, userQQ);
         user.put(UserExt.USER_INTRO, userIntro.replace("<", "&lt;").replace(">", "&gt"));
         user.put(UserExt.USER_AVATAR_TYPE, UserExt.USER_AVATAR_TYPE_C_UPLOAD);
+        user.put(UserExt.USER_TEAM, userTeam);
 
         if (Symphonys.getBoolean("qiniu.enabled")) {
             if (!StringUtils.startsWith(userAvatarURL, Symphonys.get("qiniu.domain"))) {

@@ -30,15 +30,6 @@
             <label>${pointLabel}</label>
             <input type="text" value="${user.userPoint?c}" readonly="readonly" />
 
-            <label>${countryLabel}</label>
-            <input type="text" value="${user.userCountry}" readonly="readonly" />
-
-            <label>${provinceLabel}</label>
-            <input type="text" value="${user.userProvince}" readonly="readonly" />
-
-            <label>${cityLabel}</label>
-            <input type="text" value="${user.userCity}" readonly="readonly" />
-
             <label>IP</label>
             <input type="text" value="${user.userLatestLoginIP}" readonly="readonly" />
 
@@ -93,6 +84,9 @@
 
                 <label for="userStatus">${userStatusLabel}</label>
                 <input type="text" id="userStatus" name="userStatus" value="${user.userStatus}" />
+
+                <label for="userTeam">${teamLabel}</label>
+                <input type="text" id="userTeam" name="userTeam" value="${user.userTeam}" />
 
                 <br/><br/>
                 <button type="submit" class="green fn-right">${submitLabel}</button>

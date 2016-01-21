@@ -105,9 +105,6 @@ var Settings = {
             case "profiles":
                 requestJSONObject = this._validateProfiles();
                 break;
-            case "sync/b3":
-                requestJSONObject = this._validateSyncB3();
-                break;
             case "password":
                 requestJSONObject = this._validatePassword();
                 break;
@@ -176,6 +173,7 @@ var Settings = {
                 userTags: $("#userTags").val().replace(/(^\s*)|(\s*$)/g, ""),
                 userURL: $("#userURL").val().replace(/(^\s*)|(\s*$)/g, ""),
                 userIntro: $("#userIntro").val().replace(/(^\s*)|(\s*$)/g, ""),
+                userTeam: $("#userTeam").val(),
                 userAvatarURL: $("#avatarURL").attr("src")
             };
         } else {

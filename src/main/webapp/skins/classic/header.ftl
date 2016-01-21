@@ -15,9 +15,6 @@
             </form>
             <div class="fn-right">
                 <a href="/timeline" class="icon-clock last" title="${timelineLabel}"></a>
-                <#if isLoggedIn>
-                <a href="/city/my" class="icon-compass" title="${sameCityLabel}"></a>
-                </#if>
                 <a href="/recent" class="icon-refresh" title="${recentArticleLabel}"></a>
             </div>
         </div>

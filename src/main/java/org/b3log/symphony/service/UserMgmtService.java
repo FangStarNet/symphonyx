@@ -276,7 +276,8 @@ public class UserMgmtService {
      *     "userQQ": "",
      *     "userIntro": "",
      *     "userAvatarType": int,
-     *     "userAvatarURL": ""
+     *     "userAvatarURL": "",
+     *     "userTeam": ""
      * }
      * </pre>
      *
@@ -305,6 +306,7 @@ public class UserMgmtService {
             oldUser.put(UserExt.USER_INTRO, requestJSONObject.optString(UserExt.USER_INTRO));
             oldUser.put(UserExt.USER_AVATAR_TYPE, requestJSONObject.optString(UserExt.USER_AVATAR_TYPE));
             oldUser.put(UserExt.USER_AVATAR_URL, requestJSONObject.optString(UserExt.USER_AVATAR_URL));
+            oldUser.put(UserExt.USER_TEAM, requestJSONObject.optString(UserExt.USER_TEAM));
 
             oldUser.put(UserExt.USER_UPDATE_TIME, System.currentTimeMillis());
 

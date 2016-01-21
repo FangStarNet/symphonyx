@@ -124,14 +124,7 @@ public class ArticleAddValidation extends BeforeRequestProcessAdvice {
         final LatkeBeanManager beanManager = Lifecycle.getBeanManager();
         final ArticleMgmtService articleMgmtService = beanManager.getReference(ArticleMgmtService.class);
 
-        articleTags = articleTags.replaceAll("B3log Announcement", "B3logAnnouncement").
-                replaceAll("B3log Broadcast", "B3logBroadcast"); // compatible with legacy systems
-
         articleTags = articleTags.replaceAll("\\s+", ",");
-
-        articleTags = articleTags.replaceAll("B3logAnnouncement", "B3log Announcement").
-                replaceAll("B3logBroadcast", "B3log Broadcast");
-
         articleTags = articleMgmtService.formatArticleTags(articleTags);
 
         String[] tagTitles = articleTags.split(",");
