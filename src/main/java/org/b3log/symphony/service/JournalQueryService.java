@@ -15,6 +15,7 @@
  */
 package org.b3log.symphony.service;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.inject.Inject;
@@ -83,5 +84,51 @@ public class JournalQueryService {
 
             return false;
         }
+    }
+
+    /**
+     * Chapter generated this week?
+     *
+     * @return {@code true} if chapter generated, returns {@code false} otherwise
+     */
+    public synchronized boolean hasChapterWeek() {
+        try {
+            final Query query = new Query().addSort(Keys.OBJECT_ID, SortDirection.DESCENDING).
+                    setCurrentPageNum(1).setPageSize(1);
+
+            query.setFilter(new PropertyFilter(Article.ARTICLE_TYPE, FilterOperator.EQUAL,
+                    Article.ARTICLE_TYPE_C_JOURNAL_CHAPTER));
+
+            final JSONObject result = articleRepository.get(query);
+            final List<JSONObject> journals = CollectionUtils.<JSONObject>jsonArrayToList(result.optJSONArray(Keys.RESULTS));
+
+            if (journals.isEmpty()) {
+                return false;
+            }
+
+            final JSONObject maybeToday = journals.get(0);
+            final long created = maybeToday.optLong(Article.ARTICLE_CREATE_TIME);
+
+            return isSameWeek(new Date(created), new Date());
+        } catch (final RepositoryException e) {
+            LOGGER.log(Level.ERROR, "Check chapter generated failed", e);
+
+            return false;
+        }
+    }
+
+    private static boolean isSameWeek(final Date date1, final Date date2) {
+        if (date1 == null || date2 == null) {
+            throw new IllegalArgumentException("The date must not be null");
+        }
+
+        final Calendar cal1 = Calendar.getInstance();
+        cal1.setTime(date1);
+        final Calendar cal2 = Calendar.getInstance();
+        cal2.setTime(date2);
+
+        return cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA)
+                && cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
+                && cal1.get(Calendar.WEEK_OF_YEAR) == cal2.get(Calendar.WEEK_OF_YEAR);
     }
 }

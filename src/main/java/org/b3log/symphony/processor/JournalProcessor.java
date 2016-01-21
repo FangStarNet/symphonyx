@@ -16,10 +16,15 @@
 package org.b3log.symphony.processor;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
@@ -37,6 +42,7 @@ import org.b3log.symphony.processor.advice.stopwatch.StopwatchStartAdvice;
 import org.b3log.symphony.service.ArticleMgmtService;
 import org.b3log.symphony.service.JournalQueryService;
 import org.b3log.symphony.service.UserQueryService;
+import org.b3log.symphony.util.Symphonys;
 import org.json.JSONObject;
 
 /**
@@ -91,6 +97,13 @@ public class JournalProcessor {
     @After(adviceClass = StopwatchEndAdvice.class)
     public void genSection(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response)
             throws IOException, ServletException {
+        final String key = Symphonys.get("keyOfSymphony");
+        if (!key.equals(request.getParameter("key"))) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+
+            return;
+        }
+
         context.renderJSON();
 
         if (journalQueryService.hasSectionToday()) {
@@ -98,11 +111,13 @@ public class JournalProcessor {
         }
 
         try {
+
             final JSONObject admin = userQueryService.getSA();
 
             final JSONObject section = new JSONObject();
-            section.put(Article.ARTICLE_TITLE, "1");
-            section.put(Article.ARTICLE_TAGS, "航海日记");
+            final String title = DateFormatUtils.format(new Date(), "yyyyMMdd E", Locale.US);
+            section.put(Article.ARTICLE_TITLE, title);
+            section.put(Article.ARTICLE_TAGS, "航海日记,节");
             section.put(Article.ARTICLE_CONTENT, "");
             section.put(Article.ARTICLE_EDITOR_TYPE, 0);
             section.put(Article.ARTICLE_AUTHOR_EMAIL, admin.optString(User.USER_EMAIL));
@@ -113,7 +128,65 @@ public class JournalProcessor {
 
             context.renderTrueResult();
         } catch (final ServiceException e) {
-            final String msg = e.getMessage();
+            LOGGER.log(Level.ERROR, "Generates section failed", e);
+        }
+    }
+
+    /**
+     * Generates journal chapter this week.
+     *
+     * @param context the specified context
+     * @param request the specified request
+     * @param response the specified response
+     * @throws IOException io exception
+     * @throws ServletException servlet exception
+     */
+    @RequestProcessing(value = "/journal/gen/chapter", method = HTTPRequestMethod.GET)
+    @Before(adviceClass = StopwatchStartAdvice.class)
+    @After(adviceClass = StopwatchEndAdvice.class)
+    public void genChapter(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response)
+            throws IOException, ServletException {
+        final String key = Symphonys.get("keyOfSymphony");
+        if (!key.equals(request.getParameter("key"))) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+
+            return;
+        }
+
+        context.renderJSON();
+
+        if (journalQueryService.hasChapterWeek()) {
+            return;
+        }
+
+        try {
+
+            final JSONObject admin = userQueryService.getSA();
+
+            final JSONObject chapter = new JSONObject();
+
+            final Calendar cal = Calendar.getInstance();
+            final SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
+            cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+
+            final String from = df.format(cal.getTime());
+
+            cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+            cal.add(Calendar.WEEK_OF_YEAR, 1);
+
+            final String title = from + " - " + df.format(cal.getTime());
+            chapter.put(Article.ARTICLE_TITLE, title);
+            chapter.put(Article.ARTICLE_TAGS, "航海日记,章");
+            chapter.put(Article.ARTICLE_CONTENT, "");
+            chapter.put(Article.ARTICLE_EDITOR_TYPE, 0);
+            chapter.put(Article.ARTICLE_AUTHOR_EMAIL, admin.optString(User.USER_EMAIL));
+            chapter.put(Article.ARTICLE_AUTHOR_ID, admin.optString(Keys.OBJECT_ID));
+            chapter.put(Article.ARTICLE_TYPE, Article.ARTICLE_TYPE_C_JOURNAL_CHAPTER);
+
+            articleMgmtService.addArticle(chapter);
+
+            context.renderTrueResult();
+        } catch (final ServiceException e) {
             LOGGER.log(Level.ERROR, "Generates section failed", e);
         }
     }
