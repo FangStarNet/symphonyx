@@ -36,11 +36,11 @@
                     <div class="ft-fade">@好友并在私密空间中进行交流</div>
                 </div>
                 <div>
-                    <a href="/post?type=2">
+                    <a href="/post?type=4">
                         <div class="icon-feed"></div>
-                        ${cityBroadcastLabel}
+                        ${journalLabel}
                     </a>
-                    <div class="ft-fade">发起你所在城市的招聘、Meetup 等，仅需<i>${broadcastPoint}</i> 积分</div>
+                    <div class="ft-fade">记录下今天的航海冒险经历</div>
                 </div>
             </div>
         </div>

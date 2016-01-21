@@ -60,20 +60,20 @@
                     <div class="fn-clear">
                         <#if !article??>
                         <label> &nbsp;
-                            <input tabindex="6" type="radio" name="articleType" <#if 0 == articleType>checked="checked"</#if> value="0"/> 
+                            <input type="radio" name="articleType" <#if 0 == articleType>checked="checked"</#if> value="0"/> 
                                    ${articleLabel}
                         </label>
                         <label> &nbsp;
-                            <input tabindex="9" type="radio" name="articleType" <#if 3 == articleType>checked="checked"</#if> value="3"/> 
+                            <input type="radio" name="articleType" <#if 3 == articleType>checked="checked"</#if> value="3"/> 
                                    ${thoughtLabel}
                         </label>
                         <label> &nbsp;
-                            <input tabindex="7" type="radio" name="articleType" <#if 1 == articleType>checked="checked"</#if> value="1"/> 
+                            <input type="radio" name="articleType" <#if 1 == articleType>checked="checked"</#if> value="1"/> 
                                    ${discussionLabel}
                         </label>
                         <label> &nbsp;
-                            <input tabindex="8" type="radio" name="articleType" <#if 2 == articleType>checked="checked"</#if> value="2"/> 
-                                   ${cityBroadcastLabel}
+                            <input type="radio" name="articleType" <#if 4 == articleType>checked="checked"</#if> value="4"/> 
+                                   ${journalLabel}
                         </label>
                         <#else>
                         <input class="fn-none" type="radio" name="articleType" value="${article.articleType}" checked="checked"/> 
@@ -104,32 +104,32 @@
         <script type="text/javascript" src="${staticServePath}/js/audio${miniPostfix}.js?${staticResourceVersion}"></script>
 
         <script>
-                                            Label.articleTitleErrorLabel = "${articleTitleErrorLabel}";
-                                            Label.articleContentErrorLabel = "${articleContentErrorLabel}";
-                                            Label.tagsErrorLabel = "${tagsErrorLabel}";
-                                            Label.userName = "${userName}";
-                                            Label.recordDeniedLabel = "${recordDeniedLabel}";
-                                            Label.recordDeviceNotFoundLabel = "${recordDeviceNotFoundLabel}";
-                                            Util.uploadFile({
-                                            "id": "fileUpload",
-                                                    "pasteZone": $("#articleContent").next(),
-                                                    "qiniuUploadToken": "${qiniuUploadToken}",
-                                                    "editor": AddArticle.editor,
-                                                    "uploadingLabel": "${uploadingLabel}",
-                                                    "qiniuDomain": "${qiniuDomain}"
-                                            });
-                                            Util.uploadFile({
-                                            "id": "rewardFileUpload",
-                                                    "pasteZone": $("#articleRewardContent").next(),
-                                                    "qiniuUploadToken": "${qiniuUploadToken}",
-                                                    "editor": AddArticle.rewardEditor,
-                                                    "uploadingLabel": "${uploadingLabel}",
-                                                    "qiniuDomain": "${qiniuDomain}"
-                                            });
-                                            var qiniuToken = '${qiniuUploadToken}';
-                                            var qiniuDomain = '${qiniuDomain}';
-                                            var audioRecordingLabel = '${audioRecordingLabel}';
-                                            var uploadingLabel = '${uploadingLabel}';
+                            Label.articleTitleErrorLabel = "${articleTitleErrorLabel}";
+                            Label.articleContentErrorLabel = "${articleContentErrorLabel}";
+                            Label.tagsErrorLabel = "${tagsErrorLabel}";
+                            Label.userName = "${userName}";
+                            Label.recordDeniedLabel = "${recordDeniedLabel}";
+                            Label.recordDeviceNotFoundLabel = "${recordDeviceNotFoundLabel}";
+                            Util.uploadFile({
+                            "id": "fileUpload",
+                                    "pasteZone": $("#articleContent").next(),
+                                    "qiniuUploadToken": "${qiniuUploadToken}",
+                                    "editor": AddArticle.editor,
+                                    "uploadingLabel": "${uploadingLabel}",
+                                    "qiniuDomain": "${qiniuDomain}"
+                            });
+                            Util.uploadFile({
+                            "id": "rewardFileUpload",
+                                    "pasteZone": $("#articleRewardContent").next(),
+                                    "qiniuUploadToken": "${qiniuUploadToken}",
+                                    "editor": AddArticle.rewardEditor,
+                                    "uploadingLabel": "${uploadingLabel}",
+                                    "qiniuDomain": "${qiniuDomain}"
+                            });
+                            var qiniuToken = '${qiniuUploadToken}';
+                            var qiniuDomain = '${qiniuDomain}';
+                            var audioRecordingLabel = '${audioRecordingLabel}';
+                            var uploadingLabel = '${uploadingLabel}';
         </script>
     </body>
 </html>

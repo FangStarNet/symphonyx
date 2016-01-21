@@ -19,7 +19,7 @@
  *
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.10.6.6, Dec 29, 2015
+ * @version 2.10.6.6, Jan 21, 2016
  */
 
 /**
@@ -63,7 +63,7 @@ var AddArticle = {
             },
             url = "/article", type = "POST";
 
-            if (3 === parseInt(requestJSONObject.articleType)) { // 如果文章是“思绪”
+            if (3 === parseInt(requestJSONObject.articleType)) { // 如果是“思绪”
                 requestJSONObject.articleContent = window.localStorage.thoughtContent;
             }
 

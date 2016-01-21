@@ -268,13 +268,28 @@ public final class Article {
     public static final int ARTICLE_TYPE_C_THOUGHT = 3;
 
     /**
+     * Article type - journal paragraph.
+     */
+    public static final int ARTICLE_TYPE_C_JOURNAL_PARAGRAPH = 4;
+
+    /**
+     * Article type - journal section.
+     */
+    public static final int ARTICLE_TYPE_C_JOURNAL_SECTION = 5;
+
+    /**
+     * Article type - journal chapter.
+     */
+    public static final int ARTICLE_TYPE_C_JOURNAL_CHAPTER = 6;
+
+    /**
      * Checks the specified article type is whether invalid.
      *
      * @param articleType the specified article type
      * @return {@code true} if it is invalid, otherwise returns {@code false}
      */
     public static boolean isInvalidArticleType(final int articleType) {
-        return articleType < 0 || articleType > Article.ARTICLE_TYPE_C_THOUGHT;
+        return articleType < 0 || articleType > Article.ARTICLE_TYPE_C_JOURNAL_CHAPTER;
     }
 
     /**
