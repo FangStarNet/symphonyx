@@ -211,22 +211,6 @@ public final class UserExt {
      */
     public static final String USER_T_POINT_CC = "userPointCC";
 
-    //// Default Commenter constants
-    /**
-     * Default commenter name.
-     */
-    public static final String DEFAULT_CMTER_NAME = "Default Commenter";
-
-    /**
-     * Default commenter email.
-     */
-    public static final String DEFAULT_CMTER_EMAIL = "default_commenter@b3log.org";
-
-    /**
-     * Default commenter role.
-     */
-    public static final String DEFAULT_CMTER_ROLE = "defaultCommenterRole";
-
     //// Null user
     /**
      * Null user name.

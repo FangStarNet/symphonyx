@@ -47,7 +47,6 @@ import org.b3log.symphony.repository.CommentRepository;
 import org.b3log.symphony.repository.UserRepository;
 import org.b3log.symphony.util.Emotions;
 import org.b3log.symphony.util.Markdowns;
-import org.b3log.symphony.util.Symphonys;
 import org.b3log.symphony.util.Times;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -205,10 +204,7 @@ public class CommentQueryService {
                 }
 
                 final String commenterEmail = comment.optString(Comment.COMMENT_AUTHOR_EMAIL);
-                String avatarURL = Symphonys.get("defaultThumbnailURL");
-                if (!UserExt.DEFAULT_CMTER_EMAIL.equals(commenterEmail)) {
-                    avatarURL = avatarQueryService.getAvatarURL(commenterEmail);
-                }
+                final String avatarURL = avatarQueryService.getAvatarURL(commenterEmail);
                 commenter.put(UserExt.USER_AVATAR_URL, avatarURL);
 
                 comment.put(Comment.COMMENT_T_COMMENTER, commenter);
@@ -248,8 +244,8 @@ public class CommentQueryService {
 
                 comment.put(Comment.COMMENT_T_ARTICLE_TITLE,
                         Article.ARTICLE_STATUS_C_INVALID == article.optInt(Article.ARTICLE_STATUS)
-                                ? langPropsService.get("articleTitleBlockLabel")
-                                : Emotions.convert(article.optString(Article.ARTICLE_TITLE)));
+                        ? langPropsService.get("articleTitleBlockLabel")
+                        : Emotions.convert(article.optString(Article.ARTICLE_TITLE)));
                 comment.put(Comment.COMMENT_T_ARTICLE_TYPE, article.optInt(Article.ARTICLE_TYPE));
                 comment.put(Comment.COMMENT_T_ARTICLE_PERMALINK, article.optString(Article.ARTICLE_PERMALINK));
 
@@ -409,8 +405,8 @@ public class CommentQueryService {
 
                 comment.put(Comment.COMMENT_T_ARTICLE_TITLE,
                         Article.ARTICLE_STATUS_C_INVALID == article.optInt(Article.ARTICLE_STATUS)
-                                ? langPropsService.get("articleTitleBlockLabel")
-                                : Emotions.convert(article.optString(Article.ARTICLE_TITLE)));
+                        ? langPropsService.get("articleTitleBlockLabel")
+                        : Emotions.convert(article.optString(Article.ARTICLE_TITLE)));
                 comment.put(Comment.COMMENT_T_ARTICLE_PERMALINK, article.optString(Article.ARTICLE_PERMALINK));
             }
         } catch (final RepositoryException e) {

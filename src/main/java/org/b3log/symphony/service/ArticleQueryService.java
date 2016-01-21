@@ -1041,10 +1041,7 @@ public class ArticleQueryService {
                 final String email = comment.optString(Comment.COMMENT_AUTHOR_EMAIL);
                 final JSONObject commenter = userRepository.getByEmail(email);
 
-                String thumbnailURL = Symphonys.get("defaultThumbnailURL");
-                if (!UserExt.DEFAULT_CMTER_EMAIL.equals(email)) {
-                    thumbnailURL = avatarQueryService.getAvatarURL(email);
-                }
+                final String thumbnailURL = avatarQueryService.getAvatarURL(email);
 
                 final JSONObject participant = new JSONObject();
                 participant.put(Article.ARTICLE_T_PARTICIPANT_NAME, commenter.optString(User.USER_NAME));

@@ -215,20 +215,6 @@ public class UserQueryService {
     }
 
     /**
-     * Gets the default commenter.
-     *
-     * @return default commenter
-     * @throws ServiceException service exception
-     */
-    public JSONObject getDefaultCommenter() throws ServiceException {
-        final JSONObject ret = getUserByName(UserExt.DEFAULT_CMTER_NAME);
-        ret.remove(UserExt.USER_T_POINT_HEX);
-        ret.remove(UserExt.USER_T_POINT_CC);
-
-        return ret;
-    }
-
-    /**
      * Gets a user by the specified email.
      *
      * @param email the specified email

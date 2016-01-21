@@ -43,12 +43,8 @@ import org.b3log.latke.util.Requests;
 import org.b3log.latke.util.StaticResources;
 import org.b3log.latke.util.Stopwatchs;
 import org.b3log.latke.util.Strings;
-import org.b3log.symphony.event.ArticleBaiduSender;
 import org.b3log.symphony.event.ArticleNotifier;
 import org.b3log.symphony.event.CommentNotifier;
-import org.b3log.symphony.event.solo.ArticleSender;
-import org.b3log.symphony.event.solo.ArticleUpdater;
-import org.b3log.symphony.event.solo.CommentSender;
 import org.b3log.symphony.model.Article;
 import org.b3log.symphony.model.Option;
 import org.b3log.symphony.model.UserExt;
@@ -65,7 +61,7 @@ import org.json.JSONObject;
  * Symphony servlet listener.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.8.3.4, Jan 7, 2016
+ * @version 1.8.3.5, Jan 21, 2016
  * @since 0.2.0
  */
 public final class SymphonyServletListener extends AbstractServletListener {
@@ -108,15 +104,8 @@ public final class SymphonyServletListener extends AbstractServletListener {
         // Register event listeners
         final EventManager eventManager = beanManager.getReference(EventManager.class);
 
-        eventManager.registerListener(new ArticleSender()); // Not a bean
-        eventManager.registerListener(new ArticleUpdater()); // Not a bean
-        eventManager.registerListener(new CommentSender()); // Not a bean
-
         final ArticleNotifier articleNotifier = beanManager.getReference(ArticleNotifier.class);
         eventManager.registerListener(articleNotifier);
-
-        final ArticleBaiduSender articleBaiduSender = beanManager.getReference(ArticleBaiduSender.class);
-        eventManager.registerListener(articleBaiduSender);
 
         final CommentNotifier commentNotifier = beanManager.getReference(CommentNotifier.class);
         eventManager.registerListener(commentNotifier);
@@ -294,15 +283,6 @@ public final class SymphonyServletListener extends AbstractServletListener {
             admin.put(UserExt.USER_STATUS, UserExt.USER_STATUS_C_VALID);
             final String adminId = userMgmtService.addUser(admin);
             admin.put(Keys.OBJECT_ID, adminId);
-
-            // Init default commenter (for sync comment from client)
-            final JSONObject defaultCommenter = new JSONObject();
-            defaultCommenter.put(User.USER_EMAIL, UserExt.DEFAULT_CMTER_EMAIL);
-            defaultCommenter.put(User.USER_NAME, UserExt.DEFAULT_CMTER_NAME);
-            defaultCommenter.put(User.USER_PASSWORD, MD5.hash(String.valueOf(new Random().nextInt())));
-            defaultCommenter.put(User.USER_ROLE, UserExt.DEFAULT_CMTER_ROLE);
-            defaultCommenter.put(UserExt.USER_STATUS, UserExt.USER_STATUS_C_VALID);
-            userMgmtService.addUser(defaultCommenter);
 
             // Hello World!
             final JSONObject article = new JSONObject();

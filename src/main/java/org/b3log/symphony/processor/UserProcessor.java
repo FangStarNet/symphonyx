@@ -42,7 +42,6 @@ import org.b3log.latke.util.CollectionUtils;
 import org.b3log.latke.util.Paginator;
 import org.b3log.latke.util.Requests;
 import org.b3log.latke.util.Strings;
-import org.b3log.symphony.model.Client;
 import org.b3log.symphony.model.Common;
 import org.b3log.symphony.model.Follow;
 import org.b3log.symphony.model.Notification;
@@ -58,7 +57,6 @@ import org.b3log.symphony.processor.advice.validate.PointTransferValidation;
 import org.b3log.symphony.processor.advice.validate.UpdatePasswordValidation;
 import org.b3log.symphony.processor.advice.validate.UpdateProfilesValidation;
 import org.b3log.symphony.processor.advice.validate.UpdateSyncB3Validation;
-import org.b3log.symphony.processor.advice.validate.UserRegisterValidation;
 import org.b3log.symphony.service.ArticleQueryService;
 import org.b3log.symphony.service.CommentQueryService;
 import org.b3log.symphony.service.FollowQueryService;
@@ -69,7 +67,6 @@ import org.b3log.symphony.service.PointtransferQueryService;
 import org.b3log.symphony.service.UserMgmtService;
 import org.b3log.symphony.service.UserQueryService;
 import org.b3log.symphony.util.Filler;
-import static org.b3log.symphony.util.Networks.isIPv4;
 import org.b3log.symphony.util.Results;
 import org.b3log.symphony.util.Sessions;
 import org.b3log.symphony.util.Symphonys;
@@ -93,7 +90,6 @@ import org.json.JSONObject;
  * <li>Geo status (/settings/geo/status), POST</li>
  * <li>Sync (/settings/sync/b3), POST</li>
  * <li>Password (/settings/password), POST</li>
- * <li>SyncUser (/apis/user), POST</li>
  * <li>Lists usernames (/users/names), GET</li>
  * </ul>
  * </p>
@@ -942,99 +938,6 @@ public class UserProcessor {
             LOGGER.log(Level.ERROR, msg, e);
 
             context.renderMsg(msg);
-        }
-    }
-
-    /**
-     * Sync user. Experimental API.
-     *
-     * @param context the specified context
-     * @param request the specified request
-     * @param response the specified response
-     * @throws Exception exception
-     */
-    @RequestProcessing(value = "/apis/user", method = HTTPRequestMethod.POST)
-    public void syncUser(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response)
-            throws Exception {
-        context.renderJSON();
-
-        final JSONObject requestJSONObject = Requests.parseRequestJSONObject(request, response);
-
-        final String name = requestJSONObject.optString(User.USER_NAME);
-        final String email = requestJSONObject.optString(User.USER_EMAIL);
-        final String password = requestJSONObject.optString(User.USER_PASSWORD);
-        final String clientHost = requestJSONObject.optString(Client.CLIENT_HOST);
-        final String b3Key = requestJSONObject.optString(UserExt.USER_B3_KEY);
-        final String addArticleURL = clientHost + "/apis/symphony/article";
-        final String updateArticleURL = clientHost + "/apis/symphony/article";
-        final String addCommentURL = clientHost + "/apis/symphony/comment";
-
-        if (UserRegisterValidation.invalidUserName(name)) {
-            LOGGER.log(Level.WARN, "Sync add user[name={0}, host={1}] error, caused by the username is invalid",
-                    name, clientHost);
-
-            return;
-        }
-
-//        final String maybeIP = StringUtils.substringBetween(clientHost, "://", ":");
-//        if (isIPv4(maybeIP)) {
-//            LOGGER.log(Level.WARN, "Sync add user[name={0}, host={1}] error, caused by the client host is invalid",
-//                    name, clientHost);
-//
-//            return;
-//        }
-        JSONObject user = userQueryService.getUserByEmail(email);
-        if (null == user) {
-            user = new JSONObject();
-            user.put(User.USER_NAME, name);
-            user.put(User.USER_EMAIL, email);
-            user.put(User.USER_PASSWORD, password);
-            user.put(UserExt.USER_B3_KEY, b3Key);
-            user.put(UserExt.USER_B3_CLIENT_ADD_ARTICLE_URL, addArticleURL);
-            user.put(UserExt.USER_B3_CLIENT_UPDATE_ARTICLE_URL, updateArticleURL);
-            user.put(UserExt.USER_B3_CLIENT_ADD_COMMENT_URL, addCommentURL);
-            user.put(UserExt.USER_STATUS, UserExt.USER_STATUS_C_VALID); // One Move
-
-            try {
-                final String id = userMgmtService.addUser(user);
-                user.put(Keys.OBJECT_ID, id);
-
-                userMgmtService.updateSyncB3(user);
-
-                LOGGER.log(Level.INFO, "Added a user[{0}] via Solo[{1}] sync", name, clientHost);
-
-                context.renderTrueResult();
-            } catch (final ServiceException e) {
-                LOGGER.log(Level.ERROR, "Sync add user[name={0}, host={1}] error: " + e.getMessage(), name, clientHost);
-            }
-
-            return;
-        }
-
-        if (!user.optString(UserExt.USER_B3_KEY).equals(b3Key)) {
-            LOGGER.log(Level.WARN, "Sync update user[name={0}, email={1}, host={2}] B3Key dismatch [sym={3}, solo={4}]",
-                    name, email, clientHost, user.optString(UserExt.USER_B3_KEY), b3Key);
-
-            return;
-        }
-
-        user.put(User.USER_NAME, name);
-        user.put(User.USER_EMAIL, email);
-        user.put(User.USER_PASSWORD, password);
-        user.put(UserExt.USER_B3_KEY, b3Key);
-        user.put(UserExt.USER_B3_CLIENT_ADD_ARTICLE_URL, addArticleURL);
-        user.put(UserExt.USER_B3_CLIENT_UPDATE_ARTICLE_URL, updateArticleURL);
-        user.put(UserExt.USER_B3_CLIENT_ADD_COMMENT_URL, addCommentURL);
-
-        try {
-            userMgmtService.updatePassword(user);
-            userMgmtService.updateSyncB3(user);
-
-            LOGGER.log(Level.INFO, "Updated a user[name={0}] via Solo[{1}] sync", name, clientHost);
-
-            context.renderTrueResult();
-        } catch (final ServiceException e) {
-            LOGGER.log(Level.ERROR, "Sync update user[name=" + name + ", host=" + clientHost + "] error", e);
         }
     }
 

@@ -67,7 +67,7 @@ public class UserBlockCheck extends BeforeRequestProcessAdvice {
 
         JSONObject user;
         final String userName = (String) args.get("userName");
-        if (UserExt.DEFAULT_CMTER_NAME.equals(userName) || UserExt.NULL_USER_NAME.equals(userName)) {
+        if (UserExt.NULL_USER_NAME.equals(userName)) {
             exception.put(Keys.MSG, "Nil User [" + userName + ", requestURI=" + request.getRequestURI() + "]");
             throw new RequestProcessAdviceException(exception);
         }

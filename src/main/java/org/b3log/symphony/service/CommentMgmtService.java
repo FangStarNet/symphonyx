@@ -237,8 +237,7 @@ public class CommentMgmtService {
         final String ip = requestJSONObject.optString(Comment.COMMENT_IP);
 
         if (currentTimeMillis - commenter.optLong(UserExt.USER_LATEST_CMT_TIME) < Symphonys.getLong("minStepCmtTime")
-                && !Role.ADMIN_ROLE.equals(commenter.optString(User.USER_ROLE))
-                && !UserExt.DEFAULT_CMTER_ROLE.equals(commenter.optString(User.USER_ROLE))) {
+                && !Role.ADMIN_ROLE.equals(commenter.optString(User.USER_ROLE))) {
             LOGGER.log(Level.WARN, "Adds comment too frequent [userName={0}]", commenter.optString(User.USER_NAME));
             throw new ServiceException(langPropsService.get("tooFrequentCmtLabel"));
         }
