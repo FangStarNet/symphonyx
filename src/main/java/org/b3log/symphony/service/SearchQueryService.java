@@ -16,7 +16,6 @@
 package org.b3log.symphony.service;
 
 import java.net.URL;
-import java.net.URLEncoder;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.service.annotation.Service;
