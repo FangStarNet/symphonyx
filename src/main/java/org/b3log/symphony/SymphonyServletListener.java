@@ -43,6 +43,8 @@ import org.b3log.latke.util.StaticResources;
 import org.b3log.latke.util.Stopwatchs;
 import org.b3log.latke.util.Strings;
 import org.b3log.symphony.event.ArticleNotifier;
+import org.b3log.symphony.event.ArticleSearchAdder;
+import org.b3log.symphony.event.ArticleSearchUpdater;
 import org.b3log.symphony.event.CommentNotifier;
 import org.b3log.symphony.model.Article;
 import org.b3log.symphony.model.Option;
@@ -60,7 +62,7 @@ import org.json.JSONObject;
  * Symphony servlet listener.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.8.3.5, Jan 21, 2016
+ * @version 2.9.3.5, Jan 22, 2016
  * @since 0.2.0
  */
 public final class SymphonyServletListener extends AbstractServletListener {
@@ -108,6 +110,12 @@ public final class SymphonyServletListener extends AbstractServletListener {
 
         final CommentNotifier commentNotifier = beanManager.getReference(CommentNotifier.class);
         eventManager.registerListener(commentNotifier);
+
+        final ArticleSearchAdder articleSearchAdder = beanManager.getReference(ArticleSearchAdder.class);
+        eventManager.registerListener(articleSearchAdder);
+
+        final ArticleSearchUpdater articleSearchUpdater = beanManager.getReference(ArticleSearchUpdater.class);
+        eventManager.registerListener(articleSearchUpdater);
 
         LOGGER.info("Initialized the context");
 

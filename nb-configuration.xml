@@ -16,6 +16,7 @@ Without this configuration present, some functionality in the IDE may be limited
         <word>commenters</word>
         <word>Deduplication</word>
         <word>desc</word>
+        <word>Elasticsearch</word>
         <word>emoj</word>
         <word>Emoji</word>
         <word>geo</word>
