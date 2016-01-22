@@ -80,6 +80,15 @@ public class SearchQueryService {
             reqData.put("query", query);
             reqData.put("from", currentPage);
             reqData.put("size", pageSize);
+            
+            final JSONObject highlight = new JSONObject();
+            reqData.put("highlight", highlight);
+            highlight.put("number_of_fragments", 3);
+            highlight.put("fragment_size", 150);
+            final JSONObject fields = new JSONObject();
+            highlight.put("fields", fields);
+            final JSONObject content = new JSONObject();
+            fields.put(Article.ARTICLE_CONTENT, content);
 
             LOGGER.info(reqData.toString(4));
 
@@ -87,10 +96,7 @@ public class SearchQueryService {
 
             final HTTPResponse response = URL_FETCH_SVC.fetch(request);
 
-            final byte[] data = response.getContent();
-            final String content = new String(data, "UTF-8");
-
-            return new JSONObject(content);
+            return new JSONObject(new String(response.getContent(), "UTF-8"));
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Queries failed", e);
 
