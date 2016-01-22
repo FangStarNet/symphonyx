@@ -72,7 +72,6 @@ import org.b3log.symphony.repository.OptionRepository;
 import org.b3log.symphony.repository.TagRepository;
 import org.b3log.symphony.repository.UserRepository;
 import org.b3log.symphony.repository.UserTagRepository;
-import org.b3log.symphony.util.Geos;
 import org.b3log.symphony.util.Sessions;
 import org.b3log.symphony.util.Symphonys;
 import org.json.JSONArray;
@@ -82,7 +81,7 @@ import org.json.JSONObject;
  * User management service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.10.11.6, Jan 21, 2016
+ * @version 2.10.11.7, Jan 22, 2016
  * @since 0.2.0
  */
 @Service
@@ -225,22 +224,14 @@ public class UserMgmtService {
         Transaction transaction = null;
 
         try {
-            final JSONObject address = Geos.getAddress(ip);
-
             final JSONObject user = userRepository.get(userId);
             if (null == user) {
                 return;
             }
 
-            if (null != address) {
-                final String country = address.optString(Common.COUNTRY);
-                final String province = address.optString(Common.PROVINCE);
-                final String city = address.optString(Common.CITY);
-
-                user.put(UserExt.USER_COUNTRY, country);
-                user.put(UserExt.USER_PROVINCE, province);
-                user.put(UserExt.USER_CITY, city);
-            }
+            user.put(UserExt.USER_COUNTRY, "中国");
+            user.put(UserExt.USER_PROVINCE, "云南");
+            user.put(UserExt.USER_CITY, "昆明");
 
             transaction = userRepository.beginTransaction();
 
