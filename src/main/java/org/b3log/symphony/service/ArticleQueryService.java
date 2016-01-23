@@ -77,7 +77,7 @@ import org.jsoup.safety.Whitelist;
  * Article query service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.11.8.15, Jan 21, 2016
+ * @version 2.12.8.15, Jan 23, 2016
  * @since 0.2.0
  */
 @Service
@@ -305,7 +305,7 @@ public class ArticleQueryService {
      * @throws ServiceException service exception
      */
     public List<JSONObject> getNews(final int currentPageNum, final int pageSize) throws ServiceException {
-        JSONObject tag = null;
+        JSONObject tag;
 
         try {
             tag = tagRepository.getByTitle("B3log Announcement");
@@ -432,6 +432,29 @@ public class ArticleQueryService {
             return ret;
         } catch (final RepositoryException e) {
             LOGGER.log(Level.ERROR, "Gets articles by city [" + city + "] failed", e);
+
+            throw new ServiceException(e);
+        }
+    }
+
+    /**
+     * Gets articles by the specified page number and page size.
+     *
+     * @param currentPageNum the specified page number
+     * @param pageSize the specified page size
+     * @return articles, return an empty list if not found
+     * @throws ServiceException service exception
+     */
+    public List<JSONObject> getArticles(final int currentPageNum, final int pageSize) throws ServiceException {
+        try {
+            final Query query = new Query().addSort(Keys.OBJECT_ID, SortDirection.DESCENDING)
+                    .setPageCount(1).setPageSize(pageSize).setCurrentPageNum(currentPageNum);
+
+            final JSONObject result = articleRepository.get(query);
+
+            return CollectionUtils.<JSONObject>jsonArrayToList(result.optJSONArray(Keys.RESULTS));
+        } catch (final RepositoryException e) {
+            LOGGER.log(Level.ERROR, "Gets articles failed", e);
 
             throw new ServiceException(e);
         }

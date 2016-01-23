@@ -62,6 +62,7 @@ import org.b3log.symphony.service.NotificationMgmtService;
 import org.b3log.symphony.service.OptionMgmtService;
 import org.b3log.symphony.service.OptionQueryService;
 import org.b3log.symphony.service.PointtransferMgmtService;
+import org.b3log.symphony.service.SearchMgmtService;
 import org.b3log.symphony.service.TagMgmtService;
 import org.b3log.symphony.service.TagQueryService;
 import org.b3log.symphony.service.UserMgmtService;
@@ -95,10 +96,11 @@ import org.json.JSONObject;
  * <li>Updates a tag (/admin/tag/{tagId}), POST</li>
  * <li>Shows miscellaneous (/admin/misc), GET</li>
  * <li>Updates miscellaneous (/admin/misc), POST</li>
+ * <li>Search index (/admin/search/index), POST</li>
  * </ul>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.9.2.1, Jan 21, 2016
+ * @version 2.10.2.1, Jan 23, 2016
  * @since 1.1.0
  */
 @RequestProcessor
@@ -186,6 +188,12 @@ public class AdminProcessor {
      */
     @Inject
     private NotificationMgmtService notificationMgmtService;
+
+    /**
+     * Search management service.
+     */
+    @Inject
+    private SearchMgmtService searchMgmtService;
 
     /**
      * Filler.
@@ -1013,5 +1021,33 @@ public class AdminProcessor {
         dataModel.put(Tag.TAG, tag);
 
         filler.fillHeaderAndFooter(request, response, dataModel);
+    }
+
+    /**
+     * Search index.
+     *
+     * @param context the specified context
+     * @throws Exception exception
+     */
+    @RequestProcessing(value = "/admin/search/index", method = HTTPRequestMethod.POST)
+    @Before(adviceClass = {StopwatchStartAdvice.class, AdminCheck.class})
+    @After(adviceClass = StopwatchEndAdvice.class)
+    public void searchIndex(final HTTPRequestContext context) throws Exception {
+        context.renderJSON(true);
+
+        final JSONObject stat = optionQueryService.getStatistic();
+        final int articleCount = stat.optInt(Option.ID_C_STATISTIC_ARTICLE_COUNT);
+
+        final int pages = (int) Math.ceil((double) articleCount / 50.0);
+
+        for (int pageNum = 1; pageNum <= pages; pageNum++) {
+            final List<JSONObject> articles = articleQueryService.getArticles(pageNum, 50);
+
+            for (final JSONObject article : articles) {
+                searchMgmtService.updateDocument(article, Article.ARTICLE);
+            }
+
+            LOGGER.info("Indexed page [" + pageNum + "]");
+        }
     }
 }

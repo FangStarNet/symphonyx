@@ -16,6 +16,7 @@
 package org.b3log.symphony.service;
 
 import java.net.URL;
+import org.b3log.latke.Keys;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.service.annotation.Service;
@@ -32,7 +33,7 @@ import org.json.JSONObject;
  * Uses <a href="https://www.elastic.co/products/elasticsearch">Elasticsearch</a> as the underlying engine.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Jan 22, 2016
+ * @version 1.0.0.1, Jan 23, 2016
  * @since 1.4.0
  */
 @Service
@@ -42,7 +43,7 @@ public class SearchMgmtService {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(SearchMgmtService.class.getName());
-    
+
     /**
      * Index name.
      */
@@ -63,16 +64,15 @@ public class SearchMgmtService {
      *
      * @param doc the specified document
      * @param type the specified document type
-     * @param id the specified id
      */
-    public void addDocument(final JSONObject doc, final String type, final String id) {
+    public void addDocument(final JSONObject doc, final String type) {
         final HTTPRequest request = new HTTPRequest();
         request.setRequestMethod(HTTPRequestMethod.PUT);
-
+        
         try {
-            request.setURL(new URL(SERVER + "/" + INDEX_NAME + "/" + type + "/" + id));
+            request.setURL(new URL(SERVER + "/" + INDEX_NAME + "/" + type + "/" + doc.optString(Keys.OBJECT_ID)));
             request.setPayload(doc.toString().getBytes("UTF-8"));
-
+            
             URL_FETCH_SVC.fetchAsync(request);
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Adds doc failed", e);
@@ -84,14 +84,13 @@ public class SearchMgmtService {
      *
      * @param doc the specified document
      * @param type the specified document type
-     * @param id the specified id
      */
-    public void updateDocument(final JSONObject doc, final String type, final String id) {
+    public void updateDocument(final JSONObject doc, final String type) {
         final HTTPRequest request = new HTTPRequest();
         request.setRequestMethod(HTTPRequestMethod.POST);
-
+        
         try {
-            request.setURL(new URL(SERVER + "/" + INDEX_NAME + "/" + type + "/" + id + "/_update"));
+            request.setURL(new URL(SERVER + "/" + INDEX_NAME + "/" + type + "/" + doc.optString(Keys.OBJECT_ID) + "/_update"));
             
             final JSONObject payload = new JSONObject();
             payload.put("doc", doc);

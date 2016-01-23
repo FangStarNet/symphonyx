@@ -17,7 +17,6 @@ package org.b3log.symphony.event;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import org.b3log.latke.Keys;
 import org.b3log.latke.event.AbstractEventListener;
 import org.b3log.latke.event.Event;
 import org.b3log.latke.event.EventException;
@@ -60,9 +59,7 @@ public class ArticleSearchAdder extends AbstractEventListener<JSONObject> {
             return;
         }
 
-        final String id = article.optString(Keys.OBJECT_ID);
-
-        searchMgmtService.addDocument(article, Article.ARTICLE, id);
+        searchMgmtService.addDocument(article, Article.ARTICLE);
     }
 
     /**
