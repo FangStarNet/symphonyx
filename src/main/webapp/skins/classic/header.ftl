@@ -15,6 +15,7 @@
             </form>
             <div class="fn-right">
                 <a href="/timeline" class="icon-clock last" title="${timelineLabel}"></a>
+                <a href="/journals" class="icon-navigation" title="${journalLabel}"></a>
                 <a href="/recent" class="icon-refresh" title="${recentArticleLabel}"></a>
             </div>
         </div>
