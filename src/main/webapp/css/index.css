@@ -220,9 +220,21 @@
     border-bottom-width: 0;
 }
 
-.journal-section {
-    
+.journal-section .article-content {
+    margin: 5px 0 10px 30px;
+    border-left: 2px solid #ccc;
+    padding: 0px 10px;
 }
+
+.journal .cmt-count {
+ color: #FFF;
+  background-color: #D8D8D8;
+  padding: 0px 5px;
+  border-radius: 3px;
+  float: right;
+  margin-top: 5px;
+}
+
 /* end article journal */
 
 /* start article list */

@@ -12,7 +12,7 @@
                     <a rel="nofollow" class="ft-gray"
                        href="/member/admin" 
                        title="admin"><img class="avatar-small" src="http://localhost:8084/upload/b1a99d68-943e-4f45-b0a2-c52461aa0dc6.jpg-64.jpg?0" />
-                    </a>
+                    </a> &nbsp;
                     <a class="ft-gray" href='e'>Vanessa</a>
                     <span class="ft-red">6</span>/7
                     <#list [1,2,3, 4, 5, 6, 7] as item>
@@ -21,8 +21,7 @@
                         <span class="ft-fade">&nbsp;•&nbsp;</span>
                         <a href='e'>title</a><span class="ft-fade">&nbsp;•&nbsp;</span>
                         <a rel="tag" class="tag" href="/tags/%E8%88%AA%E6%B5%B7%E6%97%A5%E8%AE%B0">航海日记</a>
-                        <span class="ft-fade">&nbsp;•&nbsp;</span>
-                        <a title="评论" class="count ft-gray" href="/article/1453533976430">1</a>
+                        <a title="评论" class="cmt-count" href="/article/1453533976430">1</a>
                         <div class="article-content">
                             <p>D248 2016-1-22</p> 
                             <p>0900 晨会</p> 
