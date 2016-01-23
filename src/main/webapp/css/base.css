@@ -526,6 +526,12 @@ a[class*=" icon-"]:hover {
     text-decoration: none;
     color: #4183c4;
 }
+.icon-thumbs-down:before {
+    content: "\e901";
+}
+.icon-thumbs-up:before {
+    content: "\e902";
+}
 .icon-navigation:before {
     content: "\e900";
 }
