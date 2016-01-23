@@ -36,7 +36,7 @@
                     <div class="ft-fade">@好友并在私密空间中进行交流</div>
                 </div>
                 <div>
-                    <a href="/post?type=4">
+                    <a href="/post?type=4&tags=航海日记,段落">
                         <div class="icon-navigation"></div>
                         ${journalLabel}
                     </a>
