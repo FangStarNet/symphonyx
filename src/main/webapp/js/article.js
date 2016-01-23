@@ -275,6 +275,7 @@ var Article = {
                 }
             });
         });
+        
         var menus = [];
         $('.content [id^=menu]').each(function (i) {
             var $it = $(this);
@@ -288,20 +289,51 @@ var Article = {
             var scrollTop = $('body').scrollTop();
 
             for (var i = 0, iMax = menus.length; i < iMax; i++) {
-                if (scrollTop >= menus[i].offsetTop) {
+                if (scrollTop < menus[i].offsetTop - 5) {
                     $('.menu a').removeClass('current');
                     $('.menu ul ul').hide();
-                    var index = i > 0 ? i : 0;
+                    var index = i > 0 ? i - 1 : 0;
                     var mItem = $('.menu a[href=#' + menus[index].id + ']');
                     mItem.addClass('current');
                     if (mItem.next().length === 0) {
                         mItem.closest('ul').show();
                         mItem.closest('ul').prev().addClass('current');
+                    } else {
+                        mItem.next().show();
                     }
                     break;
                 }
             }
+
+            if ($(window).height() + scrollTop >= $('body').height()) {
+                $('.menu a').removeClass('current');
+                $('.menu ul ul').hide();
+                var mItem = $('.menu a:last');
+                mItem.addClass('current');
+                if (mItem.next().length === 0) {
+                    mItem.closest('ul').show();
+                    mItem.closest('ul').prev().addClass('current');
+                } else {
+                    mItem.next().show();
+                }
+            }
         });
+
+
+        $('.menu a').click(function () {
+            var $it = $(this);
+            setTimeout(function () {
+                $('.menu a').removeClass('current');
+                if ($it.next().length === 0) {
+                    $it.closest('ul').prev().addClass('current');
+                } else {
+                    $it.next().show();
+                }
+                $it.addClass('current');
+            }, 50);
+        });
+        
+        $(window).scroll();
     },
     /**
      * @description 分享按钮
