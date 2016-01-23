@@ -256,7 +256,9 @@ var Article = {
     init: function () {
         this.share();
         this.parseLanguage();
-        this.initJournal();
+        if ($('.journal').length > 0) {
+            this.initJournal();
+        }
     },
     /**
      * @description 初始化航海日记
@@ -274,7 +276,7 @@ var Article = {
             });
         });
         var menus = [];
-        $('.content div[id^=menu]').each(function (i) {
+        $('.content [id^=menu]').each(function (i) {
             var $it = $(this);
             menus.push({
                 id: $it.attr('id'),
@@ -286,10 +288,16 @@ var Article = {
             var scrollTop = $('body').scrollTop();
 
             for (var i = 0, iMax = menus.length; i < iMax; i++) {
-                if (scrollTop <= menus[i].offsetTop) {
-                    $('.side a').css('color', 'yellow');
+                if (scrollTop >= menus[i].offsetTop) {
+                    $('.menu a').removeClass('current');
+                    $('.menu ul ul').hide();
                     var index = i > 0 ? i : 0;
-                    $('.side a[href=#' + menus[index].id + ']').css('color', 'red');
+                    var mItem = $('.menu a[href=#' + menus[index].id + ']');
+                    mItem.addClass('current');
+                    if (mItem.next().length === 0) {
+                        mItem.closest('ul').show();
+                        mItem.closest('ul').prev().addClass('current');
+                    }
                     break;
                 }
             }

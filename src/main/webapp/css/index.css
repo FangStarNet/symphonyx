@@ -227,12 +227,12 @@
 }
 
 .journal .cmt-count {
- color: #FFF;
-  background-color: #D8D8D8;
-  padding: 0px 5px;
-  border-radius: 3px;
-  float: right;
-  margin-top: 5px;
+    color: #FFF;
+    background-color: #D8D8D8;
+    padding: 0px 5px;
+    border-radius: 3px;
+    float: right;
+    margin-top: 5px;
 }
 
 /* end article journal */
@@ -482,6 +482,53 @@
     margin-top: 15px;
 }
 /* end side tags */
+
+/* start side menu */
+.menu li {
+    list-style: none;
+}
+
+.menu a {
+    line-height: 30px;
+    border-left: 2px solid #FFF;
+    padding-left: 10px;
+    text-decoration: none;
+    color: #999;
+    display: block;
+    font-size: 16px;
+}
+
+
+.menu li li a {
+    padding-left: 26px !important;
+    font-size: 14px;
+    line-height: 22px;
+}
+
+.menu > ul > li > a {
+    font-weight: bold;
+}
+
+.menu a:hover {
+    border-left: 1px solid #4183C4;
+    color: #4183C4;
+    padding-left: 11px;
+}
+
+.menu a.current {
+    border-left: 2px solid #4183C4;
+    color: #4183C4;
+    padding-left: 10px;
+}
+
+.menu li li a:hover {
+    padding-left: 27px !important;
+}
+
+.menu li li a.current {
+     padding-left: 26px !important;
+}
+/* end side menu */
 
 /* start tags.html */
 .tags-trend a,

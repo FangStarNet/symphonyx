@@ -9,7 +9,7 @@
             <ul>
                 <#list team.users as user>
                 <#if user.paragraphs?size == 0>
-                <li id="menu${team_index}${user_index}">
+                <li id="menu${team_index}${user_index}0">
                     <div class="fn-flex">
                         <a rel="nofollow" class="ft-gray"
                            href="/member/${user.userName}" 
@@ -24,7 +24,7 @@
                 </li>
                 </#if>
                 <#list user.paragraphs as paragraph>
-                <li>
+                <li<#if paragraph_index == 0> id="menu${team_index}${user_index}0"</#if>>
                     <div class="fn-flex">
                         <a rel="nofollow" class="ft-gray"
                            href="/member/${user.userName}" 

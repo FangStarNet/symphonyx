@@ -1,23 +1,18 @@
 <#if isLoggedIn>
-<div class="module" style="position: fixed">
-    <div class="module-header">
-        Menu
-    </div>
-    <div class="module-panel">
-        <ul>
-            <#list [1, 2, 3] as itema>
-            <li>
-                <a href="#menu${itema}">FSERP</a>
-                <ul>
-                    <#list [1, 2, 3] as item>
-                    <li>
-                        <a href="#menu${itema}${item}">Vanessa</a>
-                    </li>
-                    </#list>
-                </ul>
-            </li>
-            </#list>
-        </ul>
-    </div>
+<div class="menu" style="position: fixed">
+    <ul>
+        <#list teams as team>
+        <li>
+            <a href="#menu${team_index}">${team.teamName}</a>
+            <ul class="fn-none">
+                <#list team.users as user>
+                <li>
+                    <a href="#menu${team_index}${user_index}0">${user.userName}</a>
+                </li>
+                </#list>
+            </ul>
+        </li>
+        </#list>
+    </ul>
 </div>
 </#if>
