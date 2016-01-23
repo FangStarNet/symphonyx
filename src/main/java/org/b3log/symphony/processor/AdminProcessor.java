@@ -1044,6 +1044,12 @@ public class AdminProcessor {
             final List<JSONObject> articles = articleQueryService.getArticles(pageNum, 50);
 
             for (final JSONObject article : articles) {
+                final int articleType = article.optInt(Article.ARTICLE_TYPE);
+                if (Article.ARTICLE_TYPE_C_DISCUSSION == articleType
+                        || Article.ARTICLE_TYPE_C_THOUGHT == articleType) {
+                    continue;
+                }
+
                 searchMgmtService.updateDocument(article, Article.ARTICLE);
             }
 
