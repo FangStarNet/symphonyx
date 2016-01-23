@@ -211,6 +211,16 @@
 }
 /* end article */
 
+/* start article journal */
+.journal .list li:hover {
+    background-color: #FFF;
+}
+
+.journal .list li:last-child {
+    border-bottom-width: 0;
+}
+/* end article journal */
+
 /* start article list */
 .article-list li .commenters {
     display: none;

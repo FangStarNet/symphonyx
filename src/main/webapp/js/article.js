@@ -258,6 +258,13 @@ var Article = {
         this.parseLanguage();
     },
     /**
+     * @description 初始化航海日记
+     * @returns {undefined}
+     */
+    initJournal: function () {
+        
+    },
+    /**
      * @description 分享按钮
      */
     share: function () {
