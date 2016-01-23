@@ -48,7 +48,7 @@ import org.json.JSONObject;
  * Journal query service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Jan 21, 2016
+ * @version 1.0.0.1, Jan 23, 2016
  * @since 1.4.0
  */
 @Service
@@ -113,6 +113,9 @@ public class JournalQueryService {
 
                 final List<JSONObject> teamMembers = userQueryService.getTeamMembers(teamName);
                 users.addAll(teamMembers);
+
+                final JSONObject team = getTeam(ret, teamName);
+                team.put(Common.TOTAL, teamMembers.size());
             }
 
             for (final JSONObject paragraph : paragraphs) {
@@ -125,12 +128,13 @@ public class JournalQueryService {
 
                 final List<JSONObject> users = getUsers(ret, teamName);
                 final List<JSONObject> paras = getParagraphs(users, userName);
+                paragraph.put(UserExt.USER_TEAM, teamName);
                 paras.add(paragraph);
             }
 
             articleQueryService.genParticipants(paragraphs, Symphonys.getInt("latestArticleParticipantsCnt"));
 
-            processDoneTotal(ret);
+            doneCount(ret, paragraphs);
 
             return ret;
         } catch (final RepositoryException e) {
@@ -140,13 +144,47 @@ public class JournalQueryService {
         }
     }
 
-    private void processDoneTotal(final List<JSONObject> teams) {
-        for (final JSONObject team : teams) {
-            // TODO: team done and total
+    private void doneCount(final List<JSONObject> teams, final List<JSONObject> paragraphs) {
+        final List<JSONObject> paras = filterByUniqueAuthor(paragraphs);
 
-            team.put(Common.DONE, 0);
-            team.put(Common.TOTAL, 0);
+        for (final JSONObject team : teams) {
+            final String teamName = team.optString(Common.TEAM_NAME);
+            team.put(Common.DONE, countDone(paras, teamName));
         }
+    }
+
+    private int countDone(final List<JSONObject> paragraphs, final String teamName) {
+        int ret = 0;
+
+        for (final JSONObject paragraph : paragraphs) {
+            if (paragraph.optString(UserExt.USER_TEAM).equals(teamName)) {
+                ret++;
+            }
+        }
+
+        return ret;
+    }
+
+    private List<JSONObject> filterByUniqueAuthor(final List<JSONObject> paragraphs) {
+        final List<JSONObject> ret = new ArrayList<JSONObject>();
+
+        for (final JSONObject paragraph : paragraphs) {
+            if (!containsAuthor(ret, paragraph.optString(Article.ARTICLE_AUTHOR_ID))) {
+                ret.add(paragraph);
+            }
+        }
+
+        return ret;
+    }
+
+    private boolean containsAuthor(final List<JSONObject> paragraphs, final String authorId) {
+        for (final JSONObject paragraph : paragraphs) {
+            if (paragraph.optString(Article.ARTICLE_AUTHOR_ID).equals(authorId)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private List<JSONObject> getParagraphs(final List<JSONObject> users, final String userName) {
@@ -185,6 +223,16 @@ public class JournalQueryService {
         team.put(User.USERS, (Object) new ArrayList<JSONObject>());
 
         return (List<JSONObject>) team.opt(User.USERS);
+    }
+
+    private JSONObject getTeam(final List<JSONObject> teams, final String teamName) {
+        for (final JSONObject team : teams) {
+            if (team.optString(Common.TEAM_NAME).equals(teamName)) {
+                return team;
+            }
+        }
+
+        return null;
     }
 
     /**
