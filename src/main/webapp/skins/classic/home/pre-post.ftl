@@ -37,7 +37,7 @@
                 </div>
                 <div>
                     <a href="/post?type=4">
-                        <div class="icon-feed"></div>
+                        <div class="icon-navigation"></div>
                         ${journalLabel}
                     </a>
                     <div class="ft-fade">记录下今天的航海冒险经历</div>

@@ -17,6 +17,8 @@
                     <span class="icon-feed" title="${cityBroadcastLabel}"></span>
                     <#elseif 3 == article.articleType>
                     <span class="icon-video" title="${thoughtLabel}"></span>
+                    <#elseif 4 == article.articleType || 6 == article.articleType || 5 == article.articleType>
+                    <span class="icon-navigation" title="${thoughtLabel}"></span>
                     </#if>
                     <a rel="bookmark" href="${article.articlePermalink}">${article.articleTitleEmoj}</a>
                 </h2>
