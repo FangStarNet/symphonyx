@@ -219,6 +219,10 @@
 .journal .list li:last-child {
     border-bottom-width: 0;
 }
+
+.journal-section {
+    
+}
 /* end article journal */
 
 /* start article list */

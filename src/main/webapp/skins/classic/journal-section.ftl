@@ -1,4 +1,7 @@
 <#list [1,2,3] as item>
+<div class="journal-menu">
+    
+</div>
 <div class="module journal">
     <div class="module-header">
         FSERP2 <span class="ft-red">12</span>/18
@@ -17,7 +20,7 @@
                             <h2>
                                 <a href='e'>title</a>
                             </h2>
-                            <div class="content-rese">
+                            <div class="article-content">
                                 <p>D248 2016-1-22</p> 
                                 <p>0900 晨会</p> 
                                 <p>0930 新房通设计评审</p> 

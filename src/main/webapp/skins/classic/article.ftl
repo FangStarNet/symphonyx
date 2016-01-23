@@ -102,7 +102,12 @@
 
                     <#if 3 != article.articleType>
                     <div class="content-reset article-content">${article.articleContent}</div>
+                    <#if 5 == article.articleType>
                     <#include 'journal-section.ftl'/>
+                    </#if>
+                    <#if 6 == article.articleType>
+                    <#include 'journal-chapter.ftl'/>
+                    </#if>
                     <#else>
                     <div id="thoughtProgress"><div></div></div>
                     <div class="content-reset article-content"></div>
