@@ -1,8 +1,8 @@
 <#list [1,2,3] as item>
 <div class="module journal">
     <div class="module-header">
-        FSERP2 (12/18)
-        <span class="icon-chevron-up fn-right fn-pointer" onclick="$(this).parent().next().slideToggle()"/>
+        FSERP2 <span class="ft-red">12</span>/18
+        <span class="icon-chevron-up fn-right fn-pointer"/>
     </div>
     <div class="module-panel">
         <div class='article-list list'>

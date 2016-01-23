@@ -256,13 +256,23 @@ var Article = {
     init: function () {
         this.share();
         this.parseLanguage();
+        this.initJournal();
     },
     /**
      * @description 初始化航海日记
      * @returns {undefined}
      */
     initJournal: function () {
-        
+        $('.journal .module-header .fn-pointer').click(function () {
+            var $it = $(this);
+            $it.parent().next().slideToggle(function () {
+                if ($it.hasClass('icon-chevron-up')) {
+                    $it.removeClass('icon-chevron-up').addClass('icon-chevron-down');
+                } else {
+                    $it.addClass('icon-chevron-up').removeClass('icon-chevron-down');
+                }
+            });
+        });
     },
     /**
      * @description 分享按钮
