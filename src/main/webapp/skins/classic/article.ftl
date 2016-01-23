@@ -154,7 +154,7 @@
                                 <button class="red" onclick="Comment.add('${article.oId}', '${csrfToken}')">${submitLabel}</button>
                             </div>
                         </div>
-                        
+
                     </div>
                     <div class="grammar fn-none fn-clear">
                         ${markdwonGrammarLabel}
@@ -217,7 +217,9 @@
                     </div>
                 </div>
                 <div class="side">
-
+                    <#if 6 == article.articleType || 5 == article.articleType>
+                    <#include 'common/side-menu.ftl'/>
+                    <#else>
                     <#include 'common/person-info.ftl'/>
 
                     <div class="module">
@@ -257,6 +259,7 @@
                             </ul>
                         </div>
                     </div>
+                    </#if>
                 </div>
             </div>
         </div>
@@ -266,15 +269,15 @@
         <#include "footer.ftl">
         <div id="preview" class="content-reset"></div>
         <script>
-                    Label.commentErrorLabel = "${commentErrorLabel}";
-                    Label.symphonyLabel = "${symphonyLabel}";
-                    Label.rewardConfirmLabel = "${rewardConfirmLabel?replace("{point}", article.articleRewardPoint)}"
+            Label.commentErrorLabel = "${commentErrorLabel}";
+            Label.symphonyLabel = "${symphonyLabel}";
+            Label.rewardConfirmLabel = "${rewardConfirmLabel?replace("{point}", article.articleRewardPoint)}"
                     Label.articleOId = "${article.oId}";
-                    Label.articleTitle = "${article.articleTitle}";
-                    Label.articlePermalink = "${article.articlePermalink}";
-                    Label.recordDeniedLabel = "${recordDeniedLabel}";
-                    Label.recordDeviceNotFoundLabel = "${recordDeviceNotFoundLabel}";
-                    Label.csrfToken = "${csrfToken}";</script>
+            Label.articleTitle = "${article.articleTitle}";
+            Label.articlePermalink = "${article.articlePermalink}";
+            Label.recordDeniedLabel = "${recordDeniedLabel}";
+            Label.recordDeviceNotFoundLabel = "${recordDeviceNotFoundLabel}";
+            Label.csrfToken = "${csrfToken}";</script>
         <script src="${staticServePath}/js/lib/jquery/jquery.bowknot.min.js"></script>
         <script src="${staticServePath}/js/lib/codemirror-5.3/codemirror.js"></script>
         <script src="${staticServePath}/js/lib/codemirror-5.3/mode/markdown/markdown.js"></script>
@@ -294,26 +297,26 @@
         <script type="text/javascript" src="${staticServePath}/js/channel${miniPostfix}.js?${staticResourceVersion}"></script>
         <script type="text/javascript" src="${staticServePath}/js/audio${miniPostfix}.js?${staticResourceVersion}"></script>
         <script>
-                    WEB_SOCKET_SWF_LOCATION = "${staticServePath}/js/lib/ws-flash/WebSocketMain.swf";
-                    // Init [Article] channel
-                    ArticleChannel.init("ws://${serverHost}:${serverPort}/article-channel?articleId=${article.oId}&articleType=${article.articleType}");
-                    // jQuery File Upload
-                    Util.uploadFile({
-                    "type": "img",
-                            "id": "fileUpload",
-                            "pasteZone": $(".CodeMirror"),
-                            "qiniuUploadToken": "${qiniuUploadToken}",
-                            "editor": Comment.editor,
-                            "uploadingLabel": "${uploadingLabel}",
-                            "qiniuDomain": "${qiniuDomain}"
-                    });
-                    var qiniuToken = '${qiniuUploadToken}';
-                    var qiniuDomain = '${qiniuDomain}';
-                    var audioRecordingLabel = '${audioRecordingLabel}';
-                    var uploadingLabel = '${uploadingLabel}';
-                    <#if 3 == article.articleType >
+            WEB_SOCKET_SWF_LOCATION = "${staticServePath}/js/lib/ws-flash/WebSocketMain.swf";
+            // Init [Article] channel
+            ArticleChannel.init("ws://${serverHost}:${serverPort}/article-channel?articleId=${article.oId}&articleType=${article.articleType}");
+            // jQuery File Upload
+            Util.uploadFile({
+            "type": "img",
+                    "id": "fileUpload",
+                    "pasteZone": $(".CodeMirror"),
+                    "qiniuUploadToken": "${qiniuUploadToken}",
+                    "editor": Comment.editor,
+                    "uploadingLabel": "${uploadingLabel}",
+                    "qiniuDomain": "${qiniuDomain}"
+            });
+            var qiniuToken = '${qiniuUploadToken}';
+            var qiniuDomain = '${qiniuDomain}';
+            var audioRecordingLabel = '${audioRecordingLabel}';
+            var uploadingLabel = '${uploadingLabel}';
+            <#if 3 == article.articleType>
                     Article.playThought('${article.articleContent}');
-                    </#if>
+            </#if>
         </script>
     </body>
 </html>
