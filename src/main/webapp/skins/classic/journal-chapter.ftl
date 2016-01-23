@@ -7,7 +7,7 @@
     <div class="module-panel">
         <div class='list'>
             <ul>
-                <#list [1,2,3] as item>
+                <#list [1,2,3] as itema>
                 <li>
                     <a rel="nofollow" class="ft-gray"
                        href="/member/admin" 
@@ -16,7 +16,7 @@
                     <a class="ft-gray" href='e'>Vanessa</a>
                     <span class="ft-red">6</span>/7
                     <#list [1,2,3, 4, 5, 6, 7] as item>
-                    <div class="journal-section">
+                    <div class="journal-section" id="menu${itema}${item}">
                         <span class="ft-red">星期一</span>
                         <span class="ft-fade">&nbsp;•&nbsp;</span>
                         <a href='e'>title</a><span class="ft-fade">&nbsp;•&nbsp;</span>

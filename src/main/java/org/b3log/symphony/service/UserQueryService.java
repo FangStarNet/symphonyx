@@ -565,6 +565,7 @@ public class UserQueryService {
             for (int i = 0; i < users.length(); i++) {
                 final JSONObject user = users.optJSONObject(i);
                 avatarQueryService.fillUserAvatarURL(user);
+                user.put(Common.PARAGRAPHS, (Object) new ArrayList());
             }
 
             return CollectionUtils.<JSONObject>jsonArrayToList(result.optJSONArray(Keys.RESULTS));

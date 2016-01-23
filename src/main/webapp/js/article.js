@@ -273,6 +273,27 @@ var Article = {
                 }
             });
         });
+        var menus = [];
+        $('.content div[id^=menu]').each(function (i) {
+            var $it = $(this);
+            menus.push({
+                id: $it.attr('id'),
+                offsetTop: $it.offset().top
+            });
+        });
+
+        $(window).scroll(function () {
+            var scrollTop = $('body').scrollTop();
+
+            for (var i = 0, iMax = menus.length; i < iMax; i++) {
+                if (scrollTop <= menus[i].offsetTop) {
+                    $('.side a').css('color', 'yellow');
+                    var index = i > 0 ? i : 0;
+                    $('.side a[href=#' + menus[index].id + ']').css('color', 'red');
+                    break;
+                }
+            }
+        });
     },
     /**
      * @description 分享按钮
