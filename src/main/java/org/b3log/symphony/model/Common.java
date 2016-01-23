@@ -19,11 +19,31 @@ package org.b3log.symphony.model;
  * This class defines all common model relevant keys.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.23.1.10, Jan 21, 2016
+ * @version 2.24.1.10, Jan 23, 2016
  * @since 0.2.0
  */
 public final class Common {
     
+    /**
+     * Key of total.
+     */
+    public static final String TOTAL = "total";
+    
+    /**
+     * Key of done.
+     */
+    public static final String DONE = "done";
+    
+    /**
+     * Key of paragraphs.
+     */
+    public static final String PARAGRAPHS = "paragraphs";
+
+    /**
+     * Key of team name.
+     */
+    public static final String TEAM_NAME = "teamName";
+
     /**
      * Key of teams.
      */

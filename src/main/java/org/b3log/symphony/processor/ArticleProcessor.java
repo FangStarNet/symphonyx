@@ -18,6 +18,7 @@ package org.b3log.symphony.processor;
 import com.qiniu.util.Auth;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -66,6 +67,7 @@ import org.b3log.symphony.service.ArticleMgmtService;
 import org.b3log.symphony.service.ArticleQueryService;
 import org.b3log.symphony.service.CommentQueryService;
 import org.b3log.symphony.service.FollowQueryService;
+import org.b3log.symphony.service.JournalQueryService;
 import org.b3log.symphony.service.RewardQueryService;
 import org.b3log.symphony.service.ShortLinkQueryService;
 import org.b3log.symphony.service.UserQueryService;
@@ -164,6 +166,12 @@ public class ArticleProcessor {
      */
     @Inject
     private VoteQueryService voteQueryService;
+
+    /**
+     * Journal query service.
+     */
+    @Inject
+    private JournalQueryService journalQueryService;
 
     /**
      * Filler.
@@ -337,6 +345,11 @@ public class ArticleProcessor {
         article.put(Common.REWARDED, false);
 
         articleQueryService.processArticleContent(article, request);
+
+        if (Article.ARTICLE_TYPE_C_JOURNAL_SECTION == article.optInt(Article.ARTICLE_TYPE)) {
+            final List<JSONObject> teams = journalQueryService.getParagraphsToday();
+            dataModel.put(Common.TEAMS, teams);
+        }
 
         final boolean isLoggedIn = (Boolean) dataModel.get(Common.IS_LOGGED_IN);
         JSONObject currentUser;

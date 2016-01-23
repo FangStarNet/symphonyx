@@ -44,6 +44,7 @@ import org.b3log.latke.repository.RepositoryException;
 import org.b3log.latke.repository.SortDirection;
 import org.b3log.latke.service.ServiceException;
 import org.b3log.latke.service.annotation.Service;
+import org.b3log.latke.util.CollectionUtils;
 import org.b3log.latke.util.Paginator;
 import org.b3log.symphony.model.Common;
 import org.b3log.symphony.model.UserExt;
@@ -546,5 +547,31 @@ public class UserQueryService {
         }
 
         return Latkes.getContextPath() + "/login?goto=" + to;
+    }
+
+    /**
+     * Gets all members of a team specified by the given team name.
+     *
+     * @param teamName the given team name
+     * @return all members
+     */
+    public List<JSONObject> getTeamMembers(final String teamName) {
+        final Query query = new Query().setFilter(new PropertyFilter(UserExt.USER_TEAM, FilterOperator.EQUAL, teamName));
+
+        try {
+            final JSONObject result = userRepository.get(query);
+
+            final JSONArray users = result.optJSONArray(Keys.RESULTS);
+            for (int i = 0; i < users.length(); i++) {
+                final JSONObject user = users.optJSONObject(i);
+                avatarQueryService.fillUserAvatarURL(user);
+            }
+
+            return CollectionUtils.<JSONObject>jsonArrayToList(result.optJSONArray(Keys.RESULTS));
+        } catch (final RepositoryException e) {
+            LOGGER.log(Level.ERROR, "Gets team members failed", e);
+
+            return Collections.emptyList();
+        }
     }
 }

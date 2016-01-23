@@ -25,6 +25,7 @@ import org.apache.commons.lang.time.DateUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
+import org.b3log.latke.model.User;
 import org.b3log.latke.repository.CompositeFilter;
 import org.b3log.latke.repository.CompositeFilterOperator;
 import org.b3log.latke.repository.Filter;
@@ -36,7 +37,11 @@ import org.b3log.latke.repository.SortDirection;
 import org.b3log.latke.service.annotation.Service;
 import org.b3log.latke.util.CollectionUtils;
 import org.b3log.symphony.model.Article;
+import org.b3log.symphony.model.Common;
+import org.b3log.symphony.model.UserExt;
 import org.b3log.symphony.repository.ArticleRepository;
+import org.b3log.symphony.repository.UserRepository;
+import org.b3log.symphony.util.Symphonys;
 import org.json.JSONObject;
 
 /**
@@ -55,10 +60,28 @@ public class JournalQueryService {
     private static final Logger LOGGER = Logger.getLogger(JournalQueryService.class.getName());
 
     /**
+     * Article query service.
+     */
+    @Inject
+    private ArticleQueryService articleQueryService;
+
+    /**
+     * User query service.
+     */
+    @Inject
+    private UserQueryService userQueryService;
+
+    /**
      * Article repository.
      */
     @Inject
     private ArticleRepository articleRepository;
+
+    /**
+     * User repository.
+     */
+    @Inject
+    private UserRepository userRepository;
 
     /**
      * Gets today's paragraphs.
@@ -79,12 +102,89 @@ public class JournalQueryService {
             query.setFilter(new CompositeFilter(CompositeFilterOperator.AND, filters));
 
             final JSONObject result = articleRepository.get(query);
-            return CollectionUtils.<JSONObject>jsonArrayToList(result.optJSONArray(Keys.RESULTS));
+            final List<JSONObject> paragraphs = CollectionUtils.<JSONObject>jsonArrayToList(result.optJSONArray(Keys.RESULTS));
+
+            final List<JSONObject> ret = new ArrayList<JSONObject>();
+
+            final String[] teamNames = Symphonys.get("teams").split(",");
+
+            for (final String teamName : teamNames) {
+                final List<JSONObject> users = getUsers(ret, teamName);
+
+                final List<JSONObject> teamMembers = userQueryService.getTeamMembers(teamName);
+                users.addAll(teamMembers);
+            }
+
+            for (final JSONObject paragraph : paragraphs) {
+                articleQueryService.organizeArticle(paragraph);
+
+                final String pAuthorId = paragraph.optString(Article.ARTICLE_AUTHOR_ID);
+                final JSONObject pAuthor = userRepository.get(pAuthorId);
+                final String userName = pAuthor.optString(User.USER_NAME);
+                final String teamName = pAuthor.optString(UserExt.USER_TEAM);
+
+                final List<JSONObject> users = getUsers(ret, teamName);
+                final List<JSONObject> paras = getParagraphs(users, userName);
+                paras.add(paragraph);
+            }
+
+            articleQueryService.genParticipants(paragraphs, Symphonys.getInt("latestArticleParticipantsCnt"));
+
+            processDoneTotal(ret);
+
+            return ret;
         } catch (final RepositoryException e) {
             LOGGER.log(Level.ERROR, "Gets today's paragraphs failed", e);
 
             return Collections.emptyList();
         }
+    }
+
+    private void processDoneTotal(final List<JSONObject> teams) {
+        for (final JSONObject team : teams) {
+            // TODO: team done and total
+
+            team.put(Common.DONE, 0);
+            team.put(Common.TOTAL, 0);
+        }
+    }
+
+    private List<JSONObject> getParagraphs(final List<JSONObject> users, final String userName) {
+        for (final JSONObject user : users) {
+            if (user.optString(User.USER_NAME).equals(userName)) {
+                if (!user.has(Common.PARAGRAPHS)) {
+                    user.put(Common.PARAGRAPHS, (Object) new ArrayList<JSONObject>());
+                }
+
+                return (List<JSONObject>) user.opt(Common.PARAGRAPHS);
+            }
+        }
+
+        final JSONObject user = new JSONObject();
+        users.add(user);
+        user.put(Common.TEAM_NAME, userName);
+        user.put(Common.PARAGRAPHS, (Object) new ArrayList<JSONObject>());
+
+        return (List<JSONObject>) user.opt(Common.PARAGRAPHS);
+    }
+
+    private List<JSONObject> getUsers(final List<JSONObject> teams, final String teamName) {
+        for (final JSONObject team : teams) {
+            if (team.optString(Common.TEAM_NAME).equals(teamName)) {
+                if (!team.has(User.USERS)) {
+                    team.put(User.USERS, (Object) new ArrayList<JSONObject>());
+                }
+
+                return (List<JSONObject>) team.opt(User.USERS);
+            }
+        }
+
+        final JSONObject team = new JSONObject();
+        teams.add(team);
+        team.put(Common.TEAM_NAME, teamName);
+        team.put(User.USERS, (Object) new ArrayList<JSONObject>());
+
+        return (List<JSONObject>) team.opt(User.USERS);
     }
 
     /**

@@ -22,10 +22,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.time.DateFormatUtils;
@@ -141,12 +139,6 @@ public class ArticleQueryService {
      */
     @Inject
     private ShortLinkQueryService shortLinkQueryService;
-
-    /**
-     * Journal query service.
-     */
-    @Inject
-    private JournalQueryService journalQueryService;
 
     /**
      * Language service.
@@ -960,19 +952,12 @@ public class ArticleQueryService {
      *
      * @param articles the specified articles
      * @param participantsCnt the specified generate size
-     * @throws ServiceException service exception
      */
-    private void genParticipants(final List<JSONObject> articles, final Integer participantsCnt) throws ServiceException {
+    public void genParticipants(final List<JSONObject> articles, final Integer participantsCnt) {
         for (final JSONObject article : articles) {
-            final String participantName = "";
-            final String participantThumbnailURL = "";
-
             final List<JSONObject> articleParticipants
                     = getArticleLatestParticipants(article.optString(Keys.OBJECT_ID), participantsCnt);
             article.put(Article.ARTICLE_T_PARTICIPANTS, (Object) articleParticipants);
-
-            article.put(Article.ARTICLE_T_PARTICIPANT_NAME, participantName);
-            article.put(Article.ARTICLE_T_PARTICIPANT_THUMBNAIL_URL, participantThumbnailURL);
         }
     }
 
@@ -991,10 +976,8 @@ public class ArticleQueryService {
      *     }, ....
      * ]
      * </pre>, returns an empty list if not found
-     *
-     * @throws ServiceException service exception
      */
-    private List<JSONObject> getArticleLatestParticipants(final String articleId, final int fetchSize) throws ServiceException {
+    private List<JSONObject> getArticleLatestParticipants(final String articleId, final int fetchSize) {
         final Query query = new Query().addSort(Comment.COMMENT_CREATE_TIME, SortDirection.DESCENDING)
                 .setFilter(new PropertyFilter(Comment.COMMENT_ON_ARTICLE_ID, FilterOperator.EQUAL, articleId))
                 .addProjection(Comment.COMMENT_AUTHOR_EMAIL, String.class).addProjection(Keys.OBJECT_ID, String.class)
@@ -1021,12 +1004,11 @@ public class ArticleQueryService {
 
                 ret.add(participant);
             }
-
-            return ret;
         } catch (final RepositoryException e) {
             LOGGER.log(Level.ERROR, "Gets article [" + articleId + "] participants failed", e);
-            throw new ServiceException(e);
         }
+
+        return ret;
     }
 
     /**
@@ -1098,67 +1080,6 @@ public class ArticleQueryService {
 
                 return;
             }
-        }
-
-        if (Article.ARTICLE_TYPE_C_JOURNAL_SECTION == article.optInt(Article.ARTICLE_TYPE)) {
-            // Append journal section content
-
-            final List<JSONObject> paragraphs = journalQueryService.getParagraphsToday();
-
-            // <team, List<paragraph>>
-            final Map<String, List<JSONObject>> logs = new TreeMap<String, List<JSONObject>>();
-
-            for (final JSONObject paragraph : paragraphs) {
-                final String pAuthorId = paragraph.optString(Article.ARTICLE_AUTHOR_ID);
-                final JSONObject pAuthor = userQueryService.getUser(pAuthorId);
-                final String team = pAuthor.optString(UserExt.USER_TEAM);
-
-                if (!logs.containsKey(team)) {
-                    logs.put(team, new ArrayList());
-                }
-
-                final List<JSONObject> teamParas = logs.get(team);
-
-                teamParas.add(paragraph);
-            }
-
-            final StringBuilder contentBuilder = new StringBuilder("\n\n");
-            for (final Map.Entry<String, List<JSONObject>> entry : logs.entrySet()) {
-                final String team = entry.getKey();
-                final List<JSONObject> teamParas = entry.getValue();
-
-                contentBuilder.append("####").append(team).append("\n\n");
-
-                for (final JSONObject paragraph : teamParas) {
-                    final String pAuthorId = paragraph.optString(Article.ARTICLE_AUTHOR_ID);
-                    final JSONObject pAuthor = userQueryService.getUser(pAuthorId);
-                    final String pAuthorName = pAuthor.optString(User.USER_NAME);
-
-                    contentBuilder.append("#####").append(pAuthorName).append("\n\n").append(paragraph.optString(Article.ARTICLE_CONTENT))
-                            .append("\n\n");
-                }
-            }
-
-            articleContent += contentBuilder.toString();
-        } else if (Article.ARTICLE_TYPE_C_JOURNAL_CHAPTER == article.optInt(Article.ARTICLE_TYPE)) {
-            // Append journal chapter content
-
-            final List<JSONObject> sections = journalQueryService.getSectionsWeek();
-
-            // <team, List<paragraph>>
-            final Map<String, List<JSONObject>> logs = new TreeMap<String, List<JSONObject>>();
-
-            final StringBuilder contentBuilder = new StringBuilder("\n\n###详细日志\n\n");
-            for (final JSONObject section : sections) {
-                final String date = DateFormatUtils.format(section.optLong(Keys.OBJECT_ID), "yyyyMMdd");
-                final String dayWeek = DateFormatUtils.format(section.optLong(Keys.OBJECT_ID), "E", Locale.US);
-
-                contentBuilder.append(" * [").append(section.optString(Article.ARTICLE_TITLE)).append("]").append("(").
-                        append(Latkes.getServePath()).append(section.optString(Article.ARTICLE_PERMALINK)).
-                        append(" \"").append(date).append(" ").append(dayWeek).append("\")\n");
-            }
-
-            articleContent += contentBuilder.toString();
         }
 
         for (final String userName : userNames) {
