@@ -346,9 +346,14 @@ public class ArticleProcessor {
 
         articleQueryService.processArticleContent(article, request);
 
-        if (Article.ARTICLE_TYPE_C_JOURNAL_SECTION == article.optInt(Article.ARTICLE_TYPE)) {
+        if (Article.ARTICLE_TYPE_C_JOURNAL_SECTION == article.optInt(Article.ARTICLE_TYPE)
+                || Article.ARTICLE_TYPE_C_JOURNAL_CHAPTER == article.optInt(Article.ARTICLE_TYPE)) {
             final List<JSONObject> teams = journalQueryService.getParagraphsToday();
             dataModel.put(Common.TEAMS, teams);
+        } else {
+            filler.fillRelevantArticles(dataModel, article);
+            filler.fillRandomArticles(dataModel);
+            filler.fillHotArticles(dataModel);
         }
 
         final boolean isLoggedIn = (Boolean) dataModel.get(Common.IS_LOGGED_IN);
@@ -377,10 +382,6 @@ public class ArticleProcessor {
         if (!(Boolean) request.getAttribute(Keys.HttpRequest.IS_SEARCH_ENGINE_BOT)) {
             articleMgmtService.incArticleViewCount(articleId);
         }
-
-        filler.fillRelevantArticles(dataModel, article);
-        filler.fillRandomArticles(dataModel);
-        filler.fillHotArticles(dataModel);
 
         // Qiniu file upload authenticate
         final Auth auth = Auth.create(Symphonys.get("qiniu.accessKey"), Symphonys.get("qiniu.secretKey"));
