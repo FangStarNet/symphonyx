@@ -566,6 +566,7 @@ public class UserQueryService {
                 final JSONObject user = users.optJSONObject(i);
                 avatarQueryService.fillUserAvatarURL(user);
                 user.put(Common.PARAGRAPHS, (Object) new ArrayList());
+                user.put(Common.WEEK_DAYS, (Object) new ArrayList());
             }
 
             return CollectionUtils.<JSONObject>jsonArrayToList(result.optJSONArray(Keys.RESULTS));

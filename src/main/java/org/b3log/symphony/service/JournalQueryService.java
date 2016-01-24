@@ -157,7 +157,7 @@ public class JournalQueryService {
                     setCurrentPageNum(1);
 
             final List<Filter> filters = new ArrayList<Filter>();
-            filters.add(new PropertyFilter(Article.ARTICLE_TYPE, FilterOperator.EQUAL, Article.ARTICLE_TYPE_C_JOURNAL_SECTION));
+            filters.add(new PropertyFilter(Article.ARTICLE_TYPE, FilterOperator.EQUAL, Article.ARTICLE_TYPE_C_JOURNAL_PARAGRAPH));
 
             filters.add(new PropertyFilter(Article.ARTICLE_CREATE_TIME, FilterOperator.GREATER_THAN_OR_EQUAL, getWeekStartTime(time)));
             filters.add(new PropertyFilter(Article.ARTICLE_CREATE_TIME, FilterOperator.LESS_THAN_OR_EQUAL, getWeekEndTime(time)));
@@ -190,14 +190,23 @@ public class JournalQueryService {
                 final String teamName = pAuthor.optString(UserExt.USER_TEAM);
 
                 final List<JSONObject> users = getUsers(ret, teamName);
-                final List<JSONObject> paras = getParagraphs(users, userName);
-                paragraph.put(UserExt.USER_TEAM, teamName);
+                final List<JSONObject> weekDays = getWeekDays(users, userName);
+
+                final long created = paragraph.optLong(Keys.OBJECT_ID);
+                final Calendar calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(created);
+                int day = calendar.get(Calendar.DAY_OF_WEEK) - 1;
+                if (day <= 0) {
+                    day = 7;
+                }
+
+                final List<JSONObject> paras = getWeekDayParagraphs(weekDays, String.valueOf(day));
                 paras.add(paragraph);
             }
 
             articleQueryService.genParticipants(paragraphs, Symphonys.getInt("latestArticleParticipantsCnt"));
 
-            doneCount(ret, paragraphs);
+            //doneCount(ret, paragraphs);
 
             return ret;
         } catch (final RepositoryException e) {
@@ -331,6 +340,43 @@ public class JournalQueryService {
         return (List<JSONObject>) user.opt(Common.PARAGRAPHS);
     }
 
+    private List<JSONObject> getWeekDays(final List<JSONObject> users, final String userName) {
+        for (final JSONObject user : users) {
+            if (user.optString(User.USER_NAME).equals(userName)) {
+                if (!user.has(Common.WEEK_DAYS)) {
+                    user.put(Common.WEEK_DAYS, (Object) new ArrayList<JSONObject>());
+                }
+
+                return (List<JSONObject>) user.opt(Common.WEEK_DAYS);
+            }
+        }
+
+        final JSONObject user = new JSONObject();
+        users.add(user);
+        user.put(Common.TEAM_NAME, userName);
+        user.put(Common.WEEK_DAYS, (Object) new ArrayList<JSONObject>());
+
+        return (List<JSONObject>) user.opt(Common.WEEK_DAYS);
+    }
+
+    private List<JSONObject> getWeekDayParagraphs(final List<JSONObject> weekDays, final String dayNum) {
+        for (final JSONObject weekDay : weekDays) {
+            if (weekDay.optString(Common.WEEK_DAY).equals(dayNum)) {
+                if (!weekDay.has(Common.PARAGRAPHS)) {
+                    weekDay.put(Common.PARAGRAPHS, (Object) new ArrayList<JSONObject>());
+                }
+
+                return (List<JSONObject>) weekDay.opt(Common.PARAGRAPHS);
+            }
+        }
+
+        final JSONObject day = new JSONObject();
+        weekDays.add(day);
+        day.put(Common.PARAGRAPHS, (Object) new ArrayList<JSONObject>());
+
+        return (List<JSONObject>) day.opt(Common.PARAGRAPHS);
+    }
+
     private List<JSONObject> getUsers(final List<JSONObject> teams, final String teamName) {
         for (final JSONObject team : teams) {
             if (team.optString(Common.TEAM_NAME).equals(teamName)) {
@@ -401,7 +447,9 @@ public class JournalQueryService {
 
     private Long getWeekStartTime(final long time) {
         final Calendar start = Calendar.getInstance();
-        
+
+        start.setFirstDayOfWeek(Calendar.MONDAY);
+
         start.setTimeInMillis(time);
         start.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
         start.set(Calendar.HOUR, 0);
@@ -414,7 +462,9 @@ public class JournalQueryService {
 
     private Long getWeekEndTime(final long time) {
         final Calendar end = Calendar.getInstance();
-        
+
+        end.setFirstDayOfWeek(Calendar.MONDAY);
+
         end.setTimeInMillis(time);
         end.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
         end.add(Calendar.WEEK_OF_YEAR, 1);

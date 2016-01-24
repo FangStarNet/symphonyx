@@ -23,17 +23,27 @@ package org.b3log.symphony.model;
  * @since 0.2.0
  */
 public final class Common {
-    
+
+    /**
+     * Key of week day.
+     */
+    public static final String WEEK_DAY = "weekDay";
+
+    /**
+     * Key of week days.
+     */
+    public static final String WEEK_DAYS = "weekDays";
+
     /**
      * Key of total.
      */
     public static final String TOTAL = "total";
-    
+
     /**
      * Key of done.
      */
     public static final String DONE = "done";
-    
+
     /**
      * Key of paragraphs.
      */

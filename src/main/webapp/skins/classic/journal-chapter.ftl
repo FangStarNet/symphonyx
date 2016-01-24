@@ -1,22 +1,22 @@
-<#list [1,2,3] as item>
+<#list teams as team>
 <div class="module journal">
     <div class="module-header">
-        FSERP2
+        ${team.teamName}
         <span class="icon-chevron-up fn-right fn-pointer"/>
     </div>
     <div class="module-panel">
         <div class='list'>
             <ul>
-                <#list [1,2,3] as itema>
+                <#list team.users as user>
                 <li>
                     <a rel="nofollow" class="ft-gray"
-                       href="/member/admin" 
-                       title="admin"><img class="avatar-small" src="http://localhost:8084/upload/b1a99d68-943e-4f45-b0a2-c52461aa0dc6.jpg-64.jpg?0" />
+                       href="/member/${user.userName}" 
+                       title="${user.userName}"><img class="avatar" src="${user.userAvatarURL}-64.jpg?${user.userUpdateTime?c}" /></a>
                     </a> &nbsp;
-                    <a class="ft-gray" href='e'>Vanessa</a>
+                    <a class="ft-gray" href='e'>${user.userName}</a>
                     <span class="ft-red">6</span>/7
-                    <#list [1,2,3, 4, 5, 6, 7] as item>
-                    <div class="journal-section" id="menu${itema}${item}">
+                    <#list user.weekDays as weekDay>
+                    <div class="journal-section" id="menu${user}${weekDay}">
                         <span class="ft-red">星期一</span>
                         <span class="ft-fade">&nbsp;•&nbsp;</span>
                         <a href='e'>title</a><span class="ft-fade">&nbsp;•&nbsp;</span>
