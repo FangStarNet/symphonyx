@@ -139,7 +139,7 @@ public class JournalQueryService {
 
             return ret;
         } catch (final RepositoryException e) {
-            LOGGER.log(Level.ERROR, "Gets today's paragraphs failed", e);
+            LOGGER.log(Level.ERROR, "Gets section failed", e);
 
             return Collections.emptyList();
         }
@@ -165,9 +165,43 @@ public class JournalQueryService {
             query.setFilter(new CompositeFilter(CompositeFilterOperator.AND, filters));
 
             final JSONObject result = articleRepository.get(query);
-            return CollectionUtils.<JSONObject>jsonArrayToList(result.optJSONArray(Keys.RESULTS));
+            final List<JSONObject> paragraphs = CollectionUtils.<JSONObject>jsonArrayToList(result.optJSONArray(Keys.RESULTS));
+
+            final List<JSONObject> ret = new ArrayList<JSONObject>();
+
+            final String[] teamNames = Symphonys.get("teams").split(",");
+
+            for (final String teamName : teamNames) {
+                final List<JSONObject> users = getUsers(ret, teamName);
+
+                final List<JSONObject> teamMembers = userQueryService.getTeamMembers(teamName);
+                users.addAll(teamMembers);
+
+                final JSONObject team = getTeam(ret, teamName);
+                team.put(Common.TOTAL, teamMembers.size());
+            }
+
+            for (final JSONObject paragraph : paragraphs) {
+                articleQueryService.organizeArticle(paragraph);
+
+                final String pAuthorId = paragraph.optString(Article.ARTICLE_AUTHOR_ID);
+                final JSONObject pAuthor = userRepository.get(pAuthorId);
+                final String userName = pAuthor.optString(User.USER_NAME);
+                final String teamName = pAuthor.optString(UserExt.USER_TEAM);
+
+                final List<JSONObject> users = getUsers(ret, teamName);
+                final List<JSONObject> paras = getParagraphs(users, userName);
+                paragraph.put(UserExt.USER_TEAM, teamName);
+                paras.add(paragraph);
+            }
+
+            articleQueryService.genParticipants(paragraphs, Symphonys.getInt("latestArticleParticipantsCnt"));
+
+            doneCount(ret, paragraphs);
+
+            return ret;
         } catch (final RepositoryException e) {
-            LOGGER.log(Level.ERROR, "Gets week's sections failed", e);
+            LOGGER.log(Level.ERROR, "Gets chapter failed", e);
 
             return Collections.emptyList();
         }
