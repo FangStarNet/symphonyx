@@ -86,7 +86,7 @@ public class JournalQueryService {
     /**
      * Gets one day's paragraphs.
      *
-     * @param time the specified time
+     * @param time sometime in the specified day
      * @return paragraphs
      */
     public List<JSONObject> getSection(final long time) {
@@ -146,11 +146,12 @@ public class JournalQueryService {
     }
 
     /**
-     * Gets sections this week.
+     * Gets one week's chapter.
      *
+     * @param time sometime in the specified week
      * @return paragraphs
      */
-    public List<JSONObject> getSectionsWeek() {
+    public List<JSONObject> getChapter(final long time) {
         try {
             final Query query = new Query().addSort(Keys.OBJECT_ID, SortDirection.DESCENDING).
                     setCurrentPageNum(1);
@@ -158,8 +159,8 @@ public class JournalQueryService {
             final List<Filter> filters = new ArrayList<Filter>();
             filters.add(new PropertyFilter(Article.ARTICLE_TYPE, FilterOperator.EQUAL, Article.ARTICLE_TYPE_C_JOURNAL_SECTION));
 
-            filters.add(new PropertyFilter(Article.ARTICLE_CREATE_TIME, FilterOperator.GREATER_THAN_OR_EQUAL, getWeekStartTime()));
-            filters.add(new PropertyFilter(Article.ARTICLE_CREATE_TIME, FilterOperator.LESS_THAN_OR_EQUAL, getWeekEndTime()));
+            filters.add(new PropertyFilter(Article.ARTICLE_CREATE_TIME, FilterOperator.GREATER_THAN_OR_EQUAL, getWeekStartTime(time)));
+            filters.add(new PropertyFilter(Article.ARTICLE_CREATE_TIME, FilterOperator.LESS_THAN_OR_EQUAL, getWeekEndTime(time)));
 
             query.setFilter(new CompositeFilter(CompositeFilterOperator.AND, filters));
 
@@ -341,31 +342,33 @@ public class JournalQueryService {
     }
 
     private Long getTodayStartTime(final long time) {
-        final Calendar todayStart = Calendar.getInstance();
+        final Calendar start = Calendar.getInstance();
 
-        todayStart.setTimeInMillis(time);
-        todayStart.set(Calendar.HOUR, 0);
-        todayStart.set(Calendar.MINUTE, 0);
-        todayStart.set(Calendar.SECOND, 0);
-        todayStart.set(Calendar.MILLISECOND, 0);
+        start.setTimeInMillis(time);
+        start.set(Calendar.HOUR, 0);
+        start.set(Calendar.MINUTE, 0);
+        start.set(Calendar.SECOND, 0);
+        start.set(Calendar.MILLISECOND, 0);
 
-        return todayStart.getTime().getTime();
+        return start.getTime().getTime();
     }
 
     private Long getTodayEndTime(final long time) {
-        final Calendar todayEnd = Calendar.getInstance();
+        final Calendar end = Calendar.getInstance();
 
-        todayEnd.setTimeInMillis(time);
-        todayEnd.set(Calendar.HOUR, 23);
-        todayEnd.set(Calendar.MINUTE, 59);
-        todayEnd.set(Calendar.SECOND, 59);
-        todayEnd.set(Calendar.MILLISECOND, 999);
+        end.setTimeInMillis(time);
+        end.set(Calendar.HOUR, 23);
+        end.set(Calendar.MINUTE, 59);
+        end.set(Calendar.SECOND, 59);
+        end.set(Calendar.MILLISECOND, 999);
 
-        return todayEnd.getTime().getTime();
+        return end.getTime().getTime();
     }
 
-    private Long getWeekStartTime() {
+    private Long getWeekStartTime(final long time) {
         final Calendar start = Calendar.getInstance();
+        
+        start.setTimeInMillis(time);
         start.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
         start.set(Calendar.HOUR, 0);
         start.set(Calendar.MINUTE, 0);
@@ -375,8 +378,10 @@ public class JournalQueryService {
         return start.getTime().getTime();
     }
 
-    private Long getWeekEndTime() {
+    private Long getWeekEndTime(final long time) {
         final Calendar end = Calendar.getInstance();
+        
+        end.setTimeInMillis(time);
         end.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
         end.add(Calendar.WEEK_OF_YEAR, 1);
         end.set(Calendar.HOUR, 23);

@@ -356,7 +356,8 @@ public class ArticleProcessor {
             }
 
             case Article.ARTICLE_TYPE_C_JOURNAL_CHAPTER: {
-                final List<JSONObject> teams = journalQueryService.getSectionsWeek();
+                final List<JSONObject> teams = journalQueryService.
+                        getChapter(article.optLong(Keys.OBJECT_ID));
                 dataModel.put(Common.TEAMS, teams);
 
                 break;
@@ -366,7 +367,7 @@ public class ArticleProcessor {
                 filler.fillRelevantArticles(dataModel, article);
                 filler.fillRandomArticles(dataModel);
                 filler.fillHotArticles(dataModel);
-                
+
                 break;
         }
 
