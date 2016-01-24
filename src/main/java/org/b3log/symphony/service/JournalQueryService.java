@@ -48,7 +48,7 @@ import org.json.JSONObject;
  * Journal query service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Jan 23, 2016
+ * @version 1.0.0.2, Jan 24, 2016
  * @since 1.4.0
  */
 @Service
@@ -84,11 +84,12 @@ public class JournalQueryService {
     private UserRepository userRepository;
 
     /**
-     * Gets today's paragraphs.
+     * Gets one day's paragraphs.
      *
+     * @param time the specified time
      * @return paragraphs
      */
-    public List<JSONObject> getParagraphsToday() {
+    public List<JSONObject> getSection(final long time) {
         try {
             final Query query = new Query().addSort(Keys.OBJECT_ID, SortDirection.DESCENDING).
                     setCurrentPageNum(1);
@@ -96,8 +97,8 @@ public class JournalQueryService {
             final List<Filter> filters = new ArrayList<Filter>();
             filters.add(new PropertyFilter(Article.ARTICLE_TYPE, FilterOperator.EQUAL, Article.ARTICLE_TYPE_C_JOURNAL_PARAGRAPH));
 
-            filters.add(new PropertyFilter(Article.ARTICLE_CREATE_TIME, FilterOperator.GREATER_THAN_OR_EQUAL, getTodayStartTime()));
-            filters.add(new PropertyFilter(Article.ARTICLE_CREATE_TIME, FilterOperator.LESS_THAN_OR_EQUAL, getTodayEndTime()));
+            filters.add(new PropertyFilter(Article.ARTICLE_CREATE_TIME, FilterOperator.GREATER_THAN_OR_EQUAL, getTodayStartTime(time)));
+            filters.add(new PropertyFilter(Article.ARTICLE_CREATE_TIME, FilterOperator.LESS_THAN_OR_EQUAL, getTodayEndTime(time)));
 
             query.setFilter(new CompositeFilter(CompositeFilterOperator.AND, filters));
 
@@ -141,6 +142,95 @@ public class JournalQueryService {
             LOGGER.log(Level.ERROR, "Gets today's paragraphs failed", e);
 
             return Collections.emptyList();
+        }
+    }
+
+    /**
+     * Gets sections this week.
+     *
+     * @return paragraphs
+     */
+    public List<JSONObject> getSectionsWeek() {
+        try {
+            final Query query = new Query().addSort(Keys.OBJECT_ID, SortDirection.DESCENDING).
+                    setCurrentPageNum(1);
+
+            final List<Filter> filters = new ArrayList<Filter>();
+            filters.add(new PropertyFilter(Article.ARTICLE_TYPE, FilterOperator.EQUAL, Article.ARTICLE_TYPE_C_JOURNAL_SECTION));
+
+            filters.add(new PropertyFilter(Article.ARTICLE_CREATE_TIME, FilterOperator.GREATER_THAN_OR_EQUAL, getWeekStartTime()));
+            filters.add(new PropertyFilter(Article.ARTICLE_CREATE_TIME, FilterOperator.LESS_THAN_OR_EQUAL, getWeekEndTime()));
+
+            query.setFilter(new CompositeFilter(CompositeFilterOperator.AND, filters));
+
+            final JSONObject result = articleRepository.get(query);
+            return CollectionUtils.<JSONObject>jsonArrayToList(result.optJSONArray(Keys.RESULTS));
+        } catch (final RepositoryException e) {
+            LOGGER.log(Level.ERROR, "Gets week's sections failed", e);
+
+            return Collections.emptyList();
+        }
+    }
+
+    /**
+     * Section generated today?
+     *
+     * @return {@code true} if section generated, returns {@code false} otherwise
+     */
+    public synchronized boolean hasSectionToday() {
+        try {
+            final Query query = new Query().addSort(Keys.OBJECT_ID, SortDirection.DESCENDING).
+                    setCurrentPageNum(1).setPageSize(1);
+
+            query.setFilter(new PropertyFilter(Article.ARTICLE_TYPE, FilterOperator.EQUAL,
+                    Article.ARTICLE_TYPE_C_JOURNAL_SECTION));
+
+            final JSONObject result = articleRepository.get(query);
+            final List<JSONObject> journals = CollectionUtils.<JSONObject>jsonArrayToList(result.optJSONArray(Keys.RESULTS));
+
+            if (journals.isEmpty()) {
+                return false;
+            }
+
+            final JSONObject maybeToday = journals.get(0);
+            final long created = maybeToday.optLong(Article.ARTICLE_CREATE_TIME);
+
+            return DateUtils.isSameDay(new Date(created), new Date());
+        } catch (final RepositoryException e) {
+            LOGGER.log(Level.ERROR, "Check section generated failed", e);
+
+            return false;
+        }
+    }
+
+    /**
+     * Chapter generated this week?
+     *
+     * @return {@code true} if chapter generated, returns {@code false} otherwise
+     */
+    public synchronized boolean hasChapterWeek() {
+        try {
+            final Query query = new Query().addSort(Keys.OBJECT_ID, SortDirection.DESCENDING).
+                    setCurrentPageNum(1).setPageSize(1);
+
+            query.setFilter(new PropertyFilter(Article.ARTICLE_TYPE, FilterOperator.EQUAL,
+                    Article.ARTICLE_TYPE_C_JOURNAL_CHAPTER));
+
+            final JSONObject result = articleRepository.get(query);
+            final List<JSONObject> journals = CollectionUtils.<JSONObject>jsonArrayToList(result.optJSONArray(Keys.RESULTS));
+
+            if (journals.isEmpty()) {
+                return false;
+            }
+
+            final JSONObject maybeToday = journals.get(0);
+            final long created = maybeToday.optLong(Article.ARTICLE_CREATE_TIME);
+
+            return isSameWeek(new Date(created), new Date());
+        } catch (final RepositoryException e) {
+            LOGGER.log(Level.ERROR, "Check chapter generated failed", e);
+
+            return false;
         }
     }
 
@@ -235,122 +325,6 @@ public class JournalQueryService {
         return null;
     }
 
-    /**
-     * Gets sections this week.
-     *
-     * @return paragraphs
-     */
-    public List<JSONObject> getSectionsWeek() {
-        try {
-            final Query query = new Query().addSort(Keys.OBJECT_ID, SortDirection.DESCENDING).
-                    setCurrentPageNum(1);
-
-            final List<Filter> filters = new ArrayList<Filter>();
-            filters.add(new PropertyFilter(Article.ARTICLE_TYPE, FilterOperator.EQUAL, Article.ARTICLE_TYPE_C_JOURNAL_SECTION));
-
-            filters.add(new PropertyFilter(Article.ARTICLE_CREATE_TIME, FilterOperator.GREATER_THAN_OR_EQUAL, getWeekStartTime()));
-            filters.add(new PropertyFilter(Article.ARTICLE_CREATE_TIME, FilterOperator.LESS_THAN_OR_EQUAL, getWeekEndTime()));
-
-            query.setFilter(new CompositeFilter(CompositeFilterOperator.AND, filters));
-
-            final JSONObject result = articleRepository.get(query);
-            return CollectionUtils.<JSONObject>jsonArrayToList(result.optJSONArray(Keys.RESULTS));
-        } catch (final RepositoryException e) {
-            LOGGER.log(Level.ERROR, "Gets week's sections failed", e);
-
-            return Collections.emptyList();
-        }
-    }
-
-    /**
-     * Gets paragraphs this week.
-     *
-     * @return paragraphs
-     */
-    public List<JSONObject> getParagraphsWeek() {
-        try {
-            final Query query = new Query().addSort(Keys.OBJECT_ID, SortDirection.DESCENDING).
-                    setCurrentPageNum(1);
-
-            final List<Filter> filters = new ArrayList<Filter>();
-            filters.add(new PropertyFilter(Article.ARTICLE_TYPE, FilterOperator.EQUAL, Article.ARTICLE_TYPE_C_JOURNAL_PARAGRAPH));
-
-            filters.add(new PropertyFilter(Article.ARTICLE_CREATE_TIME, FilterOperator.GREATER_THAN_OR_EQUAL, getWeekStartTime()));
-            filters.add(new PropertyFilter(Article.ARTICLE_CREATE_TIME, FilterOperator.LESS_THAN_OR_EQUAL, getWeekEndTime()));
-
-            query.setFilter(new CompositeFilter(CompositeFilterOperator.AND, filters));
-
-            final JSONObject result = articleRepository.get(query);
-            return CollectionUtils.<JSONObject>jsonArrayToList(result.optJSONArray(Keys.RESULTS));
-        } catch (final RepositoryException e) {
-            LOGGER.log(Level.ERROR, "Gets week's paragraphs failed", e);
-
-            return Collections.emptyList();
-        }
-    }
-
-    /**
-     * Section generated today?
-     *
-     * @return {@code true} if section generated, returns {@code false} otherwise
-     */
-    public synchronized boolean hasSectionToday() {
-        try {
-            final Query query = new Query().addSort(Keys.OBJECT_ID, SortDirection.DESCENDING).
-                    setCurrentPageNum(1).setPageSize(1);
-
-            query.setFilter(new PropertyFilter(Article.ARTICLE_TYPE, FilterOperator.EQUAL,
-                    Article.ARTICLE_TYPE_C_JOURNAL_SECTION));
-
-            final JSONObject result = articleRepository.get(query);
-            final List<JSONObject> journals = CollectionUtils.<JSONObject>jsonArrayToList(result.optJSONArray(Keys.RESULTS));
-
-            if (journals.isEmpty()) {
-                return false;
-            }
-
-            final JSONObject maybeToday = journals.get(0);
-            final long created = maybeToday.optLong(Article.ARTICLE_CREATE_TIME);
-
-            return DateUtils.isSameDay(new Date(created), new Date());
-        } catch (final RepositoryException e) {
-            LOGGER.log(Level.ERROR, "Check section generated failed", e);
-
-            return false;
-        }
-    }
-
-    /**
-     * Chapter generated this week?
-     *
-     * @return {@code true} if chapter generated, returns {@code false} otherwise
-     */
-    public synchronized boolean hasChapterWeek() {
-        try {
-            final Query query = new Query().addSort(Keys.OBJECT_ID, SortDirection.DESCENDING).
-                    setCurrentPageNum(1).setPageSize(1);
-
-            query.setFilter(new PropertyFilter(Article.ARTICLE_TYPE, FilterOperator.EQUAL,
-                    Article.ARTICLE_TYPE_C_JOURNAL_CHAPTER));
-
-            final JSONObject result = articleRepository.get(query);
-            final List<JSONObject> journals = CollectionUtils.<JSONObject>jsonArrayToList(result.optJSONArray(Keys.RESULTS));
-
-            if (journals.isEmpty()) {
-                return false;
-            }
-
-            final JSONObject maybeToday = journals.get(0);
-            final long created = maybeToday.optLong(Article.ARTICLE_CREATE_TIME);
-
-            return isSameWeek(new Date(created), new Date());
-        } catch (final RepositoryException e) {
-            LOGGER.log(Level.ERROR, "Check chapter generated failed", e);
-
-            return false;
-        }
-    }
-
     private static boolean isSameWeek(final Date date1, final Date date2) {
         if (date1 == null || date2 == null) {
             throw new IllegalArgumentException("The date must not be null");
@@ -366,8 +340,10 @@ public class JournalQueryService {
                 && cal1.get(Calendar.WEEK_OF_YEAR) == cal2.get(Calendar.WEEK_OF_YEAR);
     }
 
-    private Long getTodayStartTime() {
+    private Long getTodayStartTime(final long time) {
         final Calendar todayStart = Calendar.getInstance();
+
+        todayStart.setTimeInMillis(time);
         todayStart.set(Calendar.HOUR, 0);
         todayStart.set(Calendar.MINUTE, 0);
         todayStart.set(Calendar.SECOND, 0);
@@ -376,8 +352,10 @@ public class JournalQueryService {
         return todayStart.getTime().getTime();
     }
 
-    private Long getTodayEndTime() {
+    private Long getTodayEndTime(final long time) {
         final Calendar todayEnd = Calendar.getInstance();
+
+        todayEnd.setTimeInMillis(time);
         todayEnd.set(Calendar.HOUR, 23);
         todayEnd.set(Calendar.MINUTE, 59);
         todayEnd.set(Calendar.SECOND, 59);

@@ -346,14 +346,28 @@ public class ArticleProcessor {
 
         articleQueryService.processArticleContent(article, request);
 
-        if (Article.ARTICLE_TYPE_C_JOURNAL_SECTION == article.optInt(Article.ARTICLE_TYPE)
-                || Article.ARTICLE_TYPE_C_JOURNAL_CHAPTER == article.optInt(Article.ARTICLE_TYPE)) {
-            final List<JSONObject> teams = journalQueryService.getParagraphsToday();
-            dataModel.put(Common.TEAMS, teams);
-        } else {
-            filler.fillRelevantArticles(dataModel, article);
-            filler.fillRandomArticles(dataModel);
-            filler.fillHotArticles(dataModel);
+        switch (article.optInt(Article.ARTICLE_TYPE)) {
+            case Article.ARTICLE_TYPE_C_JOURNAL_SECTION: {
+                final List<JSONObject> teams = journalQueryService.
+                        getSection(article.optLong(Keys.OBJECT_ID));
+                dataModel.put(Common.TEAMS, teams);
+
+                break;
+            }
+
+            case Article.ARTICLE_TYPE_C_JOURNAL_CHAPTER: {
+                final List<JSONObject> teams = journalQueryService.getSectionsWeek();
+                dataModel.put(Common.TEAMS, teams);
+
+                break;
+            }
+
+            default:
+                filler.fillRelevantArticles(dataModel, article);
+                filler.fillRandomArticles(dataModel);
+                filler.fillHotArticles(dataModel);
+                
+                break;
         }
 
         final boolean isLoggedIn = (Boolean) dataModel.get(Common.IS_LOGGED_IN);
