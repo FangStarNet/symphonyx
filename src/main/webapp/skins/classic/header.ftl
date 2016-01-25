@@ -3,9 +3,11 @@
         <div class="head-fn fn-clear">
             <h1 class="fn-left">
                 <a href="/">
-                    <img src="${staticServePath}/images/hacpai.png" alt="${symphonyLabel}" title="${symphonyLabel}" width="42" class="fn-pointer" />
+                    <img src="${staticServePath}/images/logo.png" alt="${symphonyLabel}" title="${symphonyLabel}" width="42" class="fn-pointer" />
                 </a>
             </h1>
+            <!--
+            TODO: search
             <form class="responsive-hide" target="_blank" action="http://search.hacpai.com/cse/search">
                 <span class="icon-search"></span>
                 <input class="search" type="text" name="q">
@@ -13,6 +15,7 @@
                 <input type="hidden" name="cc" value="hacpai.com">
                 <input type="submit" class="fn-none" value="">
             </form>
+            -->
             <div class="fn-right">
                 <a href="/timeline" class="icon-clock last" title="${timelineLabel}"></a>
                 <a href="/journals" class="icon-navigation" title="${journalLabel}"></a>

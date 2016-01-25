@@ -18,7 +18,7 @@
 -->
 <!--
     Description: Static resources definition.
-    Version: 1.2.0.1, Aug 24, 2015
+    Version: 1.3.0.1, Jan 25, 2016
     Author: Liang Ding
 -->
 <static-files>
@@ -75,6 +75,7 @@
     <include path="/images/**/*.jpg" />
     <include path="/images/**.gif" />
     <include path="/images/**/*.gif" />
+    <include path="/images/**/*.ico" />
         
     <include path="/plugins/**.css" />
     <include path="/plugins/**/*.css" />
