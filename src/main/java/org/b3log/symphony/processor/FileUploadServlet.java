@@ -33,8 +33,15 @@ import jodd.util.MimeTypes;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Latkes;
+import org.b3log.latke.ioc.LatkeBeanManager;
+import org.b3log.latke.ioc.Lifecycle;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
+import org.b3log.latke.service.ServiceException;
+import org.b3log.symphony.model.Option;
+import org.b3log.symphony.service.OptionQueryService;
+import org.b3log.symphony.service.UserMgmtService;
+import org.b3log.symphony.service.UserQueryService;
 import org.b3log.symphony.util.Symphonys;
 import org.json.JSONObject;
 
@@ -42,11 +49,10 @@ import org.json.JSONObject;
  * File upload.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Jan 20, 2016
+ * @version 1.1.0.0, Jan 25, 2016
  * @since 1.4.0
  */
 @WebServlet(urlPatterns = {"/upload", "/upload/*"}, loadOnStartup = 2)
-// TODO: Security check
 public class FileUploadServlet extends HttpServlet {
 
     /**
@@ -86,6 +92,28 @@ public class FileUploadServlet extends HttpServlet {
             return;
         }
 
+        final LatkeBeanManager beanManager = Lifecycle.getBeanManager();
+        final UserQueryService userQueryService = beanManager.getReference(UserQueryService.class);
+        final UserMgmtService userMgmtService = beanManager.getReference(UserMgmtService.class);
+        final OptionQueryService optionQueryService = beanManager.getReference(OptionQueryService.class);
+
+        try {
+            final JSONObject option = optionQueryService.getOption(Option.ID_C_MISC_ALLOW_ANONYMOUS_VIEW);
+            if (!"0".equals(option.optString(Option.OPTION_VALUE))) {
+                if (null == userQueryService.getCurrentUser(req) && !userMgmtService.tryLogInWithCookie(req, resp)) {
+                    resp.sendError(HttpServletResponse.SC_FORBIDDEN);
+
+                    return;
+                }
+            }
+        } catch (final ServiceException e) {
+            LOGGER.log(Level.ERROR, "Gets file failed", e);
+
+            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+
+            return;
+        }
+
         final String uri = req.getRequestURI();
         final String key = uri.substring("/upload/".length());
 
@@ -94,6 +122,8 @@ public class FileUploadServlet extends HttpServlet {
         path = StringUtils.substringBeforeLast(path, "-260.jpg"); // Erase Qiniu template
 
         if (!FileUtil.isExistingFile(new File(path))) {
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+
             return;
         }
 
@@ -110,6 +140,24 @@ public class FileUploadServlet extends HttpServlet {
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp)
             throws ServletException, IOException {
         if (QN_ENABLED) {
+            return;
+        }
+
+        final LatkeBeanManager beanManager = Lifecycle.getBeanManager();
+        final UserQueryService userQueryService = beanManager.getReference(UserQueryService.class);
+        final UserMgmtService userMgmtService = beanManager.getReference(UserMgmtService.class);
+
+        try {
+            if (null == userQueryService.getCurrentUser(req) && !userMgmtService.tryLogInWithCookie(req, resp)) {
+                resp.sendError(HttpServletResponse.SC_FORBIDDEN);
+
+                return;
+            }
+        } catch (final ServiceException e) {
+            LOGGER.log(Level.ERROR, "Gets file failed", e);
+
+            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+
             return;
         }
 
