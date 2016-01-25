@@ -543,7 +543,7 @@ public class LoginProcessor {
      * @param context the specified context
      * @throws IOException io exception
      */
-    @RequestProcessing(value = {"/logout"}, method = HTTPRequestMethod.GET)
+    @RequestProcessing(value = "/logout", method = HTTPRequestMethod.GET)
     public void logout(final HTTPRequestContext context) throws IOException {
         final HttpServletRequest httpServletRequest = context.getRequest();
 

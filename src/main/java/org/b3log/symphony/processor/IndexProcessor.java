@@ -32,6 +32,8 @@ import org.b3log.latke.servlet.annotation.RequestProcessor;
 import org.b3log.latke.servlet.renderer.freemarker.AbstractFreeMarkerRenderer;
 import org.b3log.latke.util.Locales;
 import org.b3log.symphony.model.Common;
+import org.b3log.symphony.processor.advice.AnonymousViewCheck;
+import org.b3log.symphony.processor.advice.LoginCheck;
 import org.b3log.symphony.processor.advice.stopwatch.StopwatchEndAdvice;
 import org.b3log.symphony.processor.advice.stopwatch.StopwatchStartAdvice;
 import org.b3log.symphony.service.ArticleQueryService;
@@ -97,7 +99,7 @@ public class IndexProcessor {
      * @throws Exception exception
      */
     @RequestProcessing(value = "/", method = HTTPRequestMethod.GET)
-    @Before(adviceClass = StopwatchStartAdvice.class)
+    @Before(adviceClass = {StopwatchStartAdvice.class, AnonymousViewCheck.class})
     @After(adviceClass = StopwatchEndAdvice.class)
     public void showIndex(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response)
             throws Exception {
@@ -127,7 +129,7 @@ public class IndexProcessor {
      * @throws Exception exception
      */
     @RequestProcessing(value = "/about", method = HTTPRequestMethod.GET)
-    @Before(adviceClass = StopwatchStartAdvice.class)
+    @Before(adviceClass = {StopwatchStartAdvice.class, AnonymousViewCheck.class})
     @After(adviceClass = StopwatchEndAdvice.class)
     public void showAbout(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response)
             throws Exception {
@@ -136,33 +138,6 @@ public class IndexProcessor {
         final AbstractFreeMarkerRenderer renderer = new SkinRenderer();
         context.setRenderer(renderer);
         renderer.setTemplateName("about.ftl");
-        final Map<String, Object> dataModel = renderer.getDataModel();
-
-        filler.fillHeaderAndFooter(request, response, dataModel);
-        filler.fillRandomArticles(dataModel);
-        filler.fillHotArticles(dataModel);
-        filler.fillSideTags(dataModel);
-        filler.fillLatestCmts(dataModel);
-    }
-
-    /**
-     * Shows b3log.
-     *
-     * @param context the specified context
-     * @param request the specified request
-     * @param response the specified response
-     * @throws Exception exception
-     */
-    @RequestProcessing(value = "/b3log", method = HTTPRequestMethod.GET)
-    @Before(adviceClass = StopwatchStartAdvice.class)
-    @After(adviceClass = StopwatchEndAdvice.class)
-    public void showB3log(final HTTPRequestContext context,
-            final HttpServletRequest request, final HttpServletResponse response) throws Exception {
-        request.setAttribute(Keys.TEMAPLTE_DIR_NAME, Symphonys.get("skinDirName"));
-
-        final AbstractFreeMarkerRenderer renderer = new SkinRenderer();
-        context.setRenderer(renderer);
-        renderer.setTemplateName("b3log.ftl");
         final Map<String, Object> dataModel = renderer.getDataModel();
 
         filler.fillHeaderAndFooter(request, response, dataModel);

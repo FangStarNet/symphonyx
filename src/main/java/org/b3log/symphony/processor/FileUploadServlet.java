@@ -46,6 +46,7 @@ import org.json.JSONObject;
  * @since 1.4.0
  */
 @WebServlet(urlPatterns = {"/upload", "/upload/*"}, loadOnStartup = 2)
+// TODO: Security check
 public class FileUploadServlet extends HttpServlet {
 
     /**

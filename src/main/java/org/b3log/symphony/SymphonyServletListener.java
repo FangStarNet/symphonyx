@@ -265,6 +265,12 @@ public final class SymphonyServletListener extends AbstractServletListener {
             option.put(Option.OPTION_VALUE, "1"); // Not allow register
             option.put(Option.OPTION_CATEGORY, Option.CATEGORY_C_MISC);
             optionRepository.add(option);
+            
+            option = new JSONObject();
+            option.put(Keys.OBJECT_ID, Option.ID_C_MISC_ALLOW_ANONYMOUS_VIEW);
+            option.put(Option.OPTION_VALUE, "1"); // Not allow anonymous view
+            option.put(Option.OPTION_CATEGORY, Option.CATEGORY_C_MISC);
+            optionRepository.add(option);
 
             option = new JSONObject();
             option.put(Keys.OBJECT_ID, Option.ID_C_MISC_ALLOW_ADD_ARTICLE);

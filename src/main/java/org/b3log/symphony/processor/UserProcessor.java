@@ -47,6 +47,7 @@ import org.b3log.symphony.model.Follow;
 import org.b3log.symphony.model.Notification;
 import org.b3log.symphony.model.Pointtransfer;
 import org.b3log.symphony.model.UserExt;
+import org.b3log.symphony.processor.advice.AnonymousViewCheck;
 import org.b3log.symphony.processor.advice.CSRFCheck;
 import org.b3log.symphony.processor.advice.CSRFToken;
 import org.b3log.symphony.processor.advice.LoginCheck;
@@ -180,7 +181,7 @@ public class UserProcessor {
      * @throws Exception exception
      */
     @RequestProcessing(value = "/member/{userName}", method = HTTPRequestMethod.GET)
-    @Before(adviceClass = {StopwatchStartAdvice.class, UserBlockCheck.class})
+    @Before(adviceClass = {StopwatchStartAdvice.class, AnonymousViewCheck.class, UserBlockCheck.class})
     @After(adviceClass = StopwatchEndAdvice.class)
     public void showHome(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response,
             final String userName) throws Exception {
@@ -256,7 +257,7 @@ public class UserProcessor {
      * @throws Exception exception
      */
     @RequestProcessing(value = "/member/{userName}/comments", method = HTTPRequestMethod.GET)
-    @Before(adviceClass = {StopwatchStartAdvice.class, UserBlockCheck.class})
+    @Before(adviceClass = {StopwatchStartAdvice.class, AnonymousViewCheck.class, UserBlockCheck.class})
     @After(adviceClass = StopwatchEndAdvice.class)
     public void showHomeComments(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response,
             final String userName) throws Exception {
@@ -325,7 +326,7 @@ public class UserProcessor {
      * @throws Exception exception
      */
     @RequestProcessing(value = "/member/{userName}/following/users", method = HTTPRequestMethod.GET)
-    @Before(adviceClass = {StopwatchStartAdvice.class, UserBlockCheck.class})
+    @Before(adviceClass = {StopwatchStartAdvice.class, AnonymousViewCheck.class, UserBlockCheck.class})
     @After(adviceClass = StopwatchEndAdvice.class)
     public void showHomeFollowingUsers(final HTTPRequestContext context, final HttpServletRequest request,
             final HttpServletResponse response, final String userName) throws Exception {
@@ -399,7 +400,7 @@ public class UserProcessor {
      * @throws Exception exception
      */
     @RequestProcessing(value = "/member/{userName}/following/tags", method = HTTPRequestMethod.GET)
-    @Before(adviceClass = {StopwatchStartAdvice.class, UserBlockCheck.class})
+    @Before(adviceClass = {StopwatchStartAdvice.class, AnonymousViewCheck.class, UserBlockCheck.class})
     @After(adviceClass = StopwatchEndAdvice.class)
     public void showHomeFollowingTags(final HTTPRequestContext context, final HttpServletRequest request,
             final HttpServletResponse response, final String userName) throws Exception {
@@ -473,7 +474,7 @@ public class UserProcessor {
      * @throws Exception exception
      */
     @RequestProcessing(value = "/member/{userName}/following/articles", method = HTTPRequestMethod.GET)
-    @Before(adviceClass = {StopwatchStartAdvice.class, UserBlockCheck.class})
+    @Before(adviceClass = {StopwatchStartAdvice.class, AnonymousViewCheck.class, UserBlockCheck.class})
     @After(adviceClass = StopwatchEndAdvice.class)
     public void showHomeFollowingArticles(final HTTPRequestContext context, final HttpServletRequest request,
             final HttpServletResponse response, final String userName) throws Exception {
@@ -547,7 +548,7 @@ public class UserProcessor {
      * @throws Exception exception
      */
     @RequestProcessing(value = "/member/{userName}/followers", method = HTTPRequestMethod.GET)
-    @Before(adviceClass = {StopwatchStartAdvice.class, UserBlockCheck.class})
+    @Before(adviceClass = {StopwatchStartAdvice.class, AnonymousViewCheck.class, UserBlockCheck.class})
     @After(adviceClass = StopwatchEndAdvice.class)
     public void showHomeFollowers(final HTTPRequestContext context, final HttpServletRequest request,
             final HttpServletResponse response, final String userName) throws Exception {
@@ -621,7 +622,7 @@ public class UserProcessor {
      * @throws Exception exception
      */
     @RequestProcessing(value = "/member/{userName}/points", method = HTTPRequestMethod.GET)
-    @Before(adviceClass = {StopwatchStartAdvice.class, UserBlockCheck.class})
+    @Before(adviceClass = {StopwatchStartAdvice.class, AnonymousViewCheck.class, UserBlockCheck.class})
     @After(adviceClass = StopwatchEndAdvice.class)
     public void showHomePoints(final HTTPRequestContext context, final HttpServletRequest request,
             final HttpServletResponse response, final String userName) throws Exception {
