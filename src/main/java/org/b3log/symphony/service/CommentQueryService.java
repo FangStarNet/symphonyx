@@ -463,7 +463,7 @@ public class CommentQueryService {
      * @throws RepositoryException repository exception
      */
     private void organizeComment(final JSONObject comment) throws RepositoryException {
-        comment.put(Common.TIME_AGO, Times.getTimeAgo(comment.optLong(Comment.COMMENT_CREATE_TIME), Latkes.getLocale()));
+        comment.put(Common.TIME_AGO, Times.getTimeAgo(comment.optLong(Comment.COMMENT_CREATE_TIME)));
         comment.put(Comment.COMMENT_CREATE_TIME, new Date(comment.optLong(Comment.COMMENT_CREATE_TIME)));
 
         final String authorId = comment.optString(Comment.COMMENT_AUTHOR_ID);

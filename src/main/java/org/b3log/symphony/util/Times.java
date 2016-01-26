@@ -15,8 +15,6 @@
  */
 package org.b3log.symphony.util;
 
-import java.util.Locale;
-import java.util.Map;
 import org.b3log.latke.ioc.LatkeBeanManager;
 import org.b3log.latke.ioc.LatkeBeanManagerImpl;
 import org.b3log.latke.service.LangPropsService;
@@ -26,7 +24,7 @@ import org.b3log.latke.service.LangPropsServiceImpl;
  * Time utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Sep 1, 2015
+ * @version 1.1.0.0, Jan 25, 2016
  * @since 1.3.0
  */
 public final class Times {
@@ -62,16 +60,44 @@ public final class Times {
     private static final long YEAR_UNIT = 12 * MONTH_UNIT;
 
     /**
+     * Gets the display name of the specified week day.
+     *
+     * @param weekDay the specified week day (1-7)
+     * @return display name
+     */
+    public static String getWeekDayName(final int weekDay) {
+        final LatkeBeanManager beanManager = LatkeBeanManagerImpl.getInstance();
+        final LangPropsService langService = beanManager.getReference(LangPropsServiceImpl.class);
+
+        switch (weekDay) {
+            case 1:
+                return langService.get("monLabel");
+            case 2:
+                return langService.get("tueLabel");
+            case 3:
+                return langService.get("wenLabel");
+            case 4:
+                return langService.get("thuLabel");
+            case 5:
+                return langService.get("friLabel");
+            case 6:
+                return langService.get("satLabel");
+            case 7:
+                return langService.get("sunLabel");
+            default:
+                return langService.get("monLabel");
+        }
+    }
+
+    /**
      * Gets time ago format text.
      *
      * @param time the specified time.
-     * @param locale the specified locale
      * @return time ago format text
      */
-    public static String getTimeAgo(final long time, final Locale locale) {
+    public static String getTimeAgo(final long time) {
         final LatkeBeanManager beanManager = LatkeBeanManagerImpl.getInstance();
         final LangPropsService langService = beanManager.getReference(LangPropsServiceImpl.class);
-        final Map<String, String> langs = langService.getAll(locale);
 
         final long diff = System.currentTimeMillis() - time;
         long r = 0;
@@ -79,40 +105,40 @@ public final class Times {
         if (diff > YEAR_UNIT) {
             r = diff / YEAR_UNIT;
 
-            return r + " " + langs.get("yearsAgoLabel");
+            return r + " " + langService.get("yearsAgoLabel");
         }
 
         if (diff > MONTH_UNIT) {
             r = diff / MONTH_UNIT;
 
-            return r + " " + langs.get("monthsAgoLabel");
+            return r + " " + langService.get("monthsAgoLabel");
         }
 
         if (diff > WEEK_UNIT) {
             r = diff / WEEK_UNIT;
 
-            return r + " " + langs.get("weeksAgoLabel");
+            return r + " " + langService.get("weeksAgoLabel");
         }
 
         if (diff > DAY_UNIT) {
             r = diff / DAY_UNIT;
 
-            return r + " " + langs.get("daysAgoLabel");
+            return r + " " + langService.get("daysAgoLabel");
         }
 
         if (diff > HOUR_UNIT) {
             r = diff / HOUR_UNIT;
 
-            return r + " " + langs.get("hoursAgoLabel");
+            return r + " " + langService.get("hoursAgoLabel");
         }
 
         if (diff > MINUTE_UNIT) {
             r = diff / MINUTE_UNIT;
 
-            return r + " " + langs.get("minutesAgoLabel");
+            return r + " " + langService.get("minutesAgoLabel");
         }
 
-        return langs.get("justNowLabel");
+        return langService.get("justNowLabel");
     }
 
     /**

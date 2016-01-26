@@ -19,7 +19,7 @@ package org.b3log.symphony.model;
  * This class defines all common model relevant keys.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.24.1.10, Jan 23, 2016
+ * @version 2.25.1.10, Jan 25, 2016
  * @since 0.2.0
  */
 public final class Common {
@@ -28,6 +28,11 @@ public final class Common {
      * Key of week day.
      */
     public static final String WEEK_DAY = "weekDay";
+    
+    /**
+     * Key of week day name.
+     */
+    public static final String WEEK_DAY_NAME = "weekDayName";
 
     /**
      * Key of week days.

@@ -18,7 +18,6 @@ package org.b3log.symphony.processor;
 import com.qiniu.util.Auth;
 import java.io.IOException;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -348,16 +347,14 @@ public class ArticleProcessor {
 
         switch (article.optInt(Article.ARTICLE_TYPE)) {
             case Article.ARTICLE_TYPE_C_JOURNAL_SECTION: {
-                final List<JSONObject> teams = journalQueryService.
-                        getSection(article.optLong(Keys.OBJECT_ID));
+                final List<JSONObject> teams = journalQueryService.getSection(article.optLong(Keys.OBJECT_ID));
                 dataModel.put(Common.TEAMS, teams);
 
                 break;
             }
 
             case Article.ARTICLE_TYPE_C_JOURNAL_CHAPTER: {
-                final List<JSONObject> teams = journalQueryService.
-                        getChapter(article.optLong(Keys.OBJECT_ID));
+                final List<JSONObject> teams = journalQueryService.getChapter(article.optLong(Keys.OBJECT_ID));
                 dataModel.put(Common.TEAMS, teams);
 
                 break;
