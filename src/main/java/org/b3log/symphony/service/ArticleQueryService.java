@@ -1202,7 +1202,7 @@ public class ArticleQueryService {
      *
      * @param article the specified article content
      */
-    private void markdown(final JSONObject article) {
+    public void markdown(final JSONObject article) {
         String content = article.optString(Article.ARTICLE_CONTENT);
 
         final int articleType = article.optInt(Article.ARTICLE_TYPE);

@@ -41,6 +41,7 @@ import org.b3log.symphony.model.Common;
 import org.b3log.symphony.model.UserExt;
 import org.b3log.symphony.repository.ArticleRepository;
 import org.b3log.symphony.repository.UserRepository;
+import org.b3log.symphony.util.Markdowns;
 import org.b3log.symphony.util.Symphonys;
 import org.b3log.symphony.util.Times;
 import org.json.JSONObject;
@@ -92,8 +93,7 @@ public class JournalQueryService {
      */
     public List<JSONObject> getSection(final long time) {
         try {
-            final Query query = new Query().addSort(Keys.OBJECT_ID, SortDirection.ASCENDING).
-                    setCurrentPageNum(1);
+            final Query query = new Query().addSort(Keys.OBJECT_ID, SortDirection.ASCENDING).setCurrentPageNum(1);
 
             final List<Filter> filters = new ArrayList<Filter>();
             filters.add(new PropertyFilter(Article.ARTICLE_TYPE, FilterOperator.EQUAL, Article.ARTICLE_TYPE_C_JOURNAL_PARAGRAPH));
@@ -124,6 +124,8 @@ public class JournalQueryService {
             }
 
             for (final JSONObject paragraph : paragraphs) {
+                articleQueryService.markdown(paragraph);
+                
                 articleQueryService.organizeArticle(paragraph);
 
                 final String pAuthorId = paragraph.optString(Article.ARTICLE_AUTHOR_ID);
@@ -212,6 +214,8 @@ public class JournalQueryService {
             }
 
             for (final JSONObject paragraph : paragraphs) {
+                articleQueryService.markdown(paragraph);
+                
                 articleQueryService.organizeArticle(paragraph);
 
                 final String pAuthorId = paragraph.optString(Article.ARTICLE_AUTHOR_ID);
