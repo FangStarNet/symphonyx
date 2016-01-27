@@ -19,7 +19,9 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -28,6 +30,7 @@ import org.apache.commons.lang.time.DateFormatUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
+import org.b3log.latke.model.Pagination;
 import org.b3log.latke.model.User;
 import org.b3log.latke.service.ServiceException;
 import org.b3log.latke.servlet.HTTPRequestContext;
@@ -36,12 +39,18 @@ import org.b3log.latke.servlet.annotation.After;
 import org.b3log.latke.servlet.annotation.Before;
 import org.b3log.latke.servlet.annotation.RequestProcessing;
 import org.b3log.latke.servlet.annotation.RequestProcessor;
+import org.b3log.latke.servlet.renderer.freemarker.AbstractFreeMarkerRenderer;
+import org.b3log.latke.util.Paginator;
+import org.b3log.latke.util.Strings;
 import org.b3log.symphony.model.Article;
+import org.b3log.symphony.model.Common;
+import org.b3log.symphony.processor.advice.AnonymousViewCheck;
 import org.b3log.symphony.processor.advice.stopwatch.StopwatchEndAdvice;
 import org.b3log.symphony.processor.advice.stopwatch.StopwatchStartAdvice;
 import org.b3log.symphony.service.ArticleMgmtService;
 import org.b3log.symphony.service.JournalQueryService;
 import org.b3log.symphony.service.UserQueryService;
+import org.b3log.symphony.util.Filler;
 import org.b3log.symphony.util.Symphonys;
 import org.json.JSONObject;
 
@@ -54,7 +63,7 @@ import org.json.JSONObject;
  * </ul>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Jan 21, 2016
+ * @version 1.1.0.0, Jan 27, 2016
  * @since 1.4.0
  */
 @RequestProcessor
@@ -82,6 +91,61 @@ public class JournalProcessor {
      */
     @Inject
     private UserQueryService userQueryService;
+
+    /**
+     * Filler.
+     */
+    @Inject
+    private Filler filler;
+
+    /**
+     * Shows journals.
+     *
+     * @param context the specified context
+     * @param request the specified request
+     * @param response the specified response
+     * @throws Exception exception
+     */
+    @RequestProcessing(value = "/journals", method = HTTPRequestMethod.GET)
+    @Before(adviceClass = {StopwatchStartAdvice.class, AnonymousViewCheck.class})
+    @After(adviceClass = StopwatchEndAdvice.class)
+    public void showJournals(final HTTPRequestContext context,
+            final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+        final AbstractFreeMarkerRenderer renderer = new SkinRenderer();
+        context.setRenderer(renderer);
+        renderer.setTemplateName("journals.ftl");
+        final Map<String, Object> dataModel = renderer.getDataModel();
+
+        String pageNumStr = request.getParameter("p");
+        if (Strings.isEmptyOrNull(pageNumStr) || !Strings.isNumeric(pageNumStr)) {
+            pageNumStr = "1";
+        }
+
+        final int pageNum = Integer.valueOf(pageNumStr);
+        final int pageSize = Symphonys.getInt("latestArticlesCnt");
+        final int windowSize = Symphonys.getInt("latestArticlesWindowSize");
+
+        final List<JSONObject> latestArticles = journalQueryService.getRecentJournals(pageNum, pageSize);
+        dataModel.put(Common.LATEST_ARTICLES, latestArticles);
+
+        final int pageCount = latestArticles.isEmpty() ? 0 : latestArticles.get(0).optInt(Pagination.PAGINATION_PAGE_COUNT);
+
+        final List<Integer> pageNums = Paginator.paginate(pageNum, pageSize, pageCount, windowSize);
+        if (!pageNums.isEmpty()) {
+            dataModel.put(Pagination.PAGINATION_FIRST_PAGE_NUM, pageNums.get(0));
+            dataModel.put(Pagination.PAGINATION_LAST_PAGE_NUM, pageNums.get(pageNums.size() - 1));
+        }
+
+        dataModel.put(Pagination.PAGINATION_CURRENT_PAGE_NUM, pageNum);
+        dataModel.put(Pagination.PAGINATION_PAGE_COUNT, pageCount);
+        dataModel.put(Pagination.PAGINATION_PAGE_NUMS, pageNums);
+
+        filler.fillHeaderAndFooter(request, response, dataModel);
+        filler.fillRandomArticles(dataModel);
+        filler.fillHotArticles(dataModel);
+        filler.fillSideTags(dataModel);
+        filler.fillLatestCmts(dataModel);
+    }
 
     /**
      * Generates today's journal section.

@@ -25,6 +25,7 @@ import org.apache.commons.lang.time.DateUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
+import org.b3log.latke.model.Pagination;
 import org.b3log.latke.model.User;
 import org.b3log.latke.repository.CompositeFilter;
 import org.b3log.latke.repository.CompositeFilterOperator;
@@ -34,6 +35,8 @@ import org.b3log.latke.repository.PropertyFilter;
 import org.b3log.latke.repository.Query;
 import org.b3log.latke.repository.RepositoryException;
 import org.b3log.latke.repository.SortDirection;
+import org.b3log.latke.service.LangPropsService;
+import org.b3log.latke.service.ServiceException;
 import org.b3log.latke.service.annotation.Service;
 import org.b3log.latke.util.CollectionUtils;
 import org.b3log.symphony.model.Article;
@@ -41,7 +44,6 @@ import org.b3log.symphony.model.Common;
 import org.b3log.symphony.model.UserExt;
 import org.b3log.symphony.repository.ArticleRepository;
 import org.b3log.symphony.repository.UserRepository;
-import org.b3log.symphony.util.Markdowns;
 import org.b3log.symphony.util.Symphonys;
 import org.b3log.symphony.util.Times;
 import org.json.JSONObject;
@@ -50,7 +52,7 @@ import org.json.JSONObject;
  * Journal query service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.2, Jan 24, 2016
+ * @version 1.1.0.2, Jan 27, 2016
  * @since 1.4.0
  */
 @Service
@@ -66,6 +68,12 @@ public class JournalQueryService {
      */
     @Inject
     private ArticleQueryService articleQueryService;
+
+    /**
+     * Language service.
+     */
+    @Inject
+    private LangPropsService langPropsService;
 
     /**
      * User query service.
@@ -84,6 +92,59 @@ public class JournalQueryService {
      */
     @Inject
     private UserRepository userRepository;
+
+    /**
+     * Gets the recent (sort by create time) articles with the specified fetch size.
+     *
+     * @param currentPageNum the specified current page number
+     * @param fetchSize the specified fetch size
+     * @return recent articles, returns an empty list if not found
+     * @throws ServiceException service exception
+     */
+    public List<JSONObject> getRecentJournals(final int currentPageNum, final int fetchSize) throws ServiceException {
+        final Query query = new Query()
+                .addSort(Keys.OBJECT_ID, SortDirection.DESCENDING)
+                .setPageSize(fetchSize).setCurrentPageNum(currentPageNum);
+
+        final List<Filter> typeFilters = new ArrayList<Filter>();
+        typeFilters.add(new PropertyFilter(Article.ARTICLE_TYPE, FilterOperator.EQUAL, Article.ARTICLE_TYPE_C_JOURNAL_CHAPTER));
+        typeFilters.add(new PropertyFilter(Article.ARTICLE_TYPE, FilterOperator.EQUAL, Article.ARTICLE_TYPE_C_JOURNAL_PARAGRAPH));
+        typeFilters.add(new PropertyFilter(Article.ARTICLE_TYPE, FilterOperator.EQUAL, Article.ARTICLE_TYPE_C_JOURNAL_SECTION));
+        final CompositeFilter typeCompositeFilter = new CompositeFilter(CompositeFilterOperator.OR, typeFilters);
+
+        final List<Filter> filters = new ArrayList<Filter>();
+        filters.add(new PropertyFilter(Article.ARTICLE_STATUS, FilterOperator.EQUAL, Article.ARTICLE_STATUS_C_VALID));
+        filters.add(typeCompositeFilter);
+
+        query.setFilter(new CompositeFilter(CompositeFilterOperator.AND, filters));
+
+        try {
+            final JSONObject result = articleRepository.get(query);
+            final List<JSONObject> ret = CollectionUtils.<JSONObject>jsonArrayToList(result.optJSONArray(Keys.RESULTS));
+            
+            final int pageCount = result.optJSONObject(Pagination.PAGINATION).optInt(Pagination.PAGINATION_PAGE_COUNT);
+
+            articleQueryService.organizeArticles(ret);
+
+            for (final JSONObject article : ret) {
+                article.put(Pagination.PAGINATION_PAGE_COUNT, pageCount);
+                
+                final String authorId = article.optString(Article.ARTICLE_AUTHOR_ID);
+                final JSONObject author = userRepository.get(authorId);
+                if (UserExt.USER_STATUS_C_INVALID == author.optInt(UserExt.USER_STATUS)) {
+                    article.put(Article.ARTICLE_TITLE, langPropsService.get("articleTitleBlockLabel"));
+                }
+            }
+
+            final Integer participantsCnt = Symphonys.getInt("latestArticleParticipantsCnt");
+            articleQueryService.genParticipants(ret, participantsCnt);
+
+            return ret;
+        } catch (final RepositoryException e) {
+            LOGGER.log(Level.ERROR, "Gets journals failed", e);
+            throw new ServiceException(e);
+        }
+    }
 
     /**
      * Gets one day's paragraphs.
@@ -125,7 +186,7 @@ public class JournalQueryService {
 
             for (final JSONObject paragraph : paragraphs) {
                 articleQueryService.markdown(paragraph);
-                
+
                 articleQueryService.organizeArticle(paragraph);
 
                 final String pAuthorId = paragraph.optString(Article.ARTICLE_AUTHOR_ID);
@@ -181,7 +242,7 @@ public class JournalQueryService {
                 final List<JSONObject> users = getUsers(ret, teamName);
 
                 final List<JSONObject> teamMembers = userQueryService.getTeamMembers(teamName);
-                
+
                 int day = 1;
                 final List<JSONObject> weekDays = new ArrayList<JSONObject>();
 
@@ -198,7 +259,7 @@ public class JournalQueryService {
                     d.put(Common.WEEK_DAY_NAME, Times.getWeekDayName(i));
                     weekDays.add(d);
                 }
-                
+
                 for (final JSONObject weekDay : weekDays) {
                     weekDay.put(Common.PARAGRAPHS, (Object) new ArrayList<JSONObject>());
                 }
@@ -215,7 +276,7 @@ public class JournalQueryService {
 
             for (final JSONObject paragraph : paragraphs) {
                 articleQueryService.markdown(paragraph);
-                
+
                 articleQueryService.organizeArticle(paragraph);
 
                 final String pAuthorId = paragraph.optString(Article.ARTICLE_AUTHOR_ID);
