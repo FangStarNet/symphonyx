@@ -121,14 +121,14 @@ public class JournalQueryService {
         try {
             final JSONObject result = articleRepository.get(query);
             final List<JSONObject> ret = CollectionUtils.<JSONObject>jsonArrayToList(result.optJSONArray(Keys.RESULTS));
-            
+
             final int pageCount = result.optJSONObject(Pagination.PAGINATION).optInt(Pagination.PAGINATION_PAGE_COUNT);
 
             articleQueryService.organizeArticles(ret);
 
             for (final JSONObject article : ret) {
                 article.put(Pagination.PAGINATION_PAGE_COUNT, pageCount);
-                
+
                 final String authorId = article.optString(Article.ARTICLE_AUTHOR_ID);
                 final JSONObject author = userRepository.get(authorId);
                 if (UserExt.USER_STATUS_C_INVALID == author.optInt(UserExt.USER_STATUS)) {
@@ -243,31 +243,32 @@ public class JournalQueryService {
 
                 final List<JSONObject> teamMembers = userQueryService.getTeamMembers(teamName);
 
-                int day = 1;
-                final List<JSONObject> weekDays = new ArrayList<JSONObject>();
-
-                final long now = System.currentTimeMillis();
-                if (now > getWeekEndTime(time)) {
-                    day = 7;
-                } else {
-                    day = getWeekDay(now);
-                }
-
-                for (int i = 1; i <= day; i++) {
-                    final JSONObject d = new JSONObject();
-                    d.put(Common.WEEK_DAY, i);
-                    d.put(Common.WEEK_DAY_NAME, Times.getWeekDayName(i));
-                    weekDays.add(d);
-                }
-
-                for (final JSONObject weekDay : weekDays) {
-                    weekDay.put(Common.PARAGRAPHS, (Object) new ArrayList<JSONObject>());
-                }
-
                 for (final JSONObject teamMember : teamMembers) {
+                    int day = 1;
+                    final List<JSONObject> weekDays = new ArrayList<JSONObject>();
+
+                    final long now = System.currentTimeMillis();
+                    if (now > getWeekEndTime(time)) {
+                        day = 7;
+                    } else {
+                        day = getWeekDay(now);
+                    }
+
+                    for (int i = 1; i <= day; i++) {
+                        final JSONObject d = new JSONObject();
+                        d.put(Common.WEEK_DAY, i);
+                        d.put(Common.WEEK_DAY_NAME, Times.getWeekDayName(i));
+                        weekDays.add(d);
+                    }
+
+                    for (final JSONObject weekDay : weekDays) {
+                        weekDay.put(Common.PARAGRAPHS, (Object) new ArrayList<JSONObject>());
+                    }
+
                     teamMember.put(Common.WEEK_DAYS, (Object) weekDays);
 
                 }
+
                 users.addAll(teamMembers);
 
                 final JSONObject team = getTeam(ret, teamName);
@@ -430,39 +431,13 @@ public class JournalQueryService {
     }
 
     private List<JSONObject> getWeekDays(final List<JSONObject> users, final String userName, final long chapterTime) {
-        int day = 1;
-        final List<JSONObject> weekDays = new ArrayList<JSONObject>();
-
-        final long now = System.currentTimeMillis();
-        if (now > getWeekEndTime(chapterTime)) {
-            day = 7;
-        } else {
-            day = getWeekDay(now);
-        }
-
-        for (int i = 1; i <= day; i++) {
-            final JSONObject d = new JSONObject();
-            d.put(Common.WEEK_DAY, i);
-            d.put(Common.WEEK_DAY_NAME, Times.getWeekDayName(i));
-            weekDays.add(d);
-        }
-
         for (final JSONObject user : users) {
             if (user.optString(User.USER_NAME).equals(userName)) {
-                if (!user.has(Common.WEEK_DAYS)) {
-                    user.put(Common.WEEK_DAYS, (Object) weekDays);
-                }
-
                 return (List<JSONObject>) user.opt(Common.WEEK_DAYS);
             }
         }
 
-        final JSONObject user = new JSONObject();
-        users.add(user);
-        user.put(Common.TEAM_NAME, userName);
-        user.put(Common.WEEK_DAYS, (Object) weekDays);
-
-        return (List<JSONObject>) user.opt(Common.WEEK_DAYS);
+        return null;
     }
 
     private List<JSONObject> getWeekDayParagraphs(final List<JSONObject> weekDays, final int dayNum) {
