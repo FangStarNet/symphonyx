@@ -414,20 +414,11 @@ public class JournalQueryService {
     private List<JSONObject> getParagraphs(final List<JSONObject> users, final String userName) {
         for (final JSONObject user : users) {
             if (user.optString(User.USER_NAME).equals(userName)) {
-                if (!user.has(Common.PARAGRAPHS)) {
-                    user.put(Common.PARAGRAPHS, (Object) new ArrayList<JSONObject>());
-                }
-
                 return (List<JSONObject>) user.opt(Common.PARAGRAPHS);
             }
         }
 
-        final JSONObject user = new JSONObject();
-        users.add(user);
-        user.put(Common.TEAM_NAME, userName);
-        user.put(Common.PARAGRAPHS, (Object) new ArrayList<JSONObject>());
-
-        return (List<JSONObject>) user.opt(Common.PARAGRAPHS);
+        return null;
     }
 
     private List<JSONObject> getWeekDays(final List<JSONObject> users, final String userName, final long chapterTime) {
@@ -443,21 +434,11 @@ public class JournalQueryService {
     private List<JSONObject> getWeekDayParagraphs(final List<JSONObject> weekDays, final int dayNum) {
         for (final JSONObject weekDay : weekDays) {
             if (weekDay.optInt(Common.WEEK_DAY) == dayNum) {
-                if (!weekDay.has(Common.PARAGRAPHS)) {
-                    weekDay.put(Common.PARAGRAPHS, (Object) new ArrayList<JSONObject>());
-                }
-
                 return (List<JSONObject>) weekDay.opt(Common.PARAGRAPHS);
             }
         }
 
-        final JSONObject day = new JSONObject();
-        day.put(Common.WEEK_DAY, dayNum);
-        day.put(Common.WEEK_DAY_NAME, Times.getWeekDayName(dayNum));
-        weekDays.add(day);
-        day.put(Common.PARAGRAPHS, (Object) new ArrayList<JSONObject>());
-
-        return (List<JSONObject>) day.opt(Common.PARAGRAPHS);
+        return null;
     }
 
     private List<JSONObject> getUsers(final List<JSONObject> teams, final String teamName) {
