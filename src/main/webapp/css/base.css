@@ -526,14 +526,15 @@ a[class*=" icon-"]:hover {
     text-decoration: none;
     color: #4183c4;
 }
+
+.icon-navigation:before {
+    content: "\e903";
+}
 .icon-thumbs-down:before {
     content: "\e901";
 }
 .icon-thumbs-up:before {
     content: "\e902";
-}
-.icon-navigation:before {
-    content: "\e900";
 }
 .icon-locked:before {
     content: "\e61e";
@@ -938,6 +939,7 @@ a[class*=" icon-"]:hover {
     flex: 1;
     -webkit-box-flex: 1; 
     width: 30%;
+    min-width: 236px;
 }
 
 .content {
@@ -973,6 +975,7 @@ a[class*=" icon-"]:hover {
     flex: 1;
     -webkit-box-flex: 1;
     width: 30%;
+    min-width: 236px;
 }
 
 .nav div > a {
@@ -1008,6 +1011,11 @@ a[class*=" icon-"]:hover {
     margin: 12px 11px 0 11px;
     padding: 3px 6px;
     text-shadow: 0 0 0;
+}
+
+.nav .no-msg:hover {
+    background-color: #4183C4;
+    color: #FFF;
 }
 
 .nav .msg {

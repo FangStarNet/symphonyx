@@ -16,12 +16,15 @@
                 <label>${passwordLabel}</label>
                 <input name="userPassword" type="text" />
 
-                <label>${teamLabel}</label><br/><br/>
-                <select id="userTeam" name="userTeam">
-                    <#list teams as team>
-                    <option value="${team}">${team}</option>
-                    </#list>
-                </select><br/><br/>
+                <label>${teamLabel}
+                    <select id="userTeam" name="userTeam">
+                        <#list teams as team>
+                        <option value="${team}">${team}</option>
+                        </#list>
+                    </select>
+                </label>
+                
+                <br/><br/> <br/>
 
                 <label><input name="userAppRole" type="radio" value="0" checked="checked" />${programmerLabel}&nbsp;&nbsp;</label>
                 <label><input name="userAppRole" type="radio" value="1" />${designerLabel}</label>

@@ -36,8 +36,10 @@
                             <a class="count ft-gray" href="${paragraph.articlePermalink}">${paragraph.articleCommentCount}</a>
                         </div>
                         </#if>
-                        <div class="article-content">
-                            ${paragraph.articleContent}
+                        <div class="journal-content">
+                            <div class="article-content">
+                                ${paragraph.articleContent}
+                            </div>
                         </div>
                         </#list>
                     </div>
