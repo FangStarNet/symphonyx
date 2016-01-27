@@ -4,7 +4,6 @@
             <div class="footer-nav fn-clear">
                 <a rel="help" href="http://hacpai.com/article/1440573175609">${aboutLabel}</a>
                 <a class="responsive-hide" href="/timeline">${timelineLabel}</a>
-                <#if isLoggedIn><a class="responsive-hide" href="/city/my">${sameCityLabel}</a></#if>
                 <a href="/tags/系统公告">${symAnnouncementLabel}</a>
                 <a href="/tags/Q%26A">${qnaLabel}</a>
                 <a href="/tags" class="last">${tagLabel}</a>
@@ -24,8 +23,8 @@
                     <span class="ft-gray">${cmtLabel}</span> ${statistic.statisticCmtCount?c}
                 </div>
                 <div class="fn-right">
-                    <span class="ft-gray">Powered by <a href="http://b3log.org" target="_blank">B3log 开源</a> • 
-                        <a href="https://github.com/b3log/symphony" target="_blank">Sym</a>
+                    <span class="ft-gray">Powered by <a href="http://fangstar.com" target="_blank">房星网</a> • 
+                        <a href="https://github.com/FangStarNet/symphonyx" target="_blank">SymX</a>
                         ${version} • ${elapsed?c}ms</span>
                 </div>
             </div>
