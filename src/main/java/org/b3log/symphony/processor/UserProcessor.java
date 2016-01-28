@@ -94,7 +94,7 @@ import org.json.JSONObject;
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.12.7.15, Jan 21, 2016
+ * @version 2.12.7.16, Jan 28, 2016
  * @since 0.2.0
  */
 @RequestProcessor
@@ -956,6 +956,7 @@ public class UserProcessor {
             for (final JSONObject admin : admins) {
                 final JSONObject userName = new JSONObject();
                 userName.put(User.USER_NAME, admin.optString(User.USER_NAME));
+                userName.put(UserExt.USER_REAL_NAME, admin.optString(UserExt.USER_REAL_NAME));
 
                 String avatar = admin.optString(UserExt.USER_AVATAR_URL);
                 if (StringUtils.isBlank(avatar)) {
