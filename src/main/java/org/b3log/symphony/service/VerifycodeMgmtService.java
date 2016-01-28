@@ -20,11 +20,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 import javax.inject.Inject;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
+import org.b3log.latke.mail.MailService;
+import org.b3log.latke.mail.MailServiceFactory;
 import org.b3log.latke.model.User;
 import org.b3log.latke.repository.CompositeFilter;
 import org.b3log.latke.repository.CompositeFilterOperator;
@@ -41,6 +44,7 @@ import org.b3log.symphony.model.Verifycode;
 import org.b3log.symphony.repository.UserRepository;
 import org.b3log.symphony.repository.VerifycodeRepository;
 import org.b3log.symphony.util.Mails;
+import org.b3log.symphony.util.Symphonys;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -48,7 +52,7 @@ import org.json.JSONObject;
  * Verifycode management service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.0.0, Dec 8, 2015
+ * @version 1.2.0.0, Jan 28, 2016
  * @since 1.3.0
  */
 @Service
@@ -133,6 +137,7 @@ public class VerifycodeMgmtService {
      */
     @Transactional
     public void sendEmailVerifycode() {
+
         final List<Filter> filters = new ArrayList<Filter>();
         filters.add(new PropertyFilter(Verifycode.TYPE, FilterOperator.EQUAL, Verifycode.TYPE_C_EMAIL));
         filters.add(new PropertyFilter(Verifycode.STATUS, FilterOperator.EQUAL, Verifycode.STATUS_C_UNSENT));
@@ -142,55 +147,101 @@ public class VerifycodeMgmtService {
             final JSONObject result = verifycodeRepository.get(query);
             final JSONArray verifycodes = result.optJSONArray(Keys.RESULTS);
 
-            final Map<String, List<String>> vars = new HashMap<String, List<String>>();
-            final List<String> var1 = new ArrayList<String>();
-            final List<String> var2 = new ArrayList<String>();
-            vars.put("%1%", var1);
-            vars.put("%2%", var2);
-            final List<String> toMails = new ArrayList<String>();
+            if (Symphonys.getBoolean("sendcloud.enabled")) {
+                final Map<String, List<String>> vars = new HashMap<String, List<String>>();
+                final List<String> var1 = new ArrayList<String>();
+                final List<String> var2 = new ArrayList<String>();
+                vars.put("%1%", var1);
+                vars.put("%2%", var2);
+                final List<String> toMails = new ArrayList<String>();
 
-            for (int i = 0; i < verifycodes.length(); i++) {
-                final JSONObject verifycode = verifycodes.optJSONObject(i);
+                for (int i = 0; i < verifycodes.length(); i++) {
+                    final JSONObject verifycode = verifycodes.optJSONObject(i);
 
-                final String userId = verifycode.optString(Verifycode.USER_ID);
-                final JSONObject user = userRepository.get(userId);
-                if (null == user) {
-                    continue;
-                }
-
-                final String userName = user.optString(User.USER_NAME);
-                final String toMail = verifycode.optString(Verifycode.RECEIVER);
-                final String code = verifycode.optString(Verifycode.CODE);
-
-                var1.add(userName);
-
-                final int bizType = verifycode.optInt(Verifycode.BIZ_TYPE);
-                switch (bizType) {
-                    case Verifycode.BIZ_TYPE_C_REGISTER:
-                        var2.add(Latkes.getServePath() + "/register?code=" + code);
-
-                        break;
-                    case Verifycode.BIZ_TYPE_C_RESET_PWD:
-                        var2.add(Latkes.getServePath() + "/reset-pwd?code=" + code);
-
-                        break;
-                    default:
-                        LOGGER.warn("Send email verify code failed with wrong biz type [" + bizType + "]");
-
+                    final String userId = verifycode.optString(Verifycode.USER_ID);
+                    final JSONObject user = userRepository.get(userId);
+                    if (null == user) {
                         continue;
+                    }
+
+                    final String userName = user.optString(User.USER_NAME);
+                    final String toMail = verifycode.optString(Verifycode.RECEIVER);
+                    final String code = verifycode.optString(Verifycode.CODE);
+
+                    var1.add(userName);
+
+                    final int bizType = verifycode.optInt(Verifycode.BIZ_TYPE);
+                    switch (bizType) {
+                        case Verifycode.BIZ_TYPE_C_REGISTER:
+                            var2.add(Latkes.getServePath() + "/register?code=" + code);
+
+                            break;
+                        case Verifycode.BIZ_TYPE_C_RESET_PWD:
+                            var2.add(Latkes.getServePath() + "/reset-pwd?code=" + code);
+
+                            break;
+                        default:
+                            LOGGER.warn("Send email verify code failed with wrong biz type [" + bizType + "]");
+
+                            continue;
+                    }
+
+                    toMails.add(toMail);
+
+                    verifycode.put(Verifycode.STATUS, Verifycode.STATUS_C_SENT);
+                    verifycodeRepository.update(verifycode.optString(Keys.OBJECT_ID), verifycode);
                 }
 
-                toMails.add(toMail);
+                if (0 != verifycodes.length()) {
+                    Mails.send(langPropsService.get("verifycodeEmailSubjectLabel"), "sym_register", toMails, vars);
+                }
+            } else {
+                final MailService mailService = MailServiceFactory.getMailService();
+                final ResourceBundle mailConf = ResourceBundle.getBundle("mail");
 
-                verifycode.put(Verifycode.STATUS, Verifycode.STATUS_C_SENT);
-                verifycodeRepository.update(verifycode.optString(Keys.OBJECT_ID), verifycode);
-            }
+                for (int i = 0; i < verifycodes.length(); i++) {
+                    final JSONObject verifycode = verifycodes.optJSONObject(i);
 
-            if (0 != verifycodes.length()) {
-                Mails.send(langPropsService.get("verifycodeEmailSubjectLabel"), "sym_register", toMails, vars);
+                    final String userId = verifycode.optString(Verifycode.USER_ID);
+                    final JSONObject user = userRepository.get(userId);
+                    if (null == user) {
+                        continue;
+                    }
+
+                    final String toMail = verifycode.optString(Verifycode.RECEIVER);
+                    final String code = verifycode.optString(Verifycode.CODE);
+
+                    final int bizType = verifycode.optInt(Verifycode.BIZ_TYPE);
+                    switch (bizType) {
+                        case Verifycode.BIZ_TYPE_C_REGISTER:
+                            LOGGER.warn("Not impletement yet!");
+
+                            break;
+                        case Verifycode.BIZ_TYPE_C_RESET_PWD:
+
+                            final MailService.Message message = new MailService.Message();
+                            message.setFrom(mailConf.getString("mail.user"));
+                            message.addRecipient(toMail);
+                            message.setSubject(langPropsService.get("forgetPwdSubjectLabel"));
+                            String body = langPropsService.get("forgetPwdBodyLabel");
+                            body = body.replace("${url}", Latkes.getServePath() + "/reset-pwd?code=" + code);
+                            message.setHtmlBody(body);
+
+                            mailService.send(message);
+                            break;
+                        default:
+                            LOGGER.warn("Send email verify code failed with wrong biz type [" + bizType + "]");
+
+                            continue;
+                    }
+
+                    verifycode.put(Verifycode.STATUS, Verifycode.STATUS_C_SENT);
+                    verifycodeRepository.update(verifycode.optString(Keys.OBJECT_ID), verifycode);
+                }
             }
-        } catch (final RepositoryException e) {
+        } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Sends verifycode failed", e);
         }
+
     }
 }

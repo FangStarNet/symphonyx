@@ -67,6 +67,7 @@
         <script>
                                         Register.init2();
                                         Label.confirmPwdErrorLabel = "${confirmPwdErrorLabel}";
+                                        Label.servePath = "${servePath}";
         </script>
     </body>
 </html>

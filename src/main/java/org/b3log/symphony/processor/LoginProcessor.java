@@ -75,7 +75,7 @@ import org.json.JSONObject;
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.6.0.9, Jan 2, 2016
+ * @version 1.7.0.9, Jan 28, 2016
  * @since 0.2.0
  */
 @RequestProcessor
@@ -283,6 +283,8 @@ public class LoginProcessor {
             context.renderTrueResult();
 
             LOGGER.info("User [email=" + user.optString(User.USER_EMAIL) + "] reseted password");
+            
+            Sessions.login(request, response, user);
         } catch (final ServiceException e) {
             final String msg = langPropsService.get("resetPwdLabel") + " - " + e.getMessage();
             LOGGER.log(Level.ERROR, msg + "[name={0}, email={1}]", name, email);

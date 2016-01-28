@@ -18,7 +18,7 @@
 -->
 <!--
     Description: Cron job configurations. 
-    Version: 1.5.0.4, Jan 8, 2016
+    Version: 1.6.0.4, Jan 28, 2016
     Author: Liang Ding
 -->
 <cronentries>
@@ -48,9 +48,6 @@
         <schedule>every 2 hours</schedule>
     </cron>
     
-    <!-- Disabled on Dev environment -->
-    <!--
-
     <cron>
         <url>/verifycode/email?key=dev_key</url>
         <description>Sends email verifycodes</description>
@@ -68,5 +65,4 @@
         <description>Resets unverified users</description>
         <schedule>every 24 hours</schedule>
     </cron>
-    -->
 </cronentries>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Description: Symphony POM.
-    Version: 2.7.2.24, Jan 4, 2016
+    Version: 2.8.2.24, Jan 28, 2016
     Author: Liang Ding
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
@@ -123,10 +123,6 @@
                 <exclusion>
                     <groupId>com.h2database</groupId>
                     <artifactId>h2</artifactId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>mail</artifactId>
-                    <groupId>javax.mail</groupId>
                 </exclusion>
                 <exclusion>
                     <groupId>org.jboss</groupId>

@@ -14,7 +14,7 @@
                 <input name="userEmail" type="text" />
 
                 <label>${passwordLabel}</label>
-                <input name="userPassword" type="text" />
+                <input name="userPassword" type="text" value="${userPassword}" />
 
                 <label>${teamLabel}
                     <select id="userTeam" name="userTeam">
