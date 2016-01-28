@@ -16,7 +16,7 @@
                            title="${user.userName}"><img class="avatar" src="${user.userAvatarURL}-64.jpg?${user.userUpdateTime?c}" /></a>
                         <div class="fn-flex-1">
                             <div class="article-content">
-                                <a class="ft-gray" href='/member/${user.userName}'><b>${user.userName}</b></a>
+                                <a class="ft-gray" href='/member/${user.userName}'><b>${user.userName}</b> (${user.userRealName})</a>
                                 <i>本日没有记录</i>
                             </div>
                         </div>
@@ -43,7 +43,7 @@
                             </#list>
 
                             <span class="ft-fade">&nbsp;•&nbsp;</span>
-                            <a class="ft-gray" href='/member/${user.userName}'><b>${user.userName}</b></a>
+                            <a class="ft-gray" href='/member/${user.userName}'><b>${user.userName}</b> (${user.userRealName})</a>
                             <span class="ft-fade">&nbsp;•&nbsp;${paragraph.timeAgo}</span>
 
                         </div>

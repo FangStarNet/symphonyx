@@ -214,6 +214,16 @@ public final class Pointtransfer {
     public static final int TRANSFER_SUM_C_ADD_ARTICLE_BROADCAST = Symphonys.getInt("pointAddArticleBroadcast");
 
     /**
+     * Transfer type - Add Article (Journal) Income.
+     */
+    public static final int TRANSFER_TYPE_C_ADD_JOURNAL = 16;
+
+    /**
+     * Transfer sum - Add Article (Journal).
+     */
+    public static final int TRANSFER_SUM_C_ADD_JOURNAL = Symphonys.getInt("pointAddJournal");
+
+    /**
      * Private constructor.
      */
     private Pointtransfer() {

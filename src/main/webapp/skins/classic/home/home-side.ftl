@@ -34,16 +34,11 @@
         <div class="user-info">
             <span class="ft-gray">${symphonyLabel}</span>
             ${user.userNo?c}
-            <span class="ft-gray">${numVIPLabel}</span>
+            <span class="ft-gray">${numVIPLabel} <i>${user.userRealName}</i></span>
         </div>
         <#if "" != user.userTags>
         <div class="user-info">
             <span class="ft-gray">${selfTagLabel}</span> <#list user.userTags?split(',') as tag> ${tag?html}<#if tag_has_next>,</#if></#list>
-        </div>
-        </#if>
-        <#if "" != user.userCity && 0 == user.userGeoStatus>
-        <div class="user-info">
-            <span class="ft-gray">${geoLable}</span> <#if "中国" == user.userCountry>${user.userCity}<#else>${user.userCountry} ${user.userCity}</#if>
         </div>
         </#if>
         <div class="user-info">

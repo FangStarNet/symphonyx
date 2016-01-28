@@ -64,7 +64,7 @@ import org.json.JSONObject;
  * Article management service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.5.14.12, Jan 21, 2016
+ * @version 2.6.14.12, Jan 28, 2016
  * @since 0.2.0
  */
 @Service
@@ -340,22 +340,30 @@ public class ArticleMgmtService {
             tagMgmtService.relateTags(article.optString(Article.ARTICLE_TAGS));
 
             // Point
-            final long followerCnt = followQueryService.getFollowerCount(authorId, Follow.FOLLOWING_TYPE_C_USER);
-            final int addition = (int) Math.round(Math.sqrt(followerCnt));
+            if (Article.ARTICLE_TYPE_C_JOURNAL_PARAGRAPH == articleType
+                    || Article.ARTICLE_TYPE_C_JOURNAL_SECTION == articleType
+                    || Article.ARTICLE_TYPE_C_JOURNAL_CHAPTER == articleType) {
+                pointtransferMgmtService.transfer(Pointtransfer.ID_C_SYS, authorId,
+                        Pointtransfer.TRANSFER_TYPE_C_ADD_JOURNAL,
+                        Pointtransfer.TRANSFER_SUM_C_ADD_JOURNAL, articleId);
+            } else {
+                final long followerCnt = followQueryService.getFollowerCount(authorId, Follow.FOLLOWING_TYPE_C_USER);
+                final int addition = (int) Math.round(Math.sqrt(followerCnt));
 
-            pointtransferMgmtService.transfer(authorId, Pointtransfer.ID_C_SYS,
-                    Pointtransfer.TRANSFER_TYPE_C_ADD_ARTICLE,
-                    Pointtransfer.TRANSFER_SUM_C_ADD_ARTICLE + addition, articleId);
+                pointtransferMgmtService.transfer(authorId, Pointtransfer.ID_C_SYS,
+                        Pointtransfer.TRANSFER_TYPE_C_ADD_ARTICLE,
+                        Pointtransfer.TRANSFER_SUM_C_ADD_ARTICLE + addition, articleId);
+
+                if (Article.ARTICLE_TYPE_C_CITY_BROADCAST == articleType) {
+                    pointtransferMgmtService.transfer(authorId, Pointtransfer.ID_C_SYS,
+                            Pointtransfer.TRANSFER_TYPE_C_ADD_ARTICLE_BROADCAST,
+                            Pointtransfer.TRANSFER_SUM_C_ADD_ARTICLE_BROADCAST, articleId);
+                }
+            }
 
             if (rewardPoint > 0) { // Enabe reward
                 pointtransferMgmtService.transfer(authorId, Pointtransfer.ID_C_SYS,
                         Pointtransfer.TRANSFER_TYPE_C_ADD_ARTICLE_REWARD, rewardPoint, articleId);
-            }
-
-            if (Article.ARTICLE_TYPE_C_CITY_BROADCAST == articleType) {
-                pointtransferMgmtService.transfer(authorId, Pointtransfer.ID_C_SYS,
-                        Pointtransfer.TRANSFER_TYPE_C_ADD_ARTICLE_BROADCAST,
-                        Pointtransfer.TRANSFER_SUM_C_ADD_ARTICLE_BROADCAST, articleId);
             }
 
             // Event
@@ -453,15 +461,20 @@ public class ArticleMgmtService {
 
             transaction.commit();
 
-            if (currentTimeMillis - createTime > 1000 * 60 * 5) {
-                final long followerCnt = followQueryService.getFollowerCount(authorId, Follow.FOLLOWING_TYPE_C_USER);
-                int addition = (int) Math.round(Math.sqrt(followerCnt));
-                final long collectCnt = followQueryService.getFollowerCount(articleId, Follow.FOLLOWING_TYPE_C_ARTICLE);
-                addition += collectCnt * 2;
+            final int articleType = oldArticle.optInt(Article.ARTICLE_TYPE);
+            if (Article.ARTICLE_TYPE_C_JOURNAL_PARAGRAPH != articleType
+                    && Article.ARTICLE_TYPE_C_JOURNAL_SECTION != articleType
+                    && Article.ARTICLE_TYPE_C_JOURNAL_CHAPTER != articleType) {
+                if (currentTimeMillis - createTime > 1000 * 60 * 5) {
+                    final long followerCnt = followQueryService.getFollowerCount(authorId, Follow.FOLLOWING_TYPE_C_USER);
+                    int addition = (int) Math.round(Math.sqrt(followerCnt));
+                    final long collectCnt = followQueryService.getFollowerCount(articleId, Follow.FOLLOWING_TYPE_C_ARTICLE);
+                    addition += collectCnt * 2;
 
-                pointtransferMgmtService.transfer(authorId, Pointtransfer.ID_C_SYS,
-                        Pointtransfer.TRANSFER_TYPE_C_UPDATE_ARTICLE,
-                        Pointtransfer.TRANSFER_SUM_C_UPDATE_ARTICLE + addition, articleId);
+                    pointtransferMgmtService.transfer(authorId, Pointtransfer.ID_C_SYS,
+                            Pointtransfer.TRANSFER_TYPE_C_UPDATE_ARTICLE,
+                            Pointtransfer.TRANSFER_SUM_C_UPDATE_ARTICLE + addition, articleId);
+                }
             }
 
             if (enableReward) {

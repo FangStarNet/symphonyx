@@ -54,7 +54,7 @@ import org.json.JSONObject;
  * Pointtransfer query service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.7.1.1, Aug 31, 2015
+ * @version 1.8.1.1, Jan 28, 2016
  * @since 1.3.0
  */
 @Service
@@ -213,7 +213,8 @@ public class PointtransferQueryService {
                 if (("3".equals(typeStr) && userId.equals(toId))
                         || ("5".equals(typeStr) && userId.equals(fromId))
                         || ("9".equals(typeStr) && userId.equals(toId))
-                        || ("14".equals(typeStr) && userId.equals(toId))) {
+                        || ("14".equals(typeStr) && userId.equals(toId))
+                        || "16".equals(typeStr) && userId.equals(toId)) {
                     typeStr += "In";
                 }
 
@@ -368,6 +369,14 @@ public class PointtransferQueryService {
                                 + addArticleBroadcast.optString(Article.ARTICLE_PERMALINK) + "\">"
                                 + addArticleBroadcast.optString(Article.ARTICLE_TITLE) + "</a>";
                         desTemplate = desTemplate.replace("{article}", addArticleBroadcastLink);
+
+                        break;
+                    case Pointtransfer.TRANSFER_TYPE_C_ADD_JOURNAL:
+                        final JSONObject journal = articleRepository.get(dataId);
+                        final String journalLink = "<a href=\""
+                                + journal.optString(Article.ARTICLE_PERMALINK) + "\">"
+                                + journal.optString(Article.ARTICLE_TITLE) + "</a>";
+                        desTemplate = desTemplate.replace("{article}", journalLink);
 
                         break;
                     default:
