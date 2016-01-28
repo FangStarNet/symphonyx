@@ -309,6 +309,8 @@ public final class SymphonyServletListener extends AbstractServletListener {
             articleMgmtService.addArticle(article);
 
             LOGGER.info("Initialized Sym");
+            
+            JdbcRepository.dispose();
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Creates database tables failed", e);
 
