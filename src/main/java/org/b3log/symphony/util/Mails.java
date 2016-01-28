@@ -20,11 +20,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 import jodd.http.HttpRequest;
 import jodd.http.HttpResponse;
 import org.b3log.latke.Latkes;
+import org.b3log.latke.ioc.LatkeBeanManager;
+import org.b3log.latke.ioc.Lifecycle;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
+import org.b3log.latke.mail.MailService;
+import org.b3log.latke.mail.MailServiceFactory;
+import org.b3log.latke.service.LangPropsService;
+import org.b3log.latke.service.LangPropsServiceImpl;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -53,7 +60,44 @@ public final class Mails {
     private static final String API_KEY = Symphonys.get("sendcloud.apiKey");
 
     /**
-     * Sends mail.
+     * Mail service.
+     */
+    private static final MailService MAIL_SVC = MailServiceFactory.getMailService();
+    
+    /**
+     * Mail configuration.
+     */
+    private static final ResourceBundle MAIL_CONF = ResourceBundle.getBundle("mail");
+
+    /**
+     * Sends mail by local account.
+     *
+     * @param recipient the specified recipient mail
+     * @param subject the specified subject
+     * @param body the specified body
+     */
+    public static void send(final String recipient, final String subject, final String body) {
+
+        final LatkeBeanManager beanManager = Lifecycle.getBeanManager();
+        final LangPropsService langService = beanManager.getReference(LangPropsServiceImpl.class);
+
+        try {
+            final MailService.Message message = new MailService.Message();
+            message.setFrom(javax.mail.internet.MimeUtility.encodeText(langService.get("symphonyLabel"))
+                    + " <" + MAIL_CONF.getString("mail.user") + ">");
+            message.addRecipient(recipient);
+            message.setSubject(subject);
+            message.setHtmlBody(body);
+
+            MAIL_SVC.send(message);
+        } catch (final Exception e) {
+
+            LOGGER.log(Level.ERROR, "Sends mail failed", e);
+        }
+    }
+
+    /**
+     * Sends mail by SendClound.
      *
      * @param toMails to mails
      * @param templateName template name

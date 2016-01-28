@@ -20,7 +20,6 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.ResourceBundle;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,8 +28,6 @@ import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.logging.Logger;
-import org.b3log.latke.mail.MailService;
-import org.b3log.latke.mail.MailServiceFactory;
 import org.b3log.latke.model.Pagination;
 import org.b3log.latke.model.User;
 import org.b3log.latke.service.LangPropsService;
@@ -72,6 +69,7 @@ import org.b3log.symphony.service.TagQueryService;
 import org.b3log.symphony.service.UserMgmtService;
 import org.b3log.symphony.service.UserQueryService;
 import org.b3log.symphony.util.Filler;
+import org.b3log.symphony.util.Mails;
 import org.b3log.symphony.util.Symphonys;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -329,7 +327,7 @@ public class AdminProcessor {
 
         final String teamsStr = Symphonys.get("teams");
         dataModel.put(Common.TEAMS, teamsStr.split(","));
-        
+
         dataModel.put(User.USER_PASSWORD, RandomStringUtils.randomAlphanumeric(6));
 
         filler.fillHeaderAndFooter(request, response, dataModel);
@@ -389,20 +387,10 @@ public class AdminProcessor {
             userId = userMgmtService.addUser(user);
 
             if (!Symphonys.getBoolean("sendcloud.enabled")) {
-                final ResourceBundle mailConf = ResourceBundle.getBundle("mail");
-
-                final MailService mailService = MailServiceFactory.getMailService();
-
-                final MailService.Message message = new MailService.Message();
-                message.setFrom(mailConf.getString("mail.user"));
-                message.addRecipient(email);
-                message.setSubject(langPropsService.get("accountCreatedSubjectLabel"));
                 String body = langPropsService.get("accountCreatedBodyLabel");
                 body = body.replace("${userName}", userName).replace("${password}", password).
                         replace("${servePath}", Latkes.getServePath());
-                message.setHtmlBody(body);
-
-                mailService.send(message);
+                Mails.send(email, langPropsService.get("accountCreatedSubjectLabel"), body);
             }
         } catch (final Exception e) {
             final AbstractFreeMarkerRenderer renderer = new SkinRenderer();

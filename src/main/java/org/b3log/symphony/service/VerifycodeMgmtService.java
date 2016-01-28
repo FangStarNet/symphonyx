@@ -20,14 +20,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.ResourceBundle;
 import javax.inject.Inject;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
-import org.b3log.latke.mail.MailService;
-import org.b3log.latke.mail.MailServiceFactory;
 import org.b3log.latke.model.User;
 import org.b3log.latke.repository.CompositeFilter;
 import org.b3log.latke.repository.CompositeFilterOperator;
@@ -196,9 +193,6 @@ public class VerifycodeMgmtService {
                     Mails.send(langPropsService.get("verifycodeEmailSubjectLabel"), "sym_register", toMails, vars);
                 }
             } else {
-                final MailService mailService = MailServiceFactory.getMailService();
-                final ResourceBundle mailConf = ResourceBundle.getBundle("mail");
-
                 for (int i = 0; i < verifycodes.length(); i++) {
                     final JSONObject verifycode = verifycodes.optJSONObject(i);
 
@@ -218,16 +212,11 @@ public class VerifycodeMgmtService {
 
                             break;
                         case Verifycode.BIZ_TYPE_C_RESET_PWD:
-
-                            final MailService.Message message = new MailService.Message();
-                            message.setFrom(mailConf.getString("mail.user"));
-                            message.addRecipient(toMail);
-                            message.setSubject(langPropsService.get("forgetPwdSubjectLabel"));
                             String body = langPropsService.get("forgetPwdBodyLabel");
                             body = body.replace("${url}", Latkes.getServePath() + "/reset-pwd?code=" + code);
-                            message.setHtmlBody(body);
+                            
+                            Mails.send(toMail, langPropsService.get("forgetPwdSubjectLabel"), body);
 
-                            mailService.send(message);
                             break;
                         default:
                             LOGGER.warn("Send email verify code failed with wrong biz type [" + bizType + "]");
