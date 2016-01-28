@@ -38,8 +38,9 @@ var Comment = {
         }
 
         Util.initCodeMirror();
-        Comment.editor = CodeMirror.fromTextArea(document.getElementById("commentContent"), {
-            mode: 'markdown',
+
+        var commentEditor = new Editor({
+            element: document.getElementById('commentContent'),
             dragDrop: false,
             lineWrapping: true,
             extraKeys: {
@@ -47,8 +48,12 @@ var Comment = {
                 "Ctrl-/": "autocompleteEmoji",
                 "Alt-S": "startAudioRecord",
                 "Alt-E": "endAudioRecord"
-            }
+            },
+            status: false
         });
+        commentEditor.render();
+
+        Comment.editor = commentEditor.codemirror;
 
         if (window.localStorage && window.localStorage[Label.articleOId]) {
             var localData = null;
@@ -113,11 +118,6 @@ var Comment = {
                             CodeMirror.Pos(cursor.line, token.end - 1));
                 }
             }
-        });
-
-        $("#preview").dialog({
-            "modal": true,
-            "hideFooter": true
         });
     },
     /**
@@ -218,26 +218,6 @@ var Comment = {
         });
     },
     /**
-     * @description 预览评论
-     */
-    preview: function () {
-        $.ajax({
-            url: "/markdown",
-            type: "POST",
-            cache: false,
-            data: {
-                markdownText: Comment.editor.getValue()
-            },
-            success: function (result, textStatus) {
-                $(".dialog-background").height($("body").height());
-                $("#preview").dialog("open");
-                $("#preview").html(result.html);
-                hljs.initHighlighting.called = false;
-                hljs.initHighlighting();
-            }
-        });
-    },
-    /**
      * @description 点击回复评论时，把当楼层的用户名带到评论框中
      * @param {String} userName 用户名称
      */
@@ -275,7 +255,7 @@ var Article = {
                 }
             });
         });
-        
+
         var menus = [];
         $('.content [id^=menu]').each(function (i) {
             var $it = $(this);
@@ -332,7 +312,7 @@ var Article = {
                 $it.addClass('current');
             }, 50);
         });
-        
+
         $(window).scroll();
     },
     /**

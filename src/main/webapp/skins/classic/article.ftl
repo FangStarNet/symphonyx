@@ -8,8 +8,7 @@
         </@head>
         <link type="text/css" rel="stylesheet" href="${staticServePath}/js/lib/highlight.js-8.6/styles/github.css">
         <link type="text/css" rel="stylesheet" href="${staticServePath}/css/index${miniPostfix}.css?${staticResourceVersion}" />
-        <link type="text/css" rel="stylesheet" href="${staticServePath}/js/lib/codemirror-5.3/codemirror.css" />
-        <link type="text/css" rel="stylesheet" href="${staticServePath}/js/lib/codemirror-5.3/addon/hint/show-hint.css" />
+        <link rel="stylesheet" href="${staticServePath}/js/lib/editor/codemirror.css">
     </head>
     <body>
         <#include "header.ftl">
@@ -151,7 +150,6 @@
                                 <a target="_blank" href="http://www.emoji-cheat-sheet.com">Emoji</a>
                             </span>
                             <div class="fn-right">
-                                <button class="green" onclick="Comment.preview()">${previewLabel}</button> &nbsp; &nbsp; 
                                 <button class="red" onclick="Comment.add('${article.oId}', '${csrfToken}')">${submitLabel}</button>
                             </div>
                         </div>
@@ -280,9 +278,9 @@
             Label.recordDeviceNotFoundLabel = "${recordDeviceNotFoundLabel}";
             Label.csrfToken = "${csrfToken}";</script>
         <script src="${staticServePath}/js/lib/jquery/jquery.bowknot.min.js"></script>
-        <script src="${staticServePath}/js/lib/codemirror-5.3/codemirror.js"></script>
-        <script src="${staticServePath}/js/lib/codemirror-5.3/mode/markdown/markdown.js"></script>
-        <script src="${staticServePath}/js/lib/codemirror-5.3/addon/display/placeholder.js"></script>
+        <script src="${staticServePath}/js/lib/editor/editor.js"></script>
+        <script src="${staticServePath}/js/lib/editor/placeholder.js"></script>
+        <script src="${staticServePath}/js/lib/editor/fullscreen.js"></script>
         <script src="${staticServePath}/js/overwrite/codemirror/addon/hint/show-hint.js"></script>
         <script type="text/javascript" src="${staticServePath}/js/lib/highlight.js-8.6/highlight.pack.js"></script>
         <script type="text/javascript" src="${staticServePath}/js/lib/ws-flash/swfobject.js"></script>
