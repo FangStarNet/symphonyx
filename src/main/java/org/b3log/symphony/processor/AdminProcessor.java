@@ -351,7 +351,6 @@ public class AdminProcessor {
         final String userName = request.getParameter(User.USER_NAME);
         final String email = request.getParameter(User.USER_EMAIL);
         final String password = request.getParameter(User.USER_PASSWORD);
-        final String appRole = request.getParameter(UserExt.USER_APP_ROLE);
         final String team = request.getParameter(UserExt.USER_TEAM);
 
         final boolean nameInvalid = UserRegisterValidation.invalidUserName(userName);
@@ -383,7 +382,7 @@ public class AdminProcessor {
             user.put(User.USER_NAME, userName);
             user.put(User.USER_EMAIL, email);
             user.put(User.USER_PASSWORD, MD5.hash(password));
-            user.put(UserExt.USER_APP_ROLE, appRole);
+            user.put(UserExt.USER_APP_ROLE, UserExt.USER_APP_ROLE_C_HACKER);
             user.put(UserExt.USER_TEAM, team);
             user.put(UserExt.USER_STATUS, UserExt.USER_STATUS_C_VALID);
 

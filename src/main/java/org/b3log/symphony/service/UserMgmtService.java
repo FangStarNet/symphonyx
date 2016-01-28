@@ -262,6 +262,7 @@ public class UserMgmtService {
      * @param requestJSONObject the specified request json object (user), for example,      <pre>
      * {
      *     "oId": "",
+     *     "userRealName": "",
      *     "userTags": "",
      *     "userURL": "",
      *     "userQQ": "",
@@ -292,6 +293,7 @@ public class UserMgmtService {
             tag(oldUser);
 
             // Update
+             oldUser.put(UserExt.USER_REAL_NAME, requestJSONObject.optString(UserExt.USER_REAL_NAME));
             oldUser.put(User.USER_URL, requestJSONObject.optString(User.USER_URL));
             oldUser.put(UserExt.USER_QQ, requestJSONObject.optString(UserExt.USER_QQ));
             oldUser.put(UserExt.USER_INTRO, requestJSONObject.optString(UserExt.USER_INTRO));
@@ -405,6 +407,7 @@ public class UserMgmtService {
 
             user = new JSONObject();
             user.put(User.USER_NAME, userName);
+            user.put(UserExt.USER_REAL_NAME, userName);
             user.put(User.USER_EMAIL, userEmail);
             user.put(UserExt.USER_APP_ROLE, requestJSONObject.optInt(UserExt.USER_APP_ROLE));
             user.put(User.USER_PASSWORD, requestJSONObject.optString(User.USER_PASSWORD));

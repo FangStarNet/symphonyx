@@ -19,11 +19,16 @@ package org.b3log.symphony.model;
  * This class defines ext of user model relevant keys.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 3.14.1.9, Jan 21, 2016
+ * @version 3.15.1.9, Jan 28, 2016
  * @since 0.2.0
  * @see org.b3log.latke.model.User
  */
 public final class UserExt {
+    
+    /**
+     * Key of user real name.
+     */
+    public static final String USER_REAL_NAME = "userRealName";
 
     /**
      * Key of user geo status.

@@ -9,6 +9,9 @@
             <form action="/admin/add-user" method="POST">
                 <label>${userNameLabel}</label>
                 <input name="userName" type="text" />
+                
+                <label>${realNameLabel}</label>
+                <input name="userRealName" type="text" />
 
                 <label>${emailLabel}</label>
                 <input name="userEmail" type="text" />
@@ -23,13 +26,8 @@
                         </#list>
                     </select>
                 </label>
-                
-                <br/><br/> <br/>
 
-                <label><input name="userAppRole" type="radio" value="0" checked="checked" />${programmerLabel}&nbsp;&nbsp;</label>
-                <label><input name="userAppRole" type="radio" value="1" />${designerLabel}</label>
-
-                <br/><br/><br/>
+                <br/><br/><br/><br/>
                 <button type="submit" class="green fn-right">${submitLabel}</button>
             </form>
         </div>

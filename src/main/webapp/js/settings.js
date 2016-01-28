@@ -19,7 +19,7 @@
  *
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.4.2.7, Jan 21, 2016
+ * @version 2.5.2.7, Jan 28, 2016
  */
 
 /**
@@ -170,6 +170,7 @@ var Settings = {
                     "msg": Label.invalidAvatarURLLabel
                 }]})) {
             return {
+                userRealName: $("#userRealName").val().replace(/(^\s*)|(\s*$)/g, ""),
                 userTags: $("#userTags").val().replace(/(^\s*)|(\s*$)/g, ""),
                 userURL: $("#userURL").val().replace(/(^\s*)|(\s*$)/g, ""),
                 userIntro: $("#userIntro").val().replace(/(^\s*)|(\s*$)/g, ""),
@@ -208,10 +209,10 @@ var Settings = {
             var data = {};
             data.userPassword = calcMD5(pwdVal);
             data.userNewPassword = calcMD5(newPwdVal);
-            
+
             return data;
         }
-        
+
         return false;
     },
     /**

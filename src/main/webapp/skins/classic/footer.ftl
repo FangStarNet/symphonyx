@@ -10,7 +10,7 @@
 
                 <div class="fn-right">
                     <span class="ft-gray">&COPY; ${year}</span>
-                    <a rel="copyright" href="http://hacpai.com" target="_blank">hacpai.com</a>
+                    <a rel="copyright" href="${servePath}" target="_blank">${serverHost}</a>
                     ${visionLabel}</div>
             </div>
             <div class="fn-clear">

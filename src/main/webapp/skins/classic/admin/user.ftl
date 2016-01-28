@@ -58,6 +58,9 @@
         </div>
         <div class="module-panel form fn-clear">
             <form action="/admin/user/${user.oId}" method="POST">
+                <label>${realNameLabel}</label>
+                <input type="text" value="${user.userRealName}" value="${user.userRealName}" />
+
                 <label for="userPassword">${userPasswordLabel}</label>
                 <input type="text" id="userPassword" name="userPassword" value="${user.userPassword}" />
 
