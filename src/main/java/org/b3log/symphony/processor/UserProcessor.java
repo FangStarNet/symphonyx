@@ -789,6 +789,7 @@ public class UserProcessor {
 
         final JSONObject requestJSONObject = (JSONObject) request.getAttribute(Keys.REQUEST);
 
+        final String userRealName = requestJSONObject.optString(UserExt.USER_REAL_NAME);
         final String userTags = requestJSONObject.optString(UserExt.USER_TAGS);
         final String userURL = requestJSONObject.optString(User.USER_URL);
         final String userQQ = requestJSONObject.optString(UserExt.USER_QQ);
@@ -798,6 +799,7 @@ public class UserProcessor {
 
         final JSONObject user = userQueryService.getCurrentUser(request);
 
+        user.put(UserExt.USER_REAL_NAME, userRealName);
         user.put(UserExt.USER_TAGS, userTags);
         user.put(User.USER_URL, userURL);
         user.put(UserExt.USER_QQ, userQQ);
