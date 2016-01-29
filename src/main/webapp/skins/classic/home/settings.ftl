@@ -10,20 +10,17 @@
     <div class="module-panel form fn-clear">
         <label>${realNameLabel}</label><br/>
         <input id="userRealName" type="text" value="${currentUser.userRealName}"/>
-        
+
         <label>${selfTagLabel}</label><br/>
         <input id="userTags" type="text" value="${currentUser.userTags}" placeholder="${selfDescriptionLabel}"/>
 
-        <label>${teamLabel}
-            <select id="userTeam" name="userTeam">
-                <#list teams as team>
-                <option value="${team}"<#if team == currentUser.userTeam>selected</#if>>${team}</option>
-                </#list>
-            </select>
-        </label><br/><br/>
-        
-        <br/><br/>
-
+        <label>${teamLabel}</label><br/>
+        <select id="userTeam" name="userTeam">
+            <#list teams as team>
+            <option value="${team}"<#if team == currentUser.userTeam>selected</#if>>${team}</option>
+            </#list>
+        </select>
+        <br/>
         <label>URL</label><br/>
         <input id="userURL" type="text" value="${currentUser.userURL}"/>
 

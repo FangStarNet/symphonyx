@@ -9,7 +9,7 @@
             <form action="/admin/add-user" method="POST">
                 <label>${userNameLabel}</label>
                 <input name="userName" type="text" />
-                
+
                 <label>${realNameLabel}</label>
                 <input name="userRealName" type="text" />
 
@@ -19,15 +19,14 @@
                 <label>${passwordLabel}</label>
                 <input name="userPassword" type="text" value="${userPassword}" />
 
-                <label>${teamLabel}
-                    <select id="userTeam" name="userTeam">
-                        <#list teams as team>
-                        <option value="${team}">${team}</option>
-                        </#list>
-                    </select>
-                </label>
+                <label>${teamLabel}</label>
+                <select id="userTeam" name="userTeam">
+                    <#list teams as team>
+                    <option value="${team}">${team}</option>
+                    </#list>
+                </select>
 
-                <br/><br/><br/><br/>
+                <br/><br/>
                 <button type="submit" class="green fn-right">${submitLabel}</button>
             </form>
         </div>
