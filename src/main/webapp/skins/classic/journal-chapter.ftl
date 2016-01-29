@@ -1,7 +1,7 @@
 <#list teams as team>
 <div class="module journal" id="menu${team_index}">
     <div class="module-header">
-        ${team.teamName} <span class="ft-red">21</span>/45
+        ${team.teamName} <span class="ft-red">${team.done}</span>/${team.total}
         <span class="icon-chevron-up fn-right fn-pointer"/>
     </div>
     <div class="module-panel">
@@ -14,7 +14,7 @@
                        title="${user.userName}"><img class="avatar-small" src="${user.userAvatarURL}-64.jpg?${user.userUpdateTime?c}" /></a>
                     </a> &nbsp;
                     <a class="ft-gray" href="/member/${user.userName}"><b>${user.userName}</b> (${user.userRealName})</a>
-                    <span class="ft-red">6</span>/7
+                    <span class="ft-red">${user.done}</span>/7
                     <#list user.weekDays as day>
                     <div class="journal-section">
                         <#if day.paragraphs?size == 0>

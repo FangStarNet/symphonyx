@@ -297,7 +297,7 @@ public class JournalQueryService {
 
             articleQueryService.genParticipants(paragraphs, Symphonys.getInt("latestArticleParticipantsCnt"));
 
-            //doneCount(ret, paragraphs);
+            userWeekDoneCount(ret);
             return ret;
         } catch (final RepositoryException e) {
             LOGGER.log(Level.ERROR, "Gets chapter failed", e);
@@ -374,6 +374,34 @@ public class JournalQueryService {
         for (final JSONObject team : teams) {
             final String teamName = team.optString(Common.TEAM_NAME);
             team.put(Common.DONE, countDone(paras, teamName));
+        }
+    }
+
+    private void userWeekDoneCount(final List<JSONObject> teams) {
+        for (final JSONObject team : teams) {
+            int teamDoneCount = 0;
+
+            final List<JSONObject> users = (List<JSONObject>) team.opt(User.USERS);
+
+            for (final JSONObject user : users) {
+                int userDoneCount = 0;
+
+                for (final JSONObject day : (List<JSONObject>) user.opt(Common.WEEK_DAYS)) {
+                    final List<JSONObject> paras = (List<JSONObject>) day.opt(Common.PARAGRAPHS);
+                    if (!paras.isEmpty()) {
+                        userDoneCount++;
+                    }
+                }
+
+                user.put(Common.DONE, userDoneCount);
+
+                if (userDoneCount > 0) {
+                    teamDoneCount++;
+                }
+            }
+
+            team.put(Common.DONE, teamDoneCount);
+            team.put(Common.TOTAL, users.size() * 7);
         }
     }
 
