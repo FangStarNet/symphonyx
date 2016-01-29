@@ -147,6 +147,12 @@ public class UserMgmtService {
     private AvatarQueryService avatarQueryService;
 
     /**
+     * Archive management service.
+     */
+    @Inject
+    private ArchiveMgmtService archiveMgmtService;
+
+    /**
      * Tries to login with cookie.
      *
      * @param request the specified request
@@ -293,7 +299,7 @@ public class UserMgmtService {
             tag(oldUser);
 
             // Update
-             oldUser.put(UserExt.USER_REAL_NAME, requestJSONObject.optString(UserExt.USER_REAL_NAME));
+            oldUser.put(UserExt.USER_REAL_NAME, requestJSONObject.optString(UserExt.USER_REAL_NAME));
             oldUser.put(User.USER_URL, requestJSONObject.optString(User.USER_URL));
             oldUser.put(UserExt.USER_QQ, requestJSONObject.optString(UserExt.USER_QQ));
             oldUser.put(UserExt.USER_INTRO, requestJSONObject.optString(UserExt.USER_INTRO));
@@ -306,6 +312,8 @@ public class UserMgmtService {
             userRepository.update(oldUserId, oldUser);
 
             transaction.commit();
+
+            archiveMgmtService.refreshTeams(System.currentTimeMillis());
         } catch (final RepositoryException e) {
             if (transaction.isActive()) {
                 transaction.rollback();
@@ -527,6 +535,8 @@ public class UserMgmtService {
                         Pointtransfer.TRANSFER_TYPE_C_INIT, Pointtransfer.TRANSFER_SUM_C_INIT, ret);
             }
 
+            archiveMgmtService.refreshTeams(status);
+
             return ret;
         } catch (final RepositoryException e) {
             if (transaction.isActive()) {
@@ -575,6 +585,8 @@ public class UserMgmtService {
             userRepository.update(userId, user);
 
             transaction.commit();
+
+            archiveMgmtService.refreshTeams(System.currentTimeMillis());
         } catch (final RepositoryException e) {
             if (transaction.isActive()) {
                 transaction.rollback();

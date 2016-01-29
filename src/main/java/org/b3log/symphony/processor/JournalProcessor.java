@@ -198,30 +198,7 @@ public class JournalProcessor {
             section.put(Article.ARTICLE_TYPE, Article.ARTICLE_TYPE_C_JOURNAL_SECTION);
 
             articleMgmtService.addArticle(section);
-
-            final JSONObject archive = new JSONObject();
-            archive.put(Archive.ARCHIVE_DATE, DateFormatUtils.format(System.currentTimeMillis(), "yyyyMMdd"));
-
-            final JSONArray teams = new JSONArray();
-            final String[] teamStrs = Symphonys.get("teams").split(",");
-            for (final String teamStr : teamStrs) {
-                final JSONObject team = new JSONObject();
-                teams.put(team);
-                team.put(Common.TEAM_NAME, teamStr);
-                final JSONArray members = new JSONArray();
-                team.put(User.USERS, members);
-
-                final List<JSONObject> teamMembers = userQueryService.getTeamMembers(teamStr);
-                for (final JSONObject teamMember : teamMembers) {
-                    final String memberId = teamMember.optString(Keys.OBJECT_ID);
-
-                    members.put(memberId);
-                }
-            }
-
-            archive.put(Archive.ARCHIVE_TEAMS, teams.toString());
-
-            archiveMgmtService.addArchive(archive);
+            archiveMgmtService.refreshTeams(System.currentTimeMillis());
 
             context.renderTrueResult();
         } catch (final ServiceException e) {

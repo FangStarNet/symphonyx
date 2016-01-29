@@ -60,7 +60,7 @@ public class AvatarQueryService {
      *
      * @param user the specified user
      */
-    public void fillUserAvatarURL(final JSONObject user) {
+    public static void fillUserAvatarURL(final JSONObject user) {
         final String originalURL = user.optString(UserExt.USER_AVATAR_URL);
 
         if (Symphonys.getBoolean("qiniu.enabled")) {

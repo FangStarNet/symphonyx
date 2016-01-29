@@ -77,7 +77,6 @@ public final class Mails {
      * @param body the specified body
      */
     public static void send(final String recipient, final String subject, final String body) {
-
         final LatkeBeanManager beanManager = Lifecycle.getBeanManager();
         final LangPropsService langService = beanManager.getReference(LangPropsServiceImpl.class);
 

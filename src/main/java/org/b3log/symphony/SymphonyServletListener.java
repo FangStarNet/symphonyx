@@ -62,7 +62,7 @@ import org.json.JSONObject;
  * Symphony servlet listener.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.9.3.5, Jan 22, 2016
+ * @version 2.9.3.6, Jan 29, 2016
  * @since 0.2.0
  */
 public final class SymphonyServletListener extends AbstractServletListener {
@@ -294,7 +294,9 @@ public final class SymphonyServletListener extends AbstractServletListener {
             admin.put(User.USER_PASSWORD, MD5.hash(init.getString("admin.password")));
             admin.put(User.USER_ROLE, Role.ADMIN_ROLE);
             admin.put(UserExt.USER_STATUS, UserExt.USER_STATUS_C_VALID);
-            admin.put(UserExt.USER_TEAM, "Owner");
+            
+            final String[] teams = Symphonys.get("teams").split(",");
+            admin.put(UserExt.USER_TEAM, teams[teams.length - 1]);
             final String adminId = userMgmtService.addUser(admin);
             admin.put(Keys.OBJECT_ID, adminId);
 
