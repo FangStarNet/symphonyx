@@ -42,16 +42,19 @@ import org.b3log.latke.servlet.annotation.RequestProcessor;
 import org.b3log.latke.servlet.renderer.freemarker.AbstractFreeMarkerRenderer;
 import org.b3log.latke.util.Paginator;
 import org.b3log.latke.util.Strings;
+import org.b3log.symphony.model.Archive;
 import org.b3log.symphony.model.Article;
 import org.b3log.symphony.model.Common;
 import org.b3log.symphony.processor.advice.AnonymousViewCheck;
 import org.b3log.symphony.processor.advice.stopwatch.StopwatchEndAdvice;
 import org.b3log.symphony.processor.advice.stopwatch.StopwatchStartAdvice;
+import org.b3log.symphony.service.ArchiveMgmtService;
 import org.b3log.symphony.service.ArticleMgmtService;
 import org.b3log.symphony.service.JournalQueryService;
 import org.b3log.symphony.service.UserQueryService;
 import org.b3log.symphony.util.Filler;
 import org.b3log.symphony.util.Symphonys;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -63,7 +66,7 @@ import org.json.JSONObject;
  * </ul>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.0.0, Jan 27, 2016
+ * @version 1.2.0.0, Jan 29, 2016
  * @since 1.4.0
  */
 @RequestProcessor
@@ -79,6 +82,12 @@ public class JournalProcessor {
      */
     @Inject
     private ArticleMgmtService articleMgmtService;
+
+    /**
+     * Archive management service.
+     */
+    @Inject
+    private ArchiveMgmtService archiveMgmtService;
 
     /**
      * Journal query service.
@@ -189,6 +198,30 @@ public class JournalProcessor {
             section.put(Article.ARTICLE_TYPE, Article.ARTICLE_TYPE_C_JOURNAL_SECTION);
 
             articleMgmtService.addArticle(section);
+
+            final JSONObject archive = new JSONObject();
+            archive.put(Archive.ARCHIVE_DATE, DateFormatUtils.format(System.currentTimeMillis(), "yyyyMMdd"));
+
+            final JSONArray teams = new JSONArray();
+            final String[] teamStrs = Symphonys.get("teams").split(",");
+            for (final String teamStr : teamStrs) {
+                final JSONObject team = new JSONObject();
+                teams.put(team);
+                team.put(Common.TEAM_NAME, teamStr);
+                final JSONArray members = new JSONArray();
+                team.put(User.USERS, members);
+
+                final List<JSONObject> teamMembers = userQueryService.getTeamMembers(teamStr);
+                for (final JSONObject teamMember : teamMembers) {
+                    final String memberId = teamMember.optString(Keys.OBJECT_ID);
+
+                    members.put(memberId);
+                }
+            }
+
+            archive.put(Archive.ARCHIVE_TEAMS, teams.toString());
+
+            archiveMgmtService.addArchive(archive);
 
             context.renderTrueResult();
         } catch (final ServiceException e) {

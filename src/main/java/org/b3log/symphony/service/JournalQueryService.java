@@ -39,20 +39,24 @@ import org.b3log.latke.service.LangPropsService;
 import org.b3log.latke.service.ServiceException;
 import org.b3log.latke.service.annotation.Service;
 import org.b3log.latke.util.CollectionUtils;
+import org.b3log.symphony.model.Archive;
 import org.b3log.symphony.model.Article;
 import org.b3log.symphony.model.Common;
 import org.b3log.symphony.model.UserExt;
+import org.b3log.symphony.repository.ArchiveRepository;
 import org.b3log.symphony.repository.ArticleRepository;
 import org.b3log.symphony.repository.UserRepository;
 import org.b3log.symphony.util.Symphonys;
 import org.b3log.symphony.util.Times;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
  * Journal query service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.1.2, Jan 28, 2016
+ * @version 1.1.1.3, Jan 29, 2016
  * @since 1.4.0
  */
 @Service
@@ -86,6 +90,12 @@ public class JournalQueryService {
      */
     @Inject
     private ArticleRepository articleRepository;
+
+    /**
+     * Archive repository.
+     */
+    @Inject
+    private ArchiveRepository archiveRepository;
 
     /**
      * User repository.
@@ -169,12 +179,13 @@ public class JournalQueryService {
 
             final List<JSONObject> ret = new ArrayList<JSONObject>();
 
-            final String[] teamNames = Symphonys.get("teams").split(",");
+            final JSONObject archive = archiveRepository.getArchive(time);
+            final String[] teamNames = getTeams(archive);
 
             for (final String teamName : teamNames) {
                 final List<JSONObject> users = getUsers(ret, teamName);
 
-                final List<JSONObject> teamMembers = userQueryService.getTeamMembers(teamName);
+                final List<JSONObject> teamMembers = getTeamMembers(archive, teamName);
                 for (final JSONObject teamMember : teamMembers) {
                     teamMember.put(Common.PARAGRAPHS, (Object) new ArrayList());
                 }
@@ -226,8 +237,8 @@ public class JournalQueryService {
             final List<Filter> filters = new ArrayList<Filter>();
             filters.add(new PropertyFilter(Article.ARTICLE_TYPE, FilterOperator.EQUAL, Article.ARTICLE_TYPE_C_JOURNAL_PARAGRAPH));
 
-            filters.add(new PropertyFilter(Article.ARTICLE_CREATE_TIME, FilterOperator.GREATER_THAN_OR_EQUAL, getWeekStartTime(time)));
-            filters.add(new PropertyFilter(Article.ARTICLE_CREATE_TIME, FilterOperator.LESS_THAN_OR_EQUAL, getWeekEndTime(time)));
+            filters.add(new PropertyFilter(Article.ARTICLE_CREATE_TIME, FilterOperator.GREATER_THAN_OR_EQUAL, Times.getWeekStartTime(time)));
+            filters.add(new PropertyFilter(Article.ARTICLE_CREATE_TIME, FilterOperator.LESS_THAN_OR_EQUAL, Times.getWeekEndTime(time)));
 
             query.setFilter(new CompositeFilter(CompositeFilterOperator.AND, filters));
 
@@ -236,19 +247,20 @@ public class JournalQueryService {
 
             final List<JSONObject> ret = new ArrayList<JSONObject>();
 
-            final String[] teamNames = Symphonys.get("teams").split(",");
+            final JSONObject archive = archiveRepository.getWeekArchive(time);
+            final String[] teamNames = getTeams(archive);
 
             for (final String teamName : teamNames) {
                 final List<JSONObject> users = getUsers(ret, teamName);
 
-                final List<JSONObject> teamMembers = userQueryService.getTeamMembers(teamName);
+                final List<JSONObject> teamMembers = getTeamMembers(archive, teamName);
 
                 for (final JSONObject teamMember : teamMembers) {
                     int day = 1;
                     final List<JSONObject> weekDays = new ArrayList<JSONObject>();
 
                     final long now = System.currentTimeMillis();
-                    if (now > getWeekEndTime(time)) {
+                    if (now > Times.getWeekEndTime(time)) {
                         day = 7;
                     } else {
                         day = getWeekDay(now);
@@ -284,7 +296,7 @@ public class JournalQueryService {
                 final JSONObject pAuthor = userRepository.get(pAuthorId);
                 final String userName = pAuthor.optString(User.USER_NAME);
                 final String teamName = pAuthor.optString(UserExt.USER_TEAM);
-                
+
                 if (UserExt.USER_STATUS_C_VALID != pAuthor.optInt(UserExt.USER_STATUS)) {
                     continue;
                 }
@@ -541,37 +553,6 @@ public class JournalQueryService {
         return end.getTime().getTime();
     }
 
-    private long getWeekStartTime(final long time) {
-        final Calendar start = Calendar.getInstance();
-
-        start.setFirstDayOfWeek(Calendar.MONDAY);
-
-        start.setTimeInMillis(time);
-        start.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-        start.set(Calendar.HOUR, 0);
-        start.set(Calendar.MINUTE, 0);
-        start.set(Calendar.SECOND, 0);
-        start.set(Calendar.MILLISECOND, 0);
-
-        return start.getTime().getTime();
-    }
-
-    private long getWeekEndTime(final long time) {
-        final Calendar end = Calendar.getInstance();
-
-        end.setFirstDayOfWeek(Calendar.MONDAY);
-
-        end.setTimeInMillis(time);
-        end.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-        end.add(Calendar.WEEK_OF_YEAR, 1);
-        end.set(Calendar.HOUR, 23);
-        end.set(Calendar.MINUTE, 59);
-        end.set(Calendar.SECOND, 59);
-        end.set(Calendar.MILLISECOND, 999);
-
-        return end.getTime().getTime();
-    }
-
     private int getWeekDay(final long time) {
         final Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(time);
@@ -581,5 +562,60 @@ public class JournalQueryService {
         }
 
         return ret;
+    }
+
+    private String[] getTeams(final JSONObject archive) {
+        try {
+            final JSONArray teams = new JSONArray(archive.optString(Archive.ARCHIVE_TEAMS));
+
+            final String[] ret = new String[teams.length()];
+
+            for (int i = 0; i < teams.length(); i++) {
+                ret[i] = teams.optJSONObject(i).optString(Common.TEAM_NAME);
+            }
+
+            return ret;
+        } catch (final JSONException e) {
+            LOGGER.log(Level.ERROR, "Gets teams with archive[ " + archive + "] failed", archive);
+
+            return null;
+        }
+    }
+
+    private List<JSONObject> getTeamMembers(final JSONObject archive, final String teamName) {
+        try {
+            final JSONArray teams = new JSONArray(archive.optString(Archive.ARCHIVE_TEAMS));
+
+            final List<JSONObject> ret = new ArrayList<JSONObject>();
+
+            for (int i = 0; i < teams.length(); i++) {
+                final JSONObject team = teams.optJSONObject(i);
+                final String name = team.optString(Common.TEAM_NAME);
+
+                if (name.equals(teamName)) {
+                    final JSONArray members = team.optJSONArray(User.USERS);
+
+                    for (int j = 0; j < members.length(); j++) {
+                        final JSONObject member = new JSONObject();
+                        final String userId = members.optString(j);
+                        member.put(Keys.OBJECT_ID, userId);
+
+                        final JSONObject u = userRepository.get(userId);
+                        member.put(User.USER_NAME, u.optString(User.USER_NAME));
+                        member.put(UserExt.USER_AVATAR_URL, u.optString(UserExt.USER_AVATAR_URL));
+                        member.put(UserExt.USER_UPDATE_TIME, u.opt(UserExt.USER_UPDATE_TIME));
+                        member.put(UserExt.USER_REAL_NAME, u.optString(UserExt.USER_REAL_NAME));
+
+                        ret.add(member);
+                    }
+
+                    return ret;
+                }
+            }
+        } catch (final Exception e) {
+            LOGGER.log(Level.ERROR, "Gets team members with archive[ " + archive + "] failed", archive);
+        }
+
+        return null;
     }
 }

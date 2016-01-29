@@ -15,6 +15,7 @@
  */
 package org.b3log.symphony.util;
 
+import java.util.Calendar;
 import org.b3log.latke.ioc.LatkeBeanManager;
 import org.b3log.latke.ioc.LatkeBeanManagerImpl;
 import org.b3log.latke.service.LangPropsService;
@@ -24,7 +25,7 @@ import org.b3log.latke.service.LangPropsServiceImpl;
  * Time utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.0.0, Jan 25, 2016
+ * @version 1.2.0.0, Jan 29, 2016
  * @since 1.3.0
  */
 public final class Times {
@@ -139,6 +140,49 @@ public final class Times {
         }
 
         return langService.get("justNowLabel");
+    }
+
+    /**
+     * Gets the week start time with the specified time.
+     *
+     * @param time the specified time
+     * @return week start time
+     */
+    public static long getWeekStartTime(final long time) {
+        final Calendar start = Calendar.getInstance();
+
+        start.setFirstDayOfWeek(Calendar.MONDAY);
+
+        start.setTimeInMillis(time);
+        start.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        start.set(Calendar.HOUR, 0);
+        start.set(Calendar.MINUTE, 0);
+        start.set(Calendar.SECOND, 0);
+        start.set(Calendar.MILLISECOND, 0);
+
+        return start.getTime().getTime();
+    }
+
+    /**
+     * Gets the week end time with the specified time.
+     *
+     * @param time the specified time
+     * @return week end time
+     */
+    public static long getWeekEndTime(final long time) {
+        final Calendar end = Calendar.getInstance();
+
+        end.setFirstDayOfWeek(Calendar.MONDAY);
+
+        end.setTimeInMillis(time);
+        end.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+        end.add(Calendar.WEEK_OF_YEAR, 1);
+        end.set(Calendar.HOUR, 23);
+        end.set(Calendar.MINUTE, 59);
+        end.set(Calendar.SECOND, 59);
+        end.set(Calendar.MILLISECOND, 999);
+
+        return end.getTime().getTime();
     }
 
     /**
