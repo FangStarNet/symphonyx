@@ -58,7 +58,7 @@ import org.json.JSONObject;
  * User query service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.5.3.5, Dec 29, 2015
+ * @version 1.5.4.5, Jan 28, 2016
  * @since 0.2.0
  */
 @Service
@@ -556,7 +556,9 @@ public class UserQueryService {
      * @return all members
      */
     public List<JSONObject> getTeamMembers(final String teamName) {
-        final Query query = new Query().setFilter(new PropertyFilter(UserExt.USER_TEAM, FilterOperator.EQUAL, teamName));
+        final Query query = new Query().setFilter(CompositeFilterOperator.and(
+                new PropertyFilter(UserExt.USER_TEAM, FilterOperator.EQUAL, teamName),
+                new PropertyFilter(UserExt.USER_STATUS, FilterOperator.EQUAL, UserExt.USER_STATUS_C_VALID)));
 
         try {
             final JSONObject result = userRepository.get(query);
@@ -566,7 +568,7 @@ public class UserQueryService {
                 final JSONObject user = users.optJSONObject(i);
                 avatarQueryService.fillUserAvatarURL(user);
             }
-            
+
             return CollectionUtils.<JSONObject>jsonArrayToList(result.optJSONArray(Keys.RESULTS));
         } catch (final RepositoryException e) {
             LOGGER.log(Level.ERROR, "Gets team members failed", e);

@@ -52,7 +52,7 @@ import org.json.JSONObject;
  * Journal query service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.0.2, Jan 27, 2016
+ * @version 1.1.1.2, Jan 28, 2016
  * @since 1.4.0
  */
 @Service
@@ -284,6 +284,10 @@ public class JournalQueryService {
                 final JSONObject pAuthor = userRepository.get(pAuthorId);
                 final String userName = pAuthor.optString(User.USER_NAME);
                 final String teamName = pAuthor.optString(UserExt.USER_TEAM);
+                
+                if (UserExt.USER_STATUS_C_VALID != pAuthor.optInt(UserExt.USER_STATUS)) {
+                    continue;
+                }
 
                 final List<JSONObject> users = getUsers(ret, teamName);
                 final List<JSONObject> weekDays = getWeekDays(users, userName, time);
