@@ -19,7 +19,7 @@
  *
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.4.1.9, Feb 2, 2016
+ * @version 2.4.2.9, Feb 2, 2016
  */
 
 /**
@@ -50,8 +50,8 @@ var Register = {
             var requestJSONObject = {
                 userName: $("#userName").val().replace(/(^\s*)|(\s*$)/g, ""),
                 userEmail: $("#userEmail").val().replace(/(^\s*)|(\s*$)/g, ""),
-                realName: $("#userRealName").val().replace(/(^\s*)|(\s*$)/g, ""),
-                team: $("#userTeam").val(),
+                userRealName: $("#userRealName").val().replace(/(^\s*)|(\s*$)/g, ""),
+                userTeam: $("#userTeam").val(),
                 captcha: $("#securityCode").val(),
                 referral: $("#referral").val()
             };
@@ -103,7 +103,7 @@ var Register = {
                 data: JSON.stringify(requestJSONObject),
                 success: function (result, textStatus) {
                     if (result.sc) {
-                        window.location.href = "http://hacpai.com/article/1440573175609";
+                        window.location.href = "/";
                     } else {
                         $("#registerTip").addClass('error').removeClass('succ').html('<ul><li>' + result.msg + '</li></ul>');
                     }

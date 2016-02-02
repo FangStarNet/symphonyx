@@ -81,7 +81,7 @@ import org.json.JSONObject;
  * User management service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.10.11.7, Jan 22, 2016
+ * @version 2.10.12.7, Feb 2, 2016
  * @since 0.2.0
  */
 @Service
@@ -398,6 +398,7 @@ public class UserMgmtService {
 
             boolean toUpdate = false;
             String ret = null;
+            String avatarURL = null;
             user = userRepository.getByEmail(userEmail);
             int userNo = 0;
             if (null != user) {
@@ -412,12 +413,13 @@ public class UserMgmtService {
                 toUpdate = true;
                 ret = user.optString(Keys.OBJECT_ID);
                 userNo = user.optInt(UserExt.USER_NO);
+                avatarURL = user.optString(UserExt.USER_AVATAR_URL);
             }
 
             user = new JSONObject();
             user.put(User.USER_NAME, userName);
 
-            String userTeam = requestJSONObject.optString(UserExt.USER_REAL_NAME);
+            String userTeam = requestJSONObject.optString(UserExt.USER_TEAM);
             if (Strings.isEmptyOrNull(userTeam)) {
                 user.put(UserExt.USER_REAL_NAME, userName);
             } else {
@@ -463,6 +465,8 @@ public class UserMgmtService {
                 if (Symphonys.getBoolean("qiniu.enabled")) {
                     user.put(UserExt.USER_AVATAR_URL, Symphonys.get("qiniu.domain") + "/avatar/" + ret + "?"
                             + new Date().getTime());
+                } else {
+                    user.put(UserExt.USER_AVATAR_URL, avatarURL + "?" + new Date().getTime());
                 }
 
                 userRepository.update(ret, user);
