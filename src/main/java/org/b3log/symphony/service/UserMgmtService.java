@@ -419,11 +419,11 @@ public class UserMgmtService {
             user = new JSONObject();
             user.put(User.USER_NAME, userName);
 
-            String userTeam = requestJSONObject.optString(UserExt.USER_TEAM);
-            if (Strings.isEmptyOrNull(userTeam)) {
+            String realName = requestJSONObject.optString(UserExt.USER_REAL_NAME);
+            if (Strings.isEmptyOrNull(realName)) {
                 user.put(UserExt.USER_REAL_NAME, userName);
             } else {
-                user.put(UserExt.USER_REAL_NAME, userTeam);
+                user.put(UserExt.USER_REAL_NAME, realName);
             }
             user.put(User.USER_EMAIL, userEmail);
             user.put(UserExt.USER_APP_ROLE, requestJSONObject.optInt(UserExt.USER_APP_ROLE));
