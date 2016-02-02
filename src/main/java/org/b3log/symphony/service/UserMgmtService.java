@@ -548,7 +548,7 @@ public class UserMgmtService {
                         Pointtransfer.TRANSFER_TYPE_C_INIT, Pointtransfer.TRANSFER_SUM_C_INIT, ret);
             }
 
-            archiveMgmtService.refreshTeams(status);
+            archiveMgmtService.refreshTeams(System.currentTimeMillis());
 
             return ret;
         } catch (final RepositoryException e) {
