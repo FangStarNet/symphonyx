@@ -262,7 +262,7 @@ public final class SymphonyServletListener extends AbstractServletListener {
             // Init misc
             option = new JSONObject();
             option.put(Keys.OBJECT_ID, Option.ID_C_MISC_ALLOW_REGISTER);
-            option.put(Option.OPTION_VALUE, "1"); // Not allow register
+            option.put(Option.OPTION_VALUE, "0");
             option.put(Option.OPTION_CATEGORY, Option.CATEGORY_C_MISC);
             optionRepository.add(option);
             

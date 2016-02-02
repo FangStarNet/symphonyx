@@ -32,6 +32,26 @@
                             </tr>
                             <tr>
                                 <td>
+                                    <label for="userRealName">${realNameLabel}</label>
+                                </td>
+                                <td>
+                                    <input type="text" id="userRealName" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label for="userTeam">${teamLabel}</label>
+                                </td>
+                                <td>
+                                    <select id="userTeam">
+                                        <#list teams as team>
+                                        <option value="${team}">${team}</option>
+                                        </#list>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
                                     <label for="securityCode">${captchaLabel}</label>
                                 </td>
                                 <td>

@@ -19,7 +19,7 @@
  *
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.4.1.8, Jan 28, 2016
+ * @version 2.4.1.9, Feb 2, 2016
  */
 
 /**
@@ -50,6 +50,8 @@ var Register = {
             var requestJSONObject = {
                 userName: $("#userName").val().replace(/(^\s*)|(\s*$)/g, ""),
                 userEmail: $("#userEmail").val().replace(/(^\s*)|(\s*$)/g, ""),
+                realName: $("#userRealName").val().replace(/(^\s*)|(\s*$)/g, ""),
+                team: $("#userTeam").val(),
                 captcha: $("#securityCode").val(),
                 referral: $("#referral").val()
             };
@@ -89,7 +91,6 @@ var Register = {
                     "type": "confirmPassword"
                 }]})) {
             var requestJSONObject = {
-                userAppRole: $("input[name=userAppRole]:checked").val(),
                 userPassword: calcMD5($("#userPassword").val()),
                 referral: $("#referral").val(),
                 userId: $("#userId").val()

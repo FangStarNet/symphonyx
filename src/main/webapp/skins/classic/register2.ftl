@@ -47,15 +47,6 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td>
-                                    <label for"userAppRole">${roleLabel}</label>
-                                </td>
-                                <td>
-                                    <label><input name="userAppRole" type="radio" value="0" checked="checked" />&nbsp;&nbsp;${programmerLabel}</label>
-                                    <label>&nbsp;&nbsp;&nbsp;&nbsp;<input name="userAppRole" type="radio" value="1" />&nbsp;&nbsp;${designerLabel}</label>
-                                </td>
-                            </tr>
-                            <tr>
                                 <td colspan="2" align="right"><br/>
                                     <div id="registerTip" class="tip"></div><br/>
                                     <button class="green" onclick="Register.register2()">${registerLabel}</button>

@@ -58,6 +58,7 @@ import org.b3log.symphony.service.VerifycodeMgmtService;
 import org.b3log.symphony.service.VerifycodeQueryService;
 import org.b3log.symphony.util.Filler;
 import org.b3log.symphony.util.Sessions;
+import org.b3log.symphony.util.Symphonys;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -75,7 +76,7 @@ import org.json.JSONObject;
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.7.0.9, Jan 28, 2016
+ * @version 1.7.0.10, Feb 2, 2016
  * @since 0.2.0
  */
 @RequestProcessor
@@ -283,7 +284,7 @@ public class LoginProcessor {
             context.renderTrueResult();
 
             LOGGER.info("User [email=" + user.optString(User.USER_EMAIL) + "] reseted password");
-            
+
             Sessions.login(request, response, user);
         } catch (final ServiceException e) {
             final String msg = langPropsService.get("resetPwdLabel") + " - " + e.getMessage();
@@ -338,6 +339,9 @@ public class LoginProcessor {
         }
 
         filler.fillHeaderAndFooter(request, response, dataModel);
+
+        final String teamsStr = Symphonys.get("teams");
+        dataModel.put(Common.TEAMS, teamsStr.split(","));
     }
 
     /**
@@ -365,11 +369,15 @@ public class LoginProcessor {
 
         final String name = requestJSONObject.optString(User.USER_NAME);
         final String email = requestJSONObject.optString(User.USER_EMAIL);
+        final String realName = requestJSONObject.optString(UserExt.USER_REAL_NAME);
+        final String team = requestJSONObject.optString(UserExt.USER_TEAM);
         final String referral = requestJSONObject.optString(Common.REFERRAL);
 
         final JSONObject user = new JSONObject();
         user.put(User.USER_NAME, name);
         user.put(User.USER_EMAIL, email);
+        user.put(UserExt.USER_REAL_NAME, realName);
+        user.put(UserExt.USER_TEAM, team);
         user.put(User.USER_PASSWORD, "");
 
         try {

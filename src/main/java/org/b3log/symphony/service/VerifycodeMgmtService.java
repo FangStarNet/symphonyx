@@ -49,7 +49,7 @@ import org.json.JSONObject;
  * Verifycode management service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.2.0.0, Jan 28, 2016
+ * @version 1.3.0.0, Feb 2, 2016
  * @since 1.3.0
  */
 @Service
@@ -208,13 +208,16 @@ public class VerifycodeMgmtService {
                     final int bizType = verifycode.optInt(Verifycode.BIZ_TYPE);
                     switch (bizType) {
                         case Verifycode.BIZ_TYPE_C_REGISTER:
-                            LOGGER.warn("Not impletement yet!");
+                            String body = langPropsService.get("registerBodyLabel");
+                            body = body.replace("${url}", Latkes.getServePath() + "/register?code=" + code);
+
+                            Mails.send(toMail, langPropsService.get("registerSubjectLabel"), body);
 
                             break;
                         case Verifycode.BIZ_TYPE_C_RESET_PWD:
-                            String body = langPropsService.get("forgetPwdBodyLabel");
+                            body = langPropsService.get("forgetPwdBodyLabel");
                             body = body.replace("${url}", Latkes.getServePath() + "/reset-pwd?code=" + code);
-                            
+
                             Mails.send(toMail, langPropsService.get("forgetPwdSubjectLabel"), body);
 
                             break;

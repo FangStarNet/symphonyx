@@ -57,7 +57,7 @@ import org.json.JSONObject;
  * Journal query service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.1.4, Feb 2, 2016
+ * @version 1.1.1.5, Feb 2, 2016
  * @since 1.4.0
  */
 @Service
@@ -125,7 +125,6 @@ public class JournalQueryService {
 
         final List<Filter> typeFilters = new ArrayList<Filter>();
         typeFilters.add(new PropertyFilter(Article.ARTICLE_TYPE, FilterOperator.EQUAL, Article.ARTICLE_TYPE_C_JOURNAL_CHAPTER));
-        typeFilters.add(new PropertyFilter(Article.ARTICLE_TYPE, FilterOperator.EQUAL, Article.ARTICLE_TYPE_C_JOURNAL_PARAGRAPH));
         typeFilters.add(new PropertyFilter(Article.ARTICLE_TYPE, FilterOperator.EQUAL, Article.ARTICLE_TYPE_C_JOURNAL_SECTION));
         final CompositeFilter typeCompositeFilter = new CompositeFilter(CompositeFilterOperator.OR, typeFilters);
 

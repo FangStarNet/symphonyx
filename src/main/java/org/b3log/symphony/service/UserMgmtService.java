@@ -372,6 +372,7 @@ public class UserMgmtService {
      *     "userAppRole": int,
      *     "userPassword": "", // Hashed
      *     "userTeam": "", // optional, uses "" if not specified
+     *     "userRealName": "", // optional, uses userName if not specified
      *     "userRole": "", // optional, uses {@value Role#DEFAULT_ROLE} instead if not specified
      *     "userStatus": int // optional, uses {@value UserExt#USER_STATUS_C_NOT_VERIFIED} instead if not specified
      * }
@@ -415,7 +416,13 @@ public class UserMgmtService {
 
             user = new JSONObject();
             user.put(User.USER_NAME, userName);
-            user.put(UserExt.USER_REAL_NAME, userName);
+
+            String userTeam = requestJSONObject.optString(UserExt.USER_REAL_NAME);
+            if (Strings.isEmptyOrNull(userTeam)) {
+                user.put(UserExt.USER_REAL_NAME, userName);
+            } else {
+                user.put(UserExt.USER_REAL_NAME, userTeam);
+            }
             user.put(User.USER_EMAIL, userEmail);
             user.put(UserExt.USER_APP_ROLE, requestJSONObject.optInt(UserExt.USER_APP_ROLE));
             user.put(User.USER_PASSWORD, requestJSONObject.optString(User.USER_PASSWORD));
@@ -453,8 +460,10 @@ public class UserMgmtService {
 
             if (toUpdate) {
                 user.put(UserExt.USER_NO, userNo);
-                user.put(UserExt.USER_AVATAR_URL, Symphonys.get("qiniu.domain") + "/avatar/" + ret + "?"
-                        + new Date().getTime());
+                if (Symphonys.getBoolean("qiniu.enabled")) {
+                    user.put(UserExt.USER_AVATAR_URL, Symphonys.get("qiniu.domain") + "/avatar/" + ret + "?"
+                            + new Date().getTime());
+                }
 
                 userRepository.update(ret, user);
 

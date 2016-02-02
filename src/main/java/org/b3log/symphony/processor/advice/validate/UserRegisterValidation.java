@@ -32,6 +32,7 @@ import org.b3log.symphony.model.Option;
 import org.b3log.symphony.model.UserExt;
 import org.b3log.symphony.processor.CaptchaProcessor;
 import org.b3log.symphony.service.OptionQueryService;
+import org.b3log.symphony.util.Symphonys;
 import org.json.JSONObject;
 
 /**
@@ -39,7 +40,7 @@ import org.json.JSONObject;
  *
  * @author <a href="mailto:wmainlove@gmail.com">Love Yao</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.3.0.6, Jul 13, 2015
+ * @version 1.4.0.6, Feb 2, 2016
  */
 @Named
 @Singleton
@@ -113,6 +114,7 @@ public class UserRegisterValidation extends BeforeRequestProcessAdvice {
         checkField(invalidCaptcha(captcha, request), "registerFailLabel", "captchaErrorLabel");
         checkField(invalidUserName(name), "registerFailLabel", "invalidUserNameLabel");
         checkField(!Strings.isEmail(email), "registerFailLabel", "invalidEmailLabel");
+        checkField(!email.endsWith(Symphonys.get("emailDomain")), "registerFailLabel", "emailDomainNotOpenLabel");
         checkField(UserExt.USER_APP_ROLE_C_HACKER != appRole
                 && UserExt.USER_APP_ROLE_C_PAINTER != appRole, "registerFailLabel", "invalidAppRoleLabel");
         //checkField(invalidUserPassword(password), "registerFailLabel", "invalidPasswordLabel");
