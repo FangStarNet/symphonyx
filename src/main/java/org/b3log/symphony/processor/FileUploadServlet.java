@@ -38,6 +38,8 @@ import org.b3log.latke.ioc.Lifecycle;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.service.ServiceException;
+import org.b3log.latke.util.MD5;
+import org.b3log.symphony.SymphonyServletListener;
 import org.b3log.symphony.model.Option;
 import org.b3log.symphony.service.OptionQueryService;
 import org.b3log.symphony.service.UserMgmtService;
@@ -49,7 +51,7 @@ import org.json.JSONObject;
  * File upload.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.0.0, Jan 25, 2016
+ * @version 1.1.0.1, Feb 2, 2016
  * @since 1.4.0
  */
 @WebServlet(urlPatterns = {"/upload", "/upload/*"}, loadOnStartup = 2)
@@ -115,11 +117,11 @@ public class FileUploadServlet extends HttpServlet {
         }
 
         final String uri = req.getRequestURI();
-        final String key = uri.substring("/upload/".length());
+        String key = uri.substring("/upload/".length());
+        key = StringUtils.substringBeforeLast(key, "-64.jpg"); // Erase Qiniu template
+        key = StringUtils.substringBeforeLast(key, "-260.jpg"); // Erase Qiniu template
 
         String path = UPLOAD_DIR + key;
-        path = StringUtils.substringBeforeLast(path, "-64.jpg"); // Erase Qiniu template
-        path = StringUtils.substringBeforeLast(path, "-260.jpg"); // Erase Qiniu template
 
         if (!FileUtil.isExistingFile(new File(path))) {
             resp.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -127,9 +129,22 @@ public class FileUploadServlet extends HttpServlet {
             return;
         }
 
-        final OutputStream output = resp.getOutputStream();
         final byte[] data = IOUtils.toByteArray(new FileInputStream(path));
 
+        final String ifNoneMatch = req.getHeader("If-None-Match");
+        final String etag = "\"" + MD5.hash(new String(data)) + "\"";
+
+        resp.addHeader("Cache-Control", "public, max-age=31536000");
+        resp.addHeader("ETag", etag);
+        resp.setHeader("Server", "Latke Static Server (v" + SymphonyServletListener.VERSION + ")");
+
+        if (etag.equals(ifNoneMatch)) {
+            resp.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+
+            return;
+        }
+
+        final OutputStream output = resp.getOutputStream();
         IOUtils.write(data, output);
         output.flush();
 
