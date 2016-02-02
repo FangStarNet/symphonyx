@@ -46,6 +46,7 @@ import org.b3log.symphony.model.UserExt;
 import org.b3log.symphony.repository.ArchiveRepository;
 import org.b3log.symphony.repository.ArticleRepository;
 import org.b3log.symphony.repository.UserRepository;
+import org.b3log.symphony.util.Emotions;
 import org.b3log.symphony.util.Symphonys;
 import org.b3log.symphony.util.Times;
 import org.json.JSONArray;
@@ -56,7 +57,7 @@ import org.json.JSONObject;
  * Journal query service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.1.3, Jan 29, 2016
+ * @version 1.1.1.4, Feb 2, 2016
  * @since 1.4.0
  */
 @Service
@@ -84,6 +85,12 @@ public class JournalQueryService {
      */
     @Inject
     private UserQueryService userQueryService;
+
+    /**
+     * Short link query service.
+     */
+    @Inject
+    private ShortLinkQueryService shortLinkQueryService;
 
     /**
      * Article repository.
@@ -196,6 +203,12 @@ public class JournalQueryService {
             }
 
             for (final JSONObject paragraph : paragraphs) {
+                String articleContent = paragraph.optString(Article.ARTICLE_CONTENT);
+                articleContent = shortLinkQueryService.linkArticle(articleContent);
+                articleContent = shortLinkQueryService.linkTag(articleContent);
+                articleContent = Emotions.convert(articleContent);
+                paragraph.put(Article.ARTICLE_CONTENT, articleContent);
+
                 articleQueryService.markdown(paragraph);
 
                 articleQueryService.organizeArticle(paragraph);
@@ -288,6 +301,12 @@ public class JournalQueryService {
             }
 
             for (final JSONObject paragraph : paragraphs) {
+                String articleContent = paragraph.optString(Article.ARTICLE_CONTENT);
+                articleContent = shortLinkQueryService.linkArticle(articleContent);
+                articleContent = shortLinkQueryService.linkTag(articleContent);
+                articleContent = Emotions.convert(articleContent);
+                paragraph.put(Article.ARTICLE_CONTENT, articleContent);
+
                 articleQueryService.markdown(paragraph);
 
                 articleQueryService.organizeArticle(paragraph);
