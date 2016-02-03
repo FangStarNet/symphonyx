@@ -340,8 +340,8 @@ public class LoginProcessor {
 
         filler.fillHeaderAndFooter(request, response, dataModel);
 
-        final String teamsStr = Symphonys.get("teams");
-        dataModel.put(Common.TEAMS, teamsStr.split(","));
+        dataModel.put(Common.TEAMS, Symphonys.get(Common.TEAMS).split(","));
+        dataModel.put(Common.EMAIL_DOMAIN, Symphonys.get(Common.EMAIL_DOMAIN));
     }
 
     /**

@@ -19,7 +19,7 @@
  *
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.4.2.9, Feb 2, 2016
+ * @version 2.4.2.10, Feb 3, 2016
  */
 
 /**
@@ -38,10 +38,6 @@ var Register = {
                     "type": 'string',
                     'max': 20
                 }, {
-                    "target": $("#userEmail"),
-                    "msg": Label.invalidEmailLabel,
-                    "type": "email"
-                }, {
                     "target": $("#securityCode"),
                     "msg": Label.captchaErrorLabel,
                     "type": 'string',
@@ -49,7 +45,7 @@ var Register = {
                 }]})) {
             var requestJSONObject = {
                 userName: $("#userName").val().replace(/(^\s*)|(\s*$)/g, ""),
-                userEmail: $("#userEmail").val().replace(/(^\s*)|(\s*$)/g, ""),
+                userEmail: $("#userEmail").val().replace(/(^\s*)|(\s*$)/g, "") + Label.emailDomain,
                 userRealName: $("#userRealName").val().replace(/(^\s*)|(\s*$)/g, ""),
                 userTeam: $("#userTeam").val(),
                 captcha: $("#securityCode").val(),

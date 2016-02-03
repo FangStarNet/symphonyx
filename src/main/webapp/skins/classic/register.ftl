@@ -27,7 +27,7 @@
                                     <label for="userEmail">${emailLabel}</label>
                                 </td>
                                 <td>
-                                    <input type="text" id="userEmail" />
+                                    <input type="text" id="userEmail" />${emailDomain}
                                 </td>
                             </tr>
                             <tr>
@@ -83,6 +83,7 @@
                                         Label.invalidEmailLabel = "${invalidEmailLabel}";
                                         Label.confirmPwdErrorLabel = "${confirmPwdErrorLabel}";
                                         Label.captchaErrorLabel = "${captchaErrorLabel}";
+                                        Label.emailDomain = "${emailDomain}";
         </script>
     </body>
 </html>

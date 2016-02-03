@@ -19,10 +19,15 @@ package org.b3log.symphony.model;
  * This class defines all common model relevant keys.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.25.1.10, Jan 25, 2016
+ * @version 2.26.1.10, Feb 3, 2016
  * @since 0.2.0
  */
 public final class Common {
+    
+    /**
+     * Key of email domain.
+     */
+    public static final String EMAIL_DOMAIN = "emailDomain";
 
     /**
      * Key of week day.
