@@ -39,7 +39,7 @@ import org.json.JSONObject;
  * Mail utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.2.0, Sep 17, 2015
+ * @version 1.0.2.1, Feb 3, 2016
  * @since 1.3.0
  */
 public final class Mails {
@@ -63,7 +63,7 @@ public final class Mails {
      * Mail service.
      */
     private static final MailService MAIL_SVC = MailServiceFactory.getMailService();
-    
+
     /**
      * Mail configuration.
      */
@@ -88,7 +88,12 @@ public final class Mails {
             message.setSubject(subject);
             message.setHtmlBody(body);
 
-            MAIL_SVC.send(message);
+            try {
+                MAIL_SVC.send(message);
+            } catch (final Exception e) {
+                // Try again
+                MAIL_SVC.send(message);
+            }
         } catch (final Exception e) {
 
             LOGGER.log(Level.ERROR, "Sends mail failed", e);
