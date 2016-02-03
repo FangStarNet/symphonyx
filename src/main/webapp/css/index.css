@@ -244,19 +244,35 @@
     border-bottom-width: 0;
 }
 
+.journal-user {
+    padding: 10px 0 0 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.journal-user:last-child {
+    border-bottom-width: 0;
+}
+
+.journal-user .article-list {
+    margin-left: 62px;
+}
+
+.journal-user .article-list li {
+    border-bottom-style: dotted;
+    padding: 10px 10px 0 0;
+}
+
 .journal-section {
     margin: 15px 0 10px 20px;
 }
 
-.journal .cmt-count {
-    color: #FFF;
-    background-color: #D8D8D8;
-    padding: 0px 5px;
-    border-radius: 3px;
-    float: right;
-    margin-top: 5px;
+.journal-day {
+    padding: 10px 0 0 62px;
 }
 
+.journal-day.last {
+    padding-bottom: 10px;
+}
 /* end article journal */
 
 /* start article list */
