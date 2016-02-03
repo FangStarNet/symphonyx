@@ -221,13 +221,7 @@
 }
 
 .journal-section {
-    margin-top: 10px;
-}
-
-.journal-section .journal-content {
-    margin: 5px 0 10px 30px;
-    border-left: 2px solid #ccc;
-    padding: 0px 10px 0 30px;
+    margin: 15px 0 10px 20px;
 }
 
 .journal .cmt-count {
@@ -526,7 +520,7 @@
 }
 
 .menu li li a.current {
-     padding-left: 26px !important;
+    padding-left: 26px !important;
 }
 /* end side menu */
 
