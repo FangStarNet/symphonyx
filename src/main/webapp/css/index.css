@@ -424,7 +424,8 @@
 
 .register .form input[type="text"],
 .register .form input[type="password"], 
-.register .form textarea {
+.register .form textarea,
+.register .form select {
     margin: 10px 0;
     width: 200px;
 }
@@ -432,6 +433,16 @@
 #securityCode {
     margin-right: 10px;
     width: 131px;
+}
+
+.register-email {
+    position: relative;
+}
+
+.register-email span.ft-gray {
+    position: absolute;
+    top: 18px;
+    right: 5px;
 }
 /* end register */
 

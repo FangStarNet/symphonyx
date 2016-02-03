@@ -26,8 +26,8 @@
                                 <td>
                                     <label for="userEmail">${emailLabel}</label>
                                 </td>
-                                <td>
-                                    <input type="text" id="userEmail" />${emailDomain}
+                                <td class="register-email">
+                                    <input type="text" id="userEmail" /><span class="ft-gray">${emailDomain}</span>
                                 </td>
                             </tr>
                             <tr>
