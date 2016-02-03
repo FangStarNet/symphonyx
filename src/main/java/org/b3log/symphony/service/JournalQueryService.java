@@ -57,7 +57,7 @@ import org.json.JSONObject;
  * Journal query service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.1.5, Feb 2, 2016
+ * @version 1.1.2.5, Feb 3, 2016
  * @since 1.4.0
  */
 @Service
@@ -215,7 +215,7 @@ public class JournalQueryService {
                 final String pAuthorId = paragraph.optString(Article.ARTICLE_AUTHOR_ID);
                 final JSONObject pAuthor = userRepository.get(pAuthorId);
                 final String userName = pAuthor.optString(User.USER_NAME);
-                final String teamName = pAuthor.optString(UserExt.USER_TEAM);
+                final String teamName = getTeamName(archive, pAuthorId);
 
                 final List<JSONObject> users = getUsers(ret, teamName);
                 final List<JSONObject> paras = getParagraphs(users, userName);
@@ -313,11 +313,7 @@ public class JournalQueryService {
                 final String pAuthorId = paragraph.optString(Article.ARTICLE_AUTHOR_ID);
                 final JSONObject pAuthor = userRepository.get(pAuthorId);
                 final String userName = pAuthor.optString(User.USER_NAME);
-                final String teamName = pAuthor.optString(UserExt.USER_TEAM);
-
-                if (UserExt.USER_STATUS_C_VALID != pAuthor.optInt(UserExt.USER_STATUS)) {
-                    continue;
-                }
+                final String teamName = getTeamName(archive, pAuthorId);
 
                 final List<JSONObject> users = getUsers(ret, teamName);
                 final List<JSONObject> weekDays = getWeekDays(users, userName, time);
@@ -473,16 +469,6 @@ public class JournalQueryService {
         return false;
     }
 
-    private List<JSONObject> getParagraphs(final List<JSONObject> users, final String userName) {
-        for (final JSONObject user : users) {
-            if (user.optString(User.USER_NAME).equals(userName)) {
-                return (List<JSONObject>) user.opt(Common.PARAGRAPHS);
-            }
-        }
-
-        return null;
-    }
-
     private List<JSONObject> getWeekDays(final List<JSONObject> users, final String userName, final long chapterTime) {
         for (final JSONObject user : users) {
             if (user.optString(User.USER_NAME).equals(userName)) {
@@ -498,6 +484,39 @@ public class JournalQueryService {
             if (weekDay.optInt(Common.WEEK_DAY) == dayNum) {
                 return (List<JSONObject>) weekDay.opt(Common.PARAGRAPHS);
             }
+        }
+
+        return null;
+    }
+
+    private JSONObject getTeam(final List<JSONObject> teams, final String teamName) {
+        for (final JSONObject team : teams) {
+            if (team.optString(Common.TEAM_NAME).equals(teamName)) {
+                return team;
+            }
+        }
+
+        return null;
+    }
+
+    private String getTeamName(final JSONObject archive, final String userId) {
+        try {
+            final JSONArray teams = new JSONArray(archive.optString(Archive.ARCHIVE_TEAMS));
+
+            for (int i = 0; i < teams.length(); i++) {
+                final JSONObject team = teams.optJSONObject(i);
+                final JSONArray users = team.optJSONArray(User.USERS);
+
+                for (int j = 0; j < users.length(); j++) {
+                    final String id = users.optString(j);
+
+                    if (id.equals(userId)) {
+                        return team.optString(Common.TEAM_NAME);
+                    }
+                }
+            }
+        } catch (final JSONException e) {
+            LOGGER.log(Level.ERROR, "Gets team with archive[ " + archive + "] failed", archive);
         }
 
         return null;
@@ -522,10 +541,10 @@ public class JournalQueryService {
         return (List<JSONObject>) team.opt(User.USERS);
     }
 
-    private JSONObject getTeam(final List<JSONObject> teams, final String teamName) {
-        for (final JSONObject team : teams) {
-            if (team.optString(Common.TEAM_NAME).equals(teamName)) {
-                return team;
+    private List<JSONObject> getParagraphs(final List<JSONObject> users, final String userName) {
+        for (final JSONObject user : users) {
+            if (user.optString(User.USER_NAME).equals(userName)) {
+                return (List<JSONObject>) user.opt(Common.PARAGRAPHS);
             }
         }
 
