@@ -13,46 +13,50 @@
                     <div class="fn-flex">
                         <a rel="nofollow" class="ft-gray"
                            href="/member/${user.userName}" 
-                           title="${user.userName}"><img class="avatar" src="${user.userAvatarURL}-64.jpg?${user.userUpdateTime?c}" /></a>
-                        <div class="fn-flex-1">
-                            <div class="article-content">
-                                <a class="ft-gray" href='/member/${user.userName}'><b>${user.userName}</b> (${user.userRealName})</a>
-                                <i>本日没有记录</i>
-                            </div>
+                           title="${user.userName} (${user.userRealName})"><img class="avatar" src="${user.userAvatarURL}-64.jpg?${user.userUpdateTime?c}" /></a>
+                        <div>
+                            <a class="ft-gray" href='/member/${user.userName}'><b>${user.userName}</b> (${user.userRealName})</a>
+                            <i>本日没有记录</i>
                         </div>
                     </div>
                 </li>
                 </#if>
                 <#list user.paragraphs as paragraph>
-                <li<#if paragraph_index == 0> id="menu${team_index}${user_index}0"</#if>>
+                <li<#if paragraph_index == 0> id="menu${team_index}${user_index}0"</#if> 
+                    <#if user.paragraphs?size != 1>
+                    class="<#if paragraph_index == 0>start<#elseif paragraph_index == user.paragraphs?size - 1>end<#else>other</#if>"
+                    </#if>
+                    >
                     <div class="fn-flex">
+                        <#if paragraph_index == 0>
                         <a rel="nofollow" class="ft-gray"
                            href="/member/${user.userName}" 
-                           title="${user.userName}"><img class="avatar" src="${user.userAvatarURL}-64.jpg?${user.userUpdateTime?c}" /></a>
-                        <div class="fn-flex-1">
+                           title="${user.userName} (${user.userRealName})"><img class="avatar" src="${user.userAvatarURL}-64.jpg?${user.userUpdateTime?c}" /></a>
+                        <#else>
+                        <div class="avatar"></div>
+                        </#if>
+                        <div class="fn-flex-1<#if paragraph_index == user.paragraphs?size - 1> last</#if>">
                             <h2>
                                 <a href='${paragraph.articlePermalink}'>${paragraph.articleTitle}</a>
+                                <span class="ft-fade">&nbsp;•&nbsp;</span>
+                                <#list paragraph.articleTags?split(",") as articleTag>
+                                <a rel="tag" class="tag" href="/tags/${articleTag?url('UTF-8')}">
+                                    ${articleTag}
+                                </a>&nbsp;
+                                </#list>
+                                <span class="ft-fade">&nbsp;•&nbsp;</span>
+                                <span class="ft-fade ft-13">${paragraph.timeAgo}</span>
                             </h2>
-                            <div class="article-content">
+                            <div class="content-reset">
                                 ${paragraph.articleContent}
                             </div>
-                            <#list paragraph.articleTags?split(",") as articleTag>
-                            <a rel="tag" class="tag" href="/tags/${articleTag?url('UTF-8')}">
-                                ${articleTag}
-                            </a>&nbsp;
-                            </#list>
-
-                            <span class="ft-fade">&nbsp;•&nbsp;</span>
-                            <a class="ft-gray" href='/member/${user.userName}'><b>${user.userName}</b> (${user.userRealName})</a>
-                            <span class="ft-fade">&nbsp;•&nbsp;${paragraph.timeAgo}</span>
-
                         </div>
                     </div>
+
                     <#if paragraph.articleCommentCount != 0>
                     <div class="cmts" title="${cmtLabel}">
                         <a class="count ft-gray" href="${paragraph.articlePermalink}">${paragraph.articleCommentCount}</a>
                     </div>
-                    </#if>
                     <div class="commenters">
                         <#list paragraph.articleParticipants as comment>
                         <a rel="nofollow" href="${article.articlePermalink}#${comment.commentId}" title="${comment.articleParticipantName}">
@@ -60,6 +64,7 @@
                         </a>
                         </#list>
                     </div>
+                    </#if>
                 </li>
                 </#list>
                 </#list>

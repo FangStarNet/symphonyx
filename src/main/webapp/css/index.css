@@ -220,6 +220,30 @@
     border-bottom-width: 0;
 }
 
+.journal .list li.start {
+    border-bottom: 0;
+    padding-bottom: 0;
+    padding-right: 0;
+}
+
+.journal .list li.other {
+    border-bottom: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+}
+
+.journal .list li.end {
+    padding-bottom: 0;
+}
+
+.journal .list .fn-flex-1 {
+    border-bottom: 1px dotted #eee;
+}
+
+.journal .list .last.fn-flex-1 {
+    border-bottom-width: 0;
+}
+
 .journal-section {
     margin: 15px 0 10px 20px;
 }
@@ -500,7 +524,7 @@
 .menu li li a {
     padding-left: 26px !important;
     font-size: 14px;
-    line-height: 22px;
+    line-height: 30px;
 }
 
 .menu a:hover {

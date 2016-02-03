@@ -7,7 +7,9 @@
             <ul class="fn-none">
                 <#list team.users as user>
                 <li>
-                    <a href="#menu${team_index}${user_index}0"><b>${user.userName}</b> (${user.userRealName})
+                    <a href="#menu${team_index}${user_index}0">
+                        <img class="avatar-small" src="${user.userAvatarURL}-64.jpg?${user.userUpdateTime?c}"/>
+                        <b>${user.userName}</b> (${user.userRealName})
                         <#if 6 == article.articleType>
                         <span class="ft-red">${user.done}</span>/7
                         </#if>

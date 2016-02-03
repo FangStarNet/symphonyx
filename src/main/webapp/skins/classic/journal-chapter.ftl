@@ -12,20 +12,20 @@
                     <div>
                         <a rel="nofollow" class="ft-gray"
                            href="/member/${user.userName}" 
-                           title="${user.userName}"><img class="avatar-small" src="${user.userAvatarURL}-64.jpg?${user.userUpdateTime?c}" /></a>
+                           title="${user.userName} (${user.userRealName})"><img class="avatar-small" src="${user.userAvatarURL}-64.jpg?${user.userUpdateTime?c}" /></a>
                         </a> &nbsp;
                         <a class="ft-gray" href="/member/${user.userName}"><b>${user.userName}</b> (${user.userRealName})</a>
                         <span class="ft-red">${user.done}</span>/7
                     </div><br/>
-                    
+
                     <#list user.weekDays as day>
                     <span class="ft-red">${day.weekDayName}</span>
-                    
+
                     <#if day.paragraphs?size == 0>
                     <span class="ft-fade">&nbsp;•&nbsp;</span>
                     <i>本日没有记录</i>
                     </#if>
-                    
+
                     <div class="journal-section">
                         <#list day.paragraphs as paragraph>
                         <a href='${paragraph.articlePermalink}'>${paragraph.articleTitle}</a><span class="ft-fade">&nbsp;•&nbsp;</span>
