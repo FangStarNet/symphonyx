@@ -57,7 +57,7 @@ import org.json.JSONObject;
  * Journal query service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.2.5, Feb 3, 2016
+ * @version 1.1.3.5, Feb 4, 2016
  * @since 1.4.0
  */
 @Service
@@ -426,7 +426,7 @@ public class JournalQueryService {
                 user.put(Common.DONE, userDoneCount);
 
                 if (userDoneCount > 0) {
-                    teamDoneCount++;
+                    teamDoneCount += userDoneCount;
                 }
             }
 
