@@ -19,7 +19,7 @@
  *
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.14.10.14, Feb 2, 2016
+ * @version 1.14.10.15, Feb 4, 2016
  */
 
 /**
@@ -255,8 +255,8 @@ var Util = {
                             var msg = Label.desktopNotificationTemplateLabel;
                             msg = msg.replace("${count}", count);
                             var options = {
-                                iconUrl: '',
-                                title: 'HacPai',
+                                iconUrl: '/images/logo.png',
+                                title: '房星内网',
                                 body: msg,
                                 timeout: 5000,
                                 onclick: function () {
