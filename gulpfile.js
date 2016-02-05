@@ -43,13 +43,22 @@ gulp.task('cc', function () {
 
     // js
     var jsJqueryUpload = ['./src/main/webapp/js/lib/jquery/file-upload-9.10.1/vendor/jquery.ui.widget.js',
-    './src/main/webapp/js/lib/jquery/file-upload-9.10.1/jquery.iframe-transport.js',
-    './src/main/webapp/js/lib/jquery/file-upload-9.10.1/jquery.fileupload.js',
-    './src/main/webapp/js/lib/jquery/file-upload-9.10.1/jquery.fileupload-process.js',
-    './src/main/webapp/js/lib/jquery/file-upload-9.10.1/jquery.fileupload-validate.js'];
+        './src/main/webapp/js/lib/jquery/file-upload-9.10.1/jquery.iframe-transport.js',
+        './src/main/webapp/js/lib/jquery/file-upload-9.10.1/jquery.fileupload.js',
+        './src/main/webapp/js/lib/jquery/file-upload-9.10.1/jquery.fileupload-process.js',
+        './src/main/webapp/js/lib/jquery/file-upload-9.10.1/jquery.fileupload-validate.js'];
     gulp.src(jsJqueryUpload)
             .pipe(uglify())
             .pipe(concat('jquery.fileupload.min.js'))
             .pipe(gulp.dest('./src/main/webapp/js/lib/jquery/file-upload-9.10.1/'));
+
+    var jsCodemirror = ['./src/main/webapp/js/lib/editor/codemirror.js',
+        './src/main/webapp/js/lib/editor/fullscreen.js',
+        './src/main/webapp/js/lib/editor/placeholder.js',
+        './src/main/webapp/js/overwrite/codemirror/addon/hint/show-hint.js'];
+    gulp.src(jsCodemirror)
+            .pipe(uglify())
+            .pipe(concat('codemirror.min.js'))
+            .pipe(gulp.dest('./src/main/webapp/js/lib/editor/'));
 
 });
