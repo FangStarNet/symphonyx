@@ -111,16 +111,6 @@
                     <div class="content-reset article-content"></div>
                     </#if>
                     
-                    <#if 4 != article.articleType && 6 != article.articleType && 5 != article.articleType>
-                    <div class="fn-clear">
-                        <div class="share fn-right">
-                            <span class="icon-tencent" data-type="tencent"></span>
-                            <span class="icon-weibo" data-type="weibo"></span>
-                            <span class="icon-twitter" data-type="twitter"></span>
-                            <span class="icon-google" data-type="google"></span>
-                        </div>
-                    </div>
-                    </#if>
                     <#if 0 < article.articleRewardPoint>
                     <div class="content-reset" id="articleRewardContent"<#if !article.rewarded> class="reward"</#if>>
                          <#if !article.rewarded>
