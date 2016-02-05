@@ -444,6 +444,10 @@
     top: 18px;
     right: 5px;
 }
+
+.register-email #userEmail {
+    padding-right: 92px;
+}
 /* end register */
 
 /* start side tags */
