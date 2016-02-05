@@ -11177,7 +11177,7 @@
         'Cmd-B': toggleBold,
         'Cmd-I': toggleItalic,
         'Cmd-K': drawLink,
-        'Cmd-Alt-I': drawImage,
+        // 'Cmd-Alt-I': drawImage,
         "Cmd-'": toggleBlockquote,
         'Cmd-Alt-L': toggleOrderedList,
         'Cmd-L': toggleUnOrderedList
@@ -11202,6 +11202,9 @@
      */
     function createIcon(name, options) {
         options = options || {};
+        if (name === 'image') {
+            return $(options.html)[0];
+        }
         var el = document.createElement('a');
 
         var shortcut = options.shortcut || shortcuts[name];
@@ -11663,7 +11666,7 @@
                     }
                 }
                 if (item.action) {
-                    if (typeof item.action === 'function') {
+                    if (typeof item.action === 'function' && item.name !== 'image') {
                         el.onclick = function (e) {
                             item.action(self);
                         };

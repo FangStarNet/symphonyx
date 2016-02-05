@@ -52,7 +52,7 @@ var Comment = {
                 {name: 'ordered-list'},
                 '|',
                 {name: 'link'},
-                {name: 'image'},
+                {name: 'image', html: '<form id="fileUpload" method="POST" enctype="multipart/form-data"><input type="file" class="icon-image"/></form>'},
                 '|',
                 {name: 'redo'},
                 {name: 'undo'},
