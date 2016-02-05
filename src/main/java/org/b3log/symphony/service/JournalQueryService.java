@@ -57,7 +57,7 @@ import org.json.JSONObject;
  * Journal query service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.3.5, Feb 4, 2016
+ * @version 1.1.3.6, Feb 5, 2016
  * @since 1.4.0
  */
 @Service
@@ -123,16 +123,9 @@ public class JournalQueryService {
                 .addSort(Keys.OBJECT_ID, SortDirection.DESCENDING)
                 .setPageSize(fetchSize).setCurrentPageNum(currentPageNum);
 
-        final List<Filter> typeFilters = new ArrayList<Filter>();
-        typeFilters.add(new PropertyFilter(Article.ARTICLE_TYPE, FilterOperator.EQUAL, Article.ARTICLE_TYPE_C_JOURNAL_CHAPTER));
-        typeFilters.add(new PropertyFilter(Article.ARTICLE_TYPE, FilterOperator.EQUAL, Article.ARTICLE_TYPE_C_JOURNAL_SECTION));
-        final CompositeFilter typeCompositeFilter = new CompositeFilter(CompositeFilterOperator.OR, typeFilters);
-
-        final List<Filter> filters = new ArrayList<Filter>();
-        filters.add(new PropertyFilter(Article.ARTICLE_STATUS, FilterOperator.EQUAL, Article.ARTICLE_STATUS_C_VALID));
-        filters.add(typeCompositeFilter);
-
-        query.setFilter(new CompositeFilter(CompositeFilterOperator.AND, filters));
+        query.setFilter(CompositeFilterOperator.and(
+                new PropertyFilter(Article.ARTICLE_STATUS, FilterOperator.EQUAL, Article.ARTICLE_STATUS_C_VALID),
+                new PropertyFilter(Article.ARTICLE_TYPE, FilterOperator.EQUAL, Article.ARTICLE_TYPE_C_JOURNAL_CHAPTER)));
 
         try {
             final JSONObject result = articleRepository.get(query);

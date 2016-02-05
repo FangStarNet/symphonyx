@@ -14,17 +14,17 @@
             <div class="wrapper">
                 <div class="content fn-clear">
                     <p>
-                        航海日志开始于2016年的第一天（2016-02-08），之前的内容存档于<a href="http://wiki.fangstar.net/doku.php?id=teamblog">房星の征途</a><sup>Team Blog</sup>
-
+                        航海日记开始于 2016 年情人节，之前的内容存档于<a href="http://wiki.fangstar.net/doku.php?id=teamblog">房星の征途</a><sup>Team Blog</sup>
                     </p>
-                    <br/> <p>
+                    <br/> 
+                    <p>
                         这是一份所有伙伴一起编写的公司日志，旨在记录房星和每一位伙伴的成长历程
                     </p>
                     <p>
-                        本文档能帮助伙伴们了解房星的历史以及其他人的工作内容和进度。
+                        帮助伙伴们了解房星的历史以及其他人的工作内容和进度
                     </p>
                     <p>
-                        本文档以周为章，以天为节，以个人为段落，将每个人在房星每天的经历记录在此。
+                        以周为章，以天为节，以个人为段落，将每个人在房星每天的经历记录在此
                     </p>   <br/> 
 
                     <div class="article-list list">
