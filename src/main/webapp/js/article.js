@@ -19,7 +19,7 @@
  *
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.11.14.7, Dec 29, 2015
+ * @version 1.11.14.8, Feb 6, 2016
  */
 
 /**
@@ -158,6 +158,9 @@ var Comment = {
             headers: {"csrfToken": csrfToken},
             cache: false,
             data: JSON.stringify(requestJSONObject),
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert(errorThrown);
+            },
             success: function (result, textStatus) {
                 if (result.sc) {
                     $("#" + id + 'Thx').text(thxed).removeAttr('onclick').removeClass('fn-none thx fn-pointer');

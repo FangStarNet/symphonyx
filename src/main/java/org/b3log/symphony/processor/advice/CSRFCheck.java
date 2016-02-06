@@ -16,6 +16,7 @@
 package org.b3log.symphony.processor.advice;
 
 import java.util.Map;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +25,7 @@ import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.logging.Logger;
+import org.b3log.latke.service.LangPropsService;
 import org.b3log.latke.servlet.HTTPRequestContext;
 import org.b3log.latke.servlet.advice.BeforeRequestProcessAdvice;
 import org.b3log.latke.servlet.advice.RequestProcessAdviceException;
@@ -35,7 +37,7 @@ import org.json.JSONObject;
  * CSRF check.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Aug 27, 2015
+ * @version 1.0.0.1, Feb 6, 2016
  * @since 1.3.0
  */
 @Named
@@ -52,7 +54,7 @@ public class CSRFCheck extends BeforeRequestProcessAdvice {
         final HttpServletRequest request = context.getRequest();
 
         final JSONObject exception = new JSONObject();
-        exception.put(Keys.MSG, "CSRF Check Error");
+        exception.put(Keys.MSG, "Security check failed, please refresh this page then try again");
         exception.put(Keys.STATUS_CODE, HttpServletResponse.SC_FORBIDDEN);
 
         // 1. Check Referer
