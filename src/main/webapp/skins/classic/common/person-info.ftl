@@ -14,7 +14,7 @@
                     <a href="/member/${currentUser.userName}">${userName}</a>&nbsp;
                     <a href="/member/${currentUser.userName}/points" class="ft-gray" title="${pointLabel} ${currentUser.userPoint?c}">
                         <#if 0 == currentUser.userAppRole>0x${currentUser.userPointHex}<#else><div class="painter-point" style="background-color: #${currentUser.userPointCC}"></div></#if></a>&nbsp;
-                    <a class="btn small red" href="/post?type=4&tags=航海日记,段落">航海</a>
+                    <a class="btn small red" href="/post?type=4&tags=航海日记,段落">启航</a>
                     <br/>
                     <#if !isDailyCheckin>
                     <a class="btn small red" href="/activity/daily-checkin">${activityDailyCheckinLabel}</a>
