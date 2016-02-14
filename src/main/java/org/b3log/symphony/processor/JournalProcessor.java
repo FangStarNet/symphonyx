@@ -64,7 +64,7 @@ import org.json.JSONObject;
  * </ul>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.2.0.1, Feb 14, 2016
+ * @version 1.2.1.1, Feb 14, 2016
  * @since 1.4.0
  */
 @RequestProcessor
@@ -239,12 +239,12 @@ public class JournalProcessor {
 
             final Calendar cal = Calendar.getInstance();
             final SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
+            cal.setFirstDayOfWeek(Calendar.MONDAY);
             cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
 
             final String from = df.format(cal.getTime());
-
+            cal.setFirstDayOfWeek(Calendar.MONDAY);
             cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-            cal.add(Calendar.WEEK_OF_YEAR, 1);
 
             final String title = from + " - " + df.format(cal.getTime());
             chapter.put(Article.ARTICLE_TITLE, title);
