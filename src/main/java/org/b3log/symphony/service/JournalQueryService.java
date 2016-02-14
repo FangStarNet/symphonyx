@@ -57,7 +57,7 @@ import org.json.JSONObject;
  * Journal query service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.3.6, Feb 5, 2016
+ * @version 1.1.3.7, Feb 14, 2016
  * @since 1.4.0
  */
 @Service
@@ -79,12 +79,6 @@ public class JournalQueryService {
      */
     @Inject
     private LangPropsService langPropsService;
-
-    /**
-     * User query service.
-     */
-    @Inject
-    private UserQueryService userQueryService;
 
     /**
      * Short link query service.

@@ -25,7 +25,7 @@ import org.b3log.latke.service.LangPropsServiceImpl;
  * Time utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.2.0.0, Jan 29, 2016
+ * @version 1.2.1.0, Feb 14, 2016
  * @since 1.3.0
  */
 public final class Times {
@@ -176,12 +176,11 @@ public final class Times {
 
         end.setTimeInMillis(time);
         end.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-        end.add(Calendar.WEEK_OF_YEAR, 1);
         end.set(Calendar.HOUR, 23);
         end.set(Calendar.MINUTE, 59);
         end.set(Calendar.SECOND, 59);
         end.set(Calendar.MILLISECOND, 999);
-
+        
         return end.getTime().getTime();
     }
 

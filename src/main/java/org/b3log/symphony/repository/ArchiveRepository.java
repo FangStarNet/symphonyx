@@ -34,14 +34,14 @@ import org.json.JSONObject;
  * Archive repository.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Jan 29, 2016
+ * @version 1.0.0.1, Feb 14, 2016
  * @since 1.4.0
  */
 @Repository
 public class ArchiveRepository extends AbstractRepository {
 
     /**
-     * Gets the latest week archive with the specified time.
+     * Gets the latest week archive (Sunday) with the specified time.
      *
      * @param time the specified time
      * @return archive, returns {@code null} if not found

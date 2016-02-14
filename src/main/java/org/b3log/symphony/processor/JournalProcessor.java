@@ -42,7 +42,6 @@ import org.b3log.latke.servlet.annotation.RequestProcessor;
 import org.b3log.latke.servlet.renderer.freemarker.AbstractFreeMarkerRenderer;
 import org.b3log.latke.util.Paginator;
 import org.b3log.latke.util.Strings;
-import org.b3log.symphony.model.Archive;
 import org.b3log.symphony.model.Article;
 import org.b3log.symphony.model.Common;
 import org.b3log.symphony.processor.advice.AnonymousViewCheck;
@@ -54,7 +53,6 @@ import org.b3log.symphony.service.JournalQueryService;
 import org.b3log.symphony.service.UserQueryService;
 import org.b3log.symphony.util.Filler;
 import org.b3log.symphony.util.Symphonys;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -66,7 +64,7 @@ import org.json.JSONObject;
  * </ul>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.2.0.0, Jan 29, 2016
+ * @version 1.2.0.1, Feb 14, 2016
  * @since 1.4.0
  */
 @RequestProcessor
