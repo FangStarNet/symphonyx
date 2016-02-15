@@ -16,7 +16,7 @@
                 <div class="form fn-flex-1 fn-clear">
                     <div>
                         <input type="text" id="articleTitle" tabindex="1"
-                               value="<#if article??>${article.articleTitle}</#if>" placeholder="${titleLabel}" />
+                               value="<#if article??>${article.articleTitle}<#else><#if 4 == articleType>${articleTitle}</#if></#if>" placeholder="${titleLabel}" />
                     </div>
                     <div class="fn-clear">
                         <label class="article-content-label">
@@ -115,7 +115,12 @@
                             var qiniuDomain = '${qiniuDomain}';
                             var audioRecordingLabel = '${audioRecordingLabel}';
                             var uploadingLabel = '${uploadingLabel}';
-                            $("#articleTitle").focus();
+                            
+                            if ("" === $("#articleTitle").val()) {
+                                $("#articleTitle").focus();
+                            } else {
+                                AddArticle.editor.focus();
+                            }
         </script>
     </body>
 </html>

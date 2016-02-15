@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.logging.Level;
@@ -102,7 +103,7 @@ import org.jsoup.safety.Whitelist;
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.13.11.26, Jan 21, 2016
+ * @version 2.14.11.26, Feb 15, 2016
  * @since 0.2.0
  */
 @RequestProcessor
@@ -289,6 +290,11 @@ public class ArticleProcessor {
             }
 
             dataModel.put(Article.ARTICLE_TYPE, articleType);
+        }
+
+        // Default title for journal
+        if (Article.ARTICLE_TYPE_C_JOURNAL_PARAGRAPH == (Integer) dataModel.get(Article.ARTICLE_TYPE)) {
+            dataModel.put(Article.ARTICLE_TITLE, DateFormatUtils.format(System.currentTimeMillis(), "yyyy-MM-dd"));
         }
 
         final String at = request.getParameter(Common.AT);
