@@ -75,7 +75,7 @@ import org.jsoup.safety.Whitelist;
  * Article query service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.12.8.15, Jan 23, 2016
+ * @version 2.13.8.15, Feb 15, 2016
  * @since 0.2.0
  */
 @Service
@@ -872,6 +872,7 @@ public class ArticleQueryService {
      * <li>converts create/update/latest comment time (long) to date type</li>
      * <li>generates author thumbnail URL</li>
      * <li>generates author name</li>
+     * <li>generates author real name</li>
      * <li>escapes article title &lt; and &gt;</li>
      * <li>generates article heat</li>
      * <li>generates article view count display format(1k+/1.5k+...)</li>
@@ -927,7 +928,7 @@ public class ArticleQueryService {
     }
 
     /**
-     * Generates the specified article author name and thumbnail URL.
+     * Generates the specified article author name, real name and thumbnail URL.
      *
      * @param article the specified article
      * @throws RepositoryException repository exception
@@ -945,6 +946,7 @@ public class ArticleQueryService {
         article.put(Article.ARTICLE_T_AUTHOR, author);
 
         article.put(Article.ARTICLE_T_AUTHOR_NAME, author.optString(User.USER_NAME));
+        article.put(Article.ARTICLE_T_AUTHOR_REAL_NAME, author.optString(UserExt.USER_REAL_NAME));
     }
 
     /**
@@ -996,6 +998,7 @@ public class ArticleQueryService {
 
                 final JSONObject participant = new JSONObject();
                 participant.put(Article.ARTICLE_T_PARTICIPANT_NAME, commenter.optString(User.USER_NAME));
+                participant.put(Article.ARTICLE_T_PARTICIPANT_REAL_NAME, commenter.optString(UserExt.USER_REAL_NAME));
                 participant.put(Article.ARTICLE_T_PARTICIPANT_THUMBNAIL_URL, thumbnailURL);
                 participant.put(Article.ARTICLE_T_PARTICIPANT_THUMBNAIL_UPDATE_TIME,
                         commenter.optLong(UserExt.USER_UPDATE_TIME));

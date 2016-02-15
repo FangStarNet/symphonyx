@@ -63,7 +63,7 @@
                     <div class="article-title fn-flex">
                         <h2 class="fn-flex-1">
                             <a rel="author" href="/member/${article.articleAuthorName}" class="ft-gray"
-                               title="${article.articleAuthorName}"><img class="avatar-small" src="${article.articleAuthorThumbnailURL}-64.jpg?${article.articleAuthor.userUpdateTime?c}" /></a> &nbsp;
+                               title="${article.articleAuthorRealName}"><img class="avatar-small" src="${article.articleAuthorThumbnailURL}-64.jpg?${article.articleAuthor.userUpdateTime?c}" /></a> &nbsp;
                             <#if 1 == article.articleType>
                             <span class="icon-locked" title="${discussionLabel}"></span>
                             <#elseif 2 == article.articleType>
@@ -160,13 +160,13 @@
                                     <div class="fn-flex">
                                         <a rel="nofollow" href="/member/${comment.commentAuthorName}">
                                             <img class="avatar" 
-                                                 title="${comment.commentAuthorName}" src="${comment.commentAuthorThumbnailURL}-64.jpg?${comment.commenter.userUpdateTime?c}" />
+                                                 title="${comment.commentAuthorRealName}" src="${comment.commentAuthorThumbnailURL}-64.jpg?${comment.commenter.userUpdateTime?c}" />
                                         </a>
                                         <div class="fn-flex-1 comment-content">
                                             <div class="fn-clear comment-info">
                                                 <span class="fn-left">
                                                     <a rel="nofollow" href="/member/${comment.commentAuthorName}"
-                                                       title="${comment.commentAuthorName}">${comment.commentAuthorName}</a>
+                                                       title="${comment.commentAuthorRealName}">${comment.commentAuthorName}</a>
                                                     <span class="ft-fade ft-smaller">&nbsp;•&nbsp;${comment.timeAgo}</span>
                                                     <#if comment.rewardedCnt gt 0>
                                                     <span class="icon-heart ft-smaller ft-fade"></span> <span class="ft-smaller ft-fade" id='${comment.oId}RewardedCnt'>${comment.rewardedCnt}</span> 

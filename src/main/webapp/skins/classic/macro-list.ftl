@@ -9,7 +9,7 @@
             <div class="fn-flex">
                 <a rel="nofollow" class="ft-gray"
                    href="/member/${article.articleAuthorName}" 
-                   title="${article.articleAuthorName}"><img class="avatar" src="${article.articleAuthorThumbnailURL}-64.jpg?${article.articleAuthor.userUpdateTime?c}" /></a>
+                   title="${article.articleAuthorRealName}"><img class="avatar" src="${article.articleAuthorThumbnailURL}-64.jpg?${article.articleAuthor.userUpdateTime?c}" /></a>
                 <div class="fn-flex-1 has-view">
                     <h2>
                         <#if 1 == article.articleType>
@@ -36,7 +36,7 @@
             </#if>
             <div class="commenters">
                 <#list article.articleParticipants as comment>
-                <a rel="nofollow" href="${article.articlePermalink}#${comment.commentId}" title="${comment.articleParticipantName}">
+                <a rel="nofollow" href="${article.articlePermalink}#${comment.commentId}" title="${comment.articleParticipantRealName}">
                     <img class="avatar-small" src="${comment.articleParticipantThumbnailURL}-64.jpg?${comment.articleParticipantThumbnailUpdateTime?c}" />
                 </a>
                 </#list>

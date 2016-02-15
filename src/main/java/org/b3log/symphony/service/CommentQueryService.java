@@ -428,6 +428,7 @@ public class CommentQueryService {
      * <li>generates comment author thumbnail URL</li>
      * <li>generates comment author URL</li>
      * <li>generates comment author name</li>
+     * <li>generates comment author real name</li>
      * <li>generates &#64;username home URL</li>
      * <li>markdowns comment content</li>
      * <li>block comment if need</li>
@@ -452,6 +453,7 @@ public class CommentQueryService {
      * <li>generates comment author thumbnail URL</li>
      * <li>generates comment author URL</li>
      * <li>generates comment author name</li>
+     * <li>generates comment author real name</li>
      * <li>generates &#64;username home URL</li>
      * <li>markdowns comment content</li>
      * <li>block comment if need</li>
@@ -475,6 +477,7 @@ public class CommentQueryService {
 
         comment.put(Comment.COMMENT_T_COMMENTER, author);
         comment.put(Comment.COMMENT_T_AUTHOR_NAME, author.optString(User.USER_NAME));
+        comment.put(Comment.COMMENT_T_AUTHOR_REAL_NAME, author.optString(UserExt.USER_REAL_NAME));
         comment.put(Comment.COMMENT_T_AUTHOR_URL, author.optString(User.USER_URL));
 
         processCommentContent(comment);
