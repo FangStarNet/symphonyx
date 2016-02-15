@@ -140,7 +140,7 @@ public class AvatarQueryService {
 
         final int ratio = Math.round(size / 5);
 
-        final BufferedImage ret = new BufferedImage(ratio * 5, ratio * 5, BufferedImage.TYPE_INT_ARGB);
+        final BufferedImage ret = new BufferedImage(ratio * 5, ratio * 5, BufferedImage.TYPE_3BYTE_BGR);
         final Graphics graphics = ret.getGraphics();
 
         graphics.setColor(new Color(Integer.parseInt(String.valueOf(hash.charAt(0)), 16) * 16,
@@ -158,7 +158,6 @@ public class AvatarQueryService {
                 }
             }
         }
-
         return ret;
     }
 }
