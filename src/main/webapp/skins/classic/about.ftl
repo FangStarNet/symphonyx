@@ -8,7 +8,7 @@
     </head>
     <body>
         <script>
-            location.href = "/article/1454058749749";
+            location.href = "/article/1454721946973";
         </script>
     </body>
 </html>
