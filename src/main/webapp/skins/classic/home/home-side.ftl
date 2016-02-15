@@ -36,6 +36,11 @@
             ${user.userNo?c}
             <span class="ft-gray">${numVIPLabel} <i>${user.userRealName}</i></span>
         </div>
+        <#if "" != user.userTeam>
+        <div class="user-info">
+            <span class="ft-gray">${teamLabel}</span> ${user.userTeam}
+        </div>
+        </#if>
         <#if "" != user.userTags>
         <div class="user-info">
             <span class="ft-gray">${selfTagLabel}</span> <#list user.userTags?split(',') as tag> ${tag?html}<#if tag_has_next>,</#if></#list>
