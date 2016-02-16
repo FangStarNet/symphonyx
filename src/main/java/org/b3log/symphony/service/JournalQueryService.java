@@ -57,7 +57,7 @@ import org.json.JSONObject;
  * Journal query service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.3.7, Feb 14, 2016
+ * @version 1.2.3.7, Feb 16, 2016
  * @since 1.4.0
  */
 @Service
@@ -105,7 +105,8 @@ public class JournalQueryService {
     private UserRepository userRepository;
 
     /**
-     * Gets the recent (sort by create time) articles with the specified fetch size.
+     * Gets the recent (sort by create time) journals with the specified fetch size. The first one is section, the
+     * followings are chapters.
      *
      * @param currentPageNum the specified current page number
      * @param fetchSize the specified fetch size
@@ -113,19 +114,34 @@ public class JournalQueryService {
      * @throws ServiceException service exception
      */
     public List<JSONObject> getRecentJournals(final int currentPageNum, final int fetchSize) throws ServiceException {
-        final Query query = new Query()
+        final Query chapterQuery = new Query()
                 .addSort(Keys.OBJECT_ID, SortDirection.DESCENDING)
                 .setPageSize(fetchSize).setCurrentPageNum(currentPageNum);
 
-        query.setFilter(CompositeFilterOperator.and(
+        chapterQuery.setFilter(CompositeFilterOperator.and(
                 new PropertyFilter(Article.ARTICLE_STATUS, FilterOperator.EQUAL, Article.ARTICLE_STATUS_C_VALID),
                 new PropertyFilter(Article.ARTICLE_TYPE, FilterOperator.EQUAL, Article.ARTICLE_TYPE_C_JOURNAL_CHAPTER)));
 
-        try {
-            final JSONObject result = articleRepository.get(query);
-            final List<JSONObject> ret = CollectionUtils.<JSONObject>jsonArrayToList(result.optJSONArray(Keys.RESULTS));
+        final Query sectionQuery = new Query()
+                .addSort(Keys.OBJECT_ID, SortDirection.DESCENDING)
+                .setPageSize(1).setCurrentPageNum(1);
 
-            final int pageCount = result.optJSONObject(Pagination.PAGINATION).optInt(Pagination.PAGINATION_PAGE_COUNT);
+        sectionQuery.setFilter(CompositeFilterOperator.and(
+                new PropertyFilter(Article.ARTICLE_STATUS, FilterOperator.EQUAL, Article.ARTICLE_STATUS_C_VALID),
+                new PropertyFilter(Article.ARTICLE_TYPE, FilterOperator.EQUAL, Article.ARTICLE_TYPE_C_JOURNAL_SECTION)));
+
+        try {
+            final JSONObject chapterResult = articleRepository.get(chapterQuery);
+            final JSONObject sectionResult = articleRepository.get(sectionQuery);
+
+            final List<JSONObject> ret
+                    = CollectionUtils.<JSONObject>jsonArrayToList(sectionResult.optJSONArray(Keys.RESULTS));
+            final List<JSONObject> chapterList
+                    = CollectionUtils.<JSONObject>jsonArrayToList(chapterResult.optJSONArray(Keys.RESULTS));
+
+            ret.addAll(chapterList);
+
+            final int pageCount = chapterResult.optJSONObject(Pagination.PAGINATION).optInt(Pagination.PAGINATION_PAGE_COUNT);
 
             articleQueryService.organizeArticles(ret);
 

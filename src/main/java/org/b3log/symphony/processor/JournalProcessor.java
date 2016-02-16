@@ -59,12 +59,13 @@ import org.json.JSONObject;
  * Journal processor.
  *
  * <ul>
+ * <li>Shows journals (/journals), GET</li>
  * <li>Generates today's journal section (/journal/gen/section), GET</li>
  * <li>Generates journal chapter this week (/journal/gen/chapter), GET</li>
  * </ul>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.2.1.1, Feb 14, 2016
+ * @version 1.2.1.2, Feb 16, 2016
  * @since 1.4.0
  */
 @RequestProcessor

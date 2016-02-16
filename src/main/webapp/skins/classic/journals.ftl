@@ -38,7 +38,9 @@
                                     <div class="fn-flex-1 has-view">
                                         <h2>
                                             <#if article_index == 0>
-                                            <a data-id="${article.oId}" data-type="${article.articleType}" rel="bookmark" href="${article.articlePermalink}">当前话</a>
+                                            <a data-id="${article.oId}" data-type="${article.articleType}" rel="bookmark" href="${article.articlePermalink}">当前节</a>
+                                            <#elseif article_index == 1>
+                                            <a data-id="${article.oId}" data-type="${article.articleType}" rel="bookmark" href="${article.articlePermalink}">当前章</a>
                                             <#else>
                                             <a data-id="${article.oId}" data-type="${article.articleType}" rel="bookmark" href="${article.articlePermalink}">${article.articleTitleEmoj}</a>
                                             </#if>
