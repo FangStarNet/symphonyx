@@ -64,7 +64,7 @@ import org.json.JSONObject;
  * Article management service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.6.14.12, Jan 28, 2016
+ * @version 2.6.15.12, Feb 16, 2016
  * @since 0.2.0
  */
 @Service
@@ -519,6 +519,14 @@ public class ArticleMgmtService {
             final JSONObject oldArticle = articleRepository.get(articleId);
 
             processTagsForArticleUpdate(oldArticle, article, author);
+
+            String articleTitle = article.optString(Article.ARTICLE_TITLE);
+            articleTitle = Emotions.toAliases(articleTitle);
+            article.put(Article.ARTICLE_TITLE, articleTitle);
+
+            String articleContent = article.optString(Article.ARTICLE_CONTENT);
+            articleContent = Emotions.toAliases(articleContent);
+            article.put(Article.ARTICLE_CONTENT, articleContent);
 
             userRepository.update(author.optString(Keys.OBJECT_ID), author);
             articleRepository.update(articleId, article);
