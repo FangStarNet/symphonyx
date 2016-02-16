@@ -180,7 +180,7 @@ public final class Times {
         end.set(Calendar.MINUTE, 59);
         end.set(Calendar.SECOND, 59);
         end.set(Calendar.MILLISECOND, 999);
-        
+
         return end.getTime().getTime();
     }
 
