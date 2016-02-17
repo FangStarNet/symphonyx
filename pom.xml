@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-    Description: Symphony POM.
-    Version: 2.8.2.24, Jan 28, 2016
+    Description: SymphonyX POM.
+    Version: 2.8.2.25, Feb 17, 2016
     Author: Liang Ding
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
