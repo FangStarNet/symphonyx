@@ -19,7 +19,7 @@
  *
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.15.10.15, Feb 5, 2016
+ * @version 1.16.10.15, Feb 18, 2016
  */
 
 /**
@@ -74,7 +74,7 @@ var Util = {
                         var updateTime = user.userUpdateTime;
 
                         autocompleteHints.push({
-                            displayText: "<span style='font-size: 1rem;line-height:22px'><img style='width: 1rem;margin:3px 0;float:left' src='" + avatar
+                            displayText: "<span style='font-size: 1rem;line-height:22px'><img style='width: 1rem;height: 1rem;margin:3px 0;float:left' src='" + avatar
                                     + "-64.jpg?" + updateTime + "'> " + name + " <span style='font-size: 0.9rem;'><i>" + realName + "</i></span></span>",
                             text: name + " "
                         });
