@@ -75,7 +75,7 @@ import org.jsoup.safety.Whitelist;
  * Article query service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.13.8.15, Feb 15, 2016
+ * @version 2.13.8.16, Feb 18, 2016
  * @since 0.2.0
  */
 @Service
@@ -634,11 +634,18 @@ public class ArticleQueryService {
      * @return recent articles query
      */
     private Query makeRecentQuery(final int currentPageNum, final int fetchSize) {
-        final Query query = new Query()
+        final Query ret = new Query()
                 .addSort(Keys.OBJECT_ID, SortDirection.DESCENDING)
                 .setPageCount(1).setPageSize(fetchSize).setCurrentPageNum(currentPageNum);
-        query.setFilter(makeArticleShowingFilter());
-        return query;
+        
+        final List<Filter> filters = new ArrayList<Filter>();
+        filters.add(new PropertyFilter(Article.ARTICLE_STATUS, FilterOperator.EQUAL, Article.ARTICLE_STATUS_C_VALID));
+        filters.add(new PropertyFilter(Article.ARTICLE_TYPE, FilterOperator.NOT_EQUAL, Article.ARTICLE_TYPE_C_DISCUSSION));
+        filters.add(new PropertyFilter(Article.ARTICLE_TYPE, FilterOperator.NOT_EQUAL, Article.ARTICLE_TYPE_C_JOURNAL_PARAGRAPH));
+        
+        ret.setFilter(new CompositeFilter(CompositeFilterOperator.AND, filters));
+        
+        return ret;
     }
 
     /**
