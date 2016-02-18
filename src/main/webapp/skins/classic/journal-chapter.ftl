@@ -11,7 +11,7 @@
                 <a rel="nofollow" class="ft-gray"
                    href="/member/${user.userName}" 
                    title="${user.userName} (${user.userRealName})"><img class="avatar" src="${user.userAvatarURL}-64.jpg?${user.userUpdateTime?c}" /></a>
-                </a><a class="ft-gray" href="/member/${user.userName}"><b>${user.userName}</b> (${user.userRealName})</a>
+                <a class="ft-gray" href="/member/${user.userName}"><b>${user.userName}</b> (${user.userRealName})</a>
                 <span class="ft-red">${user.done}</span>/7
             </div>
 
@@ -30,19 +30,18 @@
                 <ul>
                     <#list day.paragraphs as paragraph>
                     <li>
-                        <a href='${paragraph.articlePermalink}'>${paragraph.articleTitle}</a><span class="ft-fade">&nbsp;•&nbsp;</span>
-                        <#list paragraph.articleTags?split(",") as articleTag>
-                        <a rel="tag" class="tag" href="/tags/${articleTag?url('UTF-8')}">
-                            ${articleTag}
-                        </a>&nbsp;
-                        </#list>
-                        <span class="ft-fade">&nbsp;•&nbsp;</span>
-                        <span class="ft-fade ft-13">${paragraph.timeAgo}</span>
-                        <div class="content-reset">
-                            ${paragraph.articleContent}
+                        <div class="has-view">
+                            <a href='${paragraph.articlePermalink}'>${paragraph.articleTitle}</a><span class="ft-fade">&nbsp;•&nbsp;</span>
+                            <#list paragraph.articleTags?split(",") as articleTag>
+                            <a rel="tag" class="tag" href="/tags/${articleTag?url('UTF-8')}">
+                                ${articleTag}
+                            </a>&nbsp;
+                            </#list>
+                            <span class="ft-fade">&nbsp;•&nbsp;</span>
+                            <span class="ft-fade ft-13">${paragraph.timeAgo}</span>
                         </div>
                         <#if paragraph.articleCommentCount != 0>
-                        <div class="cmts" title="${cmtLabel}">
+                        <div title="${cmtLabel}" class="cmts">
                             <a class="count ft-gray" href="${paragraph.articlePermalink}">${paragraph.articleCommentCount}</a>
                         </div>
                         <div class="commenters">
@@ -53,6 +52,10 @@
                             </#list>
                         </div>
                         </#if>
+
+                        <div class="content-reset">
+                            ${paragraph.articleContent}
+                        </div>
                     </li>
                     </#list>
                 </ul>

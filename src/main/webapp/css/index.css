@@ -244,6 +244,14 @@
     border-bottom-width: 0;
 }
 
+.journal .cmts {
+    top:15px;
+}
+
+.journal .article-list li  .commenters{
+    top: 12px;
+}
+
 .journal-user {
     padding: 10px 0 0 10px;
     border-bottom: 1px solid #eee;

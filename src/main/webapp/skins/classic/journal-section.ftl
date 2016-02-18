@@ -36,7 +36,7 @@
                         <div class="avatar"></div>
                         </#if>
                         <div class="fn-flex-1<#if paragraph_index == user.paragraphs?size - 1> last</#if>">
-                            <h2>
+                            <h2 class="has-view">
                                 <a href='${paragraph.articlePermalink}'>${paragraph.articleTitle}</a>
                                 <span class="ft-fade">&nbsp;•&nbsp;</span>
                                 <#list paragraph.articleTags?split(",") as articleTag>
