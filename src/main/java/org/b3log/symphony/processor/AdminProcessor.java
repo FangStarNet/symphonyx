@@ -87,6 +87,7 @@ import org.json.JSONObject;
  * <li>Updates a user's email (/admin/user/{userId}/email), POST</li>
  * <li>Updates a user's username (/admin/user/{userId}/username), POST</li>
  * <li>Charges a user's point (/admin/user/{userId}/charge-point), POST</li>
+ * <li>Exchanges a user's point (/admin/user/{userId}/exchange-point), POST</li>
  * <li>Shows articles (/admin/articles), GET</li>
  * <li>Shows an article (/admin/article/{articleId}), GET</li>
  * <li>Updates an article (/admin/article/{articleId}), POST</li>
@@ -102,7 +103,7 @@ import org.json.JSONObject;
  * </ul>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.11.2.1, Jan 28, 2016
+ * @version 2.12.2.1, Feb 18, 2016
  * @since 1.1.0
  */
 @RequestProcessor
@@ -573,6 +574,65 @@ public class AdminProcessor {
             notification.put(Notification.NOTIFICATION_DATA_ID, transferId);
 
             notificationMgmtService.addPointChargeNotification(notification);
+        } catch (final Exception e) {
+            final AbstractFreeMarkerRenderer renderer = new SkinRenderer();
+            context.setRenderer(renderer);
+            renderer.setTemplateName("admin/error.ftl");
+            final Map<String, Object> dataModel = renderer.getDataModel();
+
+            dataModel.put(Keys.MSG, e.getMessage());
+            filler.fillHeaderAndFooter(request, response, dataModel);
+
+            return;
+        }
+
+        response.sendRedirect(Latkes.getServePath() + "/admin/user/" + userId);
+    }
+
+    /**
+     * Exchanges a user's point.
+     *
+     * @param context the specified context
+     * @param request the specified request
+     * @param response the specified response
+     * @param userId the specified user id
+     * @throws Exception exception
+     */
+    @RequestProcessing(value = "/admin/user/{userId}/exchange-point", method = HTTPRequestMethod.POST)
+    @Before(adviceClass = {StopwatchStartAdvice.class, AdminCheck.class})
+    @After(adviceClass = StopwatchEndAdvice.class)
+    public void exchangePoint(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response,
+            final String userId) throws Exception {
+        final String pointStr = request.getParameter(Common.POINT);
+
+        try {
+            final int point = Integer.valueOf(pointStr);
+
+            final JSONObject user = userQueryService.getUser(userId);
+            final int currentPoint = user.optInt(UserExt.USER_POINT);
+
+            if (currentPoint - point < Symphonys.getInt("pointExchangeMin")) {
+                final AbstractFreeMarkerRenderer renderer = new SkinRenderer();
+                context.setRenderer(renderer);
+                renderer.setTemplateName("admin/error.ftl");
+                final Map<String, Object> dataModel = renderer.getDataModel();
+
+                dataModel.put(Keys.MSG, langPropsService.get("insufficientBalanceLabel"));
+                filler.fillHeaderAndFooter(request, response, dataModel);
+
+                return;
+            }
+
+            final String memo = String.valueOf(Math.floor(point / (double) Symphonys.getInt("pointExchangeUnit")));
+
+            final String transferId = pointtransferMgmtService.transfer(userId, Pointtransfer.ID_C_SYS,
+                    Pointtransfer.TRANSFER_TYPE_C_EXCHANGE, point, memo);
+
+            final JSONObject notification = new JSONObject();
+            notification.put(Notification.NOTIFICATION_USER_ID, userId);
+            notification.put(Notification.NOTIFICATION_DATA_ID, transferId);
+
+            notificationMgmtService.addPointExchangeNotification(notification);
         } catch (final Exception e) {
             final AbstractFreeMarkerRenderer renderer = new SkinRenderer();
             context.setRenderer(renderer);
