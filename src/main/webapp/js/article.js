@@ -258,6 +258,15 @@ var Article = {
         if ($('.journal').length > 0) {
             this.initJournal();
         }
+
+        if ($('#journalSide').length === 1) {
+            $(window).resize(function () {
+                $('#journalSide').width($('.side').width())
+                        .height($(window).height() - 230);
+            });
+            $('#journalSide').width($('.side').width())
+                    .height($(window).height() - 230);
+        }
     },
     /**
      * @description 初始化航海日记

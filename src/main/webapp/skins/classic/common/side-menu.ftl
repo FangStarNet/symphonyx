@@ -1,5 +1,5 @@
 <#if isLoggedIn>
-<div class="menu" style="position: fixed">
+<div class="menu" id="journalSide" style="position: fixed;overflow: auto">
     <ul>
         <#list teams as team>
         <li>
