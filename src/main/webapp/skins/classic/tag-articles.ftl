@@ -16,7 +16,7 @@
                 <div class="content">
                     <div class="fn-clear title">
                         <#if tag.tagIconPath != "">
-                        <img class="avatar fn-left" src="${staticServePath}/images/tags/${tag.tagIconPath}" alt="${tag.tagTitle}">
+                        <div class="avatar fn-left" style="background-image:url('${staticServePath}/images/tags/${tag.tagIconPath}')" alt="${tag.tagTitle}"></div>
                         </#if>
                         <h1 class="fn-inline">
                             <a rel="tag" 
@@ -88,7 +88,7 @@
                     <div class="tag-artile-user fn-clear">
                         <a rel="nofollow" class="fn-left" title="${creatorLabel} ${tag.tagCreatorName}" 
                            href="/member/${tag.tagCreatorName}">
-                            <img class="avatar" src="${tag.tagCreatorThumbnailURL}-64.jpg?${tag.tagCreatorThumbnailUpdateTime?c}">
+                            <div class="avatar" style="background-image:url('${tag.tagCreatorThumbnailURL}-64.jpg?${tag.tagCreatorThumbnailUpdateTime?c}')"></div>
                         </a>
                         <div class="fn-right">
                             <#list tag.tagParticipants as commenter>
@@ -96,7 +96,7 @@
                             <a rel="nofollow" class="fn-left" 
                                title="${contributorLabel} ${commenter.tagParticipantName}"
                                href="/member/${commenter.tagParticipantName}">
-                                <img class="avatar" src="${commenter.tagParticipantThumbnailURL}-64.jpg?${commenter.tagParticipantThumbnailUpdateTime?c}">
+                                <div class="avatar" style="background-image:url('${commenter.tagParticipantThumbnailURL}-64.jpg?${commenter.tagParticipantThumbnailUpdateTime?c}')"></div>
                             </a>
                             </#if>
                             </#list>

@@ -13,7 +13,7 @@
                     <div class="fn-flex">
                         <a rel="nofollow" class="ft-gray"
                            href="/member/${user.userName}" 
-                           title="${user.userName} (${user.userRealName})"><img class="avatar" src="${user.userAvatarURL}-64.jpg?${user.userUpdateTime?c}" /></a>
+                           title="${user.userName} (${user.userRealName})"><div class="avatar" style="background-image:url('${user.userAvatarURL}-64.jpg?${user.userUpdateTime?c}')"></div></a>
                         <div>
                             <a class="ft-gray" href='/member/${user.userName}'><b>${user.userName}</b> (${user.userRealName})</a>
                             <i>本日没有记录</i>
@@ -31,7 +31,7 @@
                         <#if paragraph_index == 0>
                         <a rel="nofollow" class="ft-gray"
                            href="/member/${user.userName}" 
-                           title="${user.userName} (${user.userRealName})"><img class="avatar" src="${user.userAvatarURL}-64.jpg?${user.userUpdateTime?c}" /></a>
+                           title="${user.userName} (${user.userRealName})"><div class="avatar" style="background-image:url('${user.userAvatarURL}-64.jpg?${user.userUpdateTime?c}')"></div></a>
                         <#else>
                         <div class="avatar"></div>
                         </#if>
@@ -60,7 +60,7 @@
                     <div class="commenters">
                         <#list paragraph.articleParticipants as comment>
                         <a rel="nofollow" href="${article.articlePermalink}#${comment.commentId}" title="${comment.articleParticipantName}">
-                            <img class="avatar-small" src="${comment.articleParticipantThumbnailURL}-64.jpg?${comment.articleParticipantThumbnailUpdateTime?c}" />
+                            <div class="avatar-small" style="background-image:url('${comment.articleParticipantThumbnailURL}-64.jpg?${comment.articleParticipantThumbnailUpdateTime?c}')"></div>
                         </a>
                         </#list>
                     </div>

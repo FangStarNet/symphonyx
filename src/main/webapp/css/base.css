@@ -19,7 +19,7 @@
  *
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.8.9.14, Feb 14, 2016
+ * @version 1.8.9.15, Feb 19, 2016
  */
 
 /* start reset */
@@ -756,8 +756,14 @@ a[class*=" icon-"]:hover {
 /* start avatar */
 .avatar,
 .avatar-small,
+.avatar-mid,
 .avatar-big {
     border-radius: 3px 3px 3px 3px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .avatar {

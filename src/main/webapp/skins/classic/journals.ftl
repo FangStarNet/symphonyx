@@ -57,7 +57,7 @@
                                 <div class="commenters">
                                     <#list article.articleParticipants as comment>
                                     <a rel="nofollow" href="${article.articlePermalink}#${comment.commentId}" title="${comment.articleParticipantName}">
-                                        <img class="avatar-small" src="${comment.articleParticipantThumbnailURL}-64.jpg?${comment.articleParticipantThumbnailUpdateTime?c}" />
+                                        <div class="avatar-small" style="background-image:url('${comment.articleParticipantThumbnailURL}-64.jpg?${comment.articleParticipantThumbnailUpdateTime?c}')"></div>
                                     </a>
                                     </#list>
                                 </div>

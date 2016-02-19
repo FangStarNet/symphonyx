@@ -8,7 +8,7 @@
                 <#list team.users as user>
                 <li>
                     <a href="#menu${team_index}${user_index}0">
-                        <img class="avatar-small" src="${user.userAvatarURL}-64.jpg?${user.userUpdateTime?c}"/>
+                        <div class="avatar-small" style="background-image:url('${user.userAvatarURL}-64.jpg?${user.userUpdateTime?c}')"></div>
                         <b>${user.userName}</b> (${user.userRealName})
                         <#if 6 == article.articleType>
                         <span class="ft-red">${user.done}</span>/7
