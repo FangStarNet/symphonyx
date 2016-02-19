@@ -64,7 +64,7 @@ import org.json.JSONObject;
  * Article management service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.6.15.12, Feb 16, 2016
+ * @version 2.7.15.12, Feb 19, 2016
  * @since 0.2.0
  */
 @Service
@@ -158,6 +158,12 @@ public class ArticleMgmtService {
      */
     @Inject
     private NotificationMgmtService notificationMgmtService;
+
+    /**
+     * Journal query service.
+     */
+    @Inject
+    private JournalQueryService journalQueryService;
 
     /**
      * Increments the view count of the specified article by the given article id.
@@ -340,25 +346,44 @@ public class ArticleMgmtService {
             tagMgmtService.relateTags(article.optString(Article.ARTICLE_TAGS));
 
             // Point
-            if (Article.ARTICLE_TYPE_C_JOURNAL_PARAGRAPH == articleType
-                    || Article.ARTICLE_TYPE_C_JOURNAL_SECTION == articleType
-                    || Article.ARTICLE_TYPE_C_JOURNAL_CHAPTER == articleType) {
-                pointtransferMgmtService.transfer(Pointtransfer.ID_C_SYS, authorId,
-                        Pointtransfer.TRANSFER_TYPE_C_ADD_JOURNAL,
-                        Pointtransfer.TRANSFER_SUM_C_ADD_JOURNAL, articleId);
-            } else {
-                final long followerCnt = followQueryService.getFollowerCount(authorId, Follow.FOLLOWING_TYPE_C_USER);
-                final int addition = (int) Math.round(Math.sqrt(followerCnt));
+            switch (articleType) {
+                case Article.ARTICLE_TYPE_C_JOURNAL_PARAGRAPH:
+                    if (journalQueryService.hasPostParagraphToday(authorId)) {
+                        final long followerCnt = followQueryService.getFollowerCount(authorId, Follow.FOLLOWING_TYPE_C_USER);
+                        final int addition = (int) Math.round(Math.sqrt(followerCnt));
 
-                pointtransferMgmtService.transfer(authorId, Pointtransfer.ID_C_SYS,
-                        Pointtransfer.TRANSFER_TYPE_C_ADD_ARTICLE,
-                        Pointtransfer.TRANSFER_SUM_C_ADD_ARTICLE + addition, articleId);
+                        pointtransferMgmtService.transfer(authorId, Pointtransfer.ID_C_SYS,
+                                Pointtransfer.TRANSFER_TYPE_C_ADD_ARTICLE,
+                                Pointtransfer.TRANSFER_SUM_C_ADD_ARTICLE + addition, articleId);
+                    } else {
+                        pointtransferMgmtService.transfer(Pointtransfer.ID_C_SYS, authorId,
+                                Pointtransfer.TRANSFER_TYPE_C_ADD_JOURNAL,
+                                Pointtransfer.TRANSFER_SUM_C_ADD_JOURNAL, articleId);
+                    }
 
-                if (Article.ARTICLE_TYPE_C_CITY_BROADCAST == articleType) {
+                    break;
+                case Article.ARTICLE_TYPE_C_JOURNAL_SECTION:
+                case Article.ARTICLE_TYPE_C_JOURNAL_CHAPTER:
+                    pointtransferMgmtService.transfer(Pointtransfer.ID_C_SYS, authorId,
+                            Pointtransfer.TRANSFER_TYPE_C_ADD_JOURNAL,
+                            Pointtransfer.TRANSFER_SUM_C_ADD_JOURNAL, articleId);
+
+                    break;
+                default:
+                    final long followerCnt = followQueryService.getFollowerCount(authorId, Follow.FOLLOWING_TYPE_C_USER);
+                    final int addition = (int) Math.round(Math.sqrt(followerCnt));
+
                     pointtransferMgmtService.transfer(authorId, Pointtransfer.ID_C_SYS,
-                            Pointtransfer.TRANSFER_TYPE_C_ADD_ARTICLE_BROADCAST,
-                            Pointtransfer.TRANSFER_SUM_C_ADD_ARTICLE_BROADCAST, articleId);
-                }
+                            Pointtransfer.TRANSFER_TYPE_C_ADD_ARTICLE,
+                            Pointtransfer.TRANSFER_SUM_C_ADD_ARTICLE + addition, articleId);
+
+                    if (Article.ARTICLE_TYPE_C_CITY_BROADCAST == articleType) {
+                        pointtransferMgmtService.transfer(authorId, Pointtransfer.ID_C_SYS,
+                                Pointtransfer.TRANSFER_TYPE_C_ADD_ARTICLE_BROADCAST,
+                                Pointtransfer.TRANSFER_SUM_C_ADD_ARTICLE_BROADCAST, articleId);
+                    }
+
+                    break;
             }
 
             if (rewardPoint > 0) { // Enabe reward
