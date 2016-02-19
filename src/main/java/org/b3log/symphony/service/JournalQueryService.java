@@ -57,7 +57,7 @@ import org.json.JSONObject;
  * Journal query service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.2.3.7, Feb 16, 2016
+ * @version 1.3.3.7, Feb 19, 2016
  * @since 1.4.0
  */
 @Service
@@ -401,6 +401,30 @@ public class JournalQueryService {
         }
     }
 
+    /**
+     * Checks the user specified by the given user id has post journal paragraph or not.
+     *
+     * @param userId the given user id
+     * @return {@code true} if post, returns {@code false} otherwise
+     */
+    public boolean hasPostParagraphToday(final String userId) {
+        try {
+            final Query query = new Query().addSort(Keys.OBJECT_ID, SortDirection.DESCENDING).
+                    setCurrentPageNum(1).setPageSize(2).setFilter(CompositeFilterOperator.and(
+                    new PropertyFilter(Article.ARTICLE_TYPE, FilterOperator.EQUAL, Article.ARTICLE_TYPE_C_JOURNAL_PARAGRAPH),
+                    new PropertyFilter(Article.ARTICLE_AUTHOR_ID, FilterOperator.EQUAL, userId)));
+
+            final JSONObject result = articleRepository.get(query);
+            final List<JSONObject> journals = CollectionUtils.<JSONObject>jsonArrayToList(result.optJSONArray(Keys.RESULTS));
+
+            return journals.size() > 1;
+        } catch (final RepositoryException e) {
+            LOGGER.log(Level.ERROR, "Check today paragraph post failed", e);
+
+            return true;
+        }
+    }
+
     private void doneCount(final List<JSONObject> teams, final List<JSONObject> paragraphs) {
         final List<JSONObject> paras = filterByUniqueAuthor(paragraphs);
 
@@ -554,11 +578,16 @@ public class JournalQueryService {
         return null;
     }
 
-    private static boolean isSameWeek(final Date date1, final Date date2) {
-        if (date1 == null || date2 == null) {
-            throw new IllegalArgumentException("The date must not be null");
-        }
+    private static boolean isSameDay(final Date date1, final Date date2) {
+        final Calendar cal1 = Calendar.getInstance();
+        cal1.setTime(date1);
+        final Calendar cal2 = Calendar.getInstance();
+        cal2.setTime(date2);
 
+        return cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA) && cal1.get(Calendar.DATE) == cal2.get(Calendar.DATE);
+    }
+
+    private static boolean isSameWeek(final Date date1, final Date date2) {
         final Calendar cal1 = Calendar.getInstance();
         cal1.setTime(date1);
         final Calendar cal2 = Calendar.getInstance();
