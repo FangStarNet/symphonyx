@@ -263,7 +263,8 @@
             Label.articlePermalink = "${article.articlePermalink}";
             Label.recordDeniedLabel = "${recordDeniedLabel}";
             Label.recordDeviceNotFoundLabel = "${recordDeviceNotFoundLabel}";
-            Label.csrfToken = "${csrfToken}";</script>
+            Label.csrfToken = "${csrfToken}";
+        </script>
         <script src="${staticServePath}/js/lib/jquery/jquery.bowknot.min.js"></script>
         <script src="${staticServePath}/js/lib/editor/codemirror.min.js?4.13"></script>
         <script src="${staticServePath}/js/lib/editor/editor.js"></script>
