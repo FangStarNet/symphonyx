@@ -28,12 +28,10 @@ import org.b3log.latke.servlet.annotation.Before;
 import org.b3log.latke.servlet.annotation.RequestProcessing;
 import org.b3log.latke.servlet.annotation.RequestProcessor;
 import org.b3log.latke.servlet.renderer.freemarker.AbstractFreeMarkerRenderer;
-import org.b3log.latke.util.Paginator;
 import org.b3log.latke.util.Strings;
+import org.b3log.symphony.model.Article;
 import org.b3log.symphony.model.Common;
-import org.b3log.symphony.model.Option;
 import org.b3log.symphony.processor.advice.AnonymousViewCheck;
-import org.b3log.symphony.processor.advice.LoginCheck;
 import org.b3log.symphony.processor.advice.stopwatch.StopwatchEndAdvice;
 import org.b3log.symphony.processor.advice.stopwatch.StopwatchStartAdvice;
 import org.b3log.symphony.service.ArticleQueryService;
@@ -99,16 +97,15 @@ public class RecentProcessor {
 
         final int pageNum = Integer.valueOf(pageNumStr);
         final int pageSize = Symphonys.getInt("latestArticlesCnt");
-        final int windowSize = Symphonys.getInt("latestArticlesWindowSize");
 
-        final List<JSONObject> latestArticles = articleQueryService.getRecentArticles(pageNum, pageSize);
+        final JSONObject result = articleQueryService.getRecentArticles(pageNum, pageSize);
+        final List<JSONObject> latestArticles = (List<JSONObject>) result.get(Article.ARTICLES);
         dataModel.put(Common.LATEST_ARTICLES, latestArticles);
 
-        final JSONObject statistic = optionQueryService.getStatistic();
-        final int articleCnt = statistic.optInt(Option.ID_C_STATISTIC_ARTICLE_COUNT);
-        final int pageCount = (int) Math.ceil((double) articleCnt / (double) pageSize);
+        final JSONObject pagination = result.getJSONObject(Pagination.PAGINATION);
+        final int pageCount = pagination.optInt(Pagination.PAGINATION_PAGE_COUNT);
 
-        final List<Integer> pageNums = Paginator.paginate(pageNum, pageSize, pageCount, windowSize);
+        final List<Integer> pageNums = (List<Integer>) pagination.get(Pagination.PAGINATION_PAGE_NUMS);
         if (!pageNums.isEmpty()) {
             dataModel.put(Pagination.PAGINATION_FIRST_PAGE_NUM, pageNums.get(0));
             dataModel.put(Pagination.PAGINATION_LAST_PAGE_NUM, pageNums.get(pageNums.size() - 1));
