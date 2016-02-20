@@ -16,7 +16,6 @@
 package org.b3log.symphony.service;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -57,7 +56,7 @@ import org.json.JSONObject;
  * Journal query service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.3.3.7, Feb 19, 2016
+ * @version 1.3.3.8, Feb 20, 2016
  * @since 1.4.0
  */
 @Service
@@ -178,8 +177,8 @@ public class JournalQueryService {
             final List<Filter> filters = new ArrayList<Filter>();
             filters.add(new PropertyFilter(Article.ARTICLE_TYPE, FilterOperator.EQUAL, Article.ARTICLE_TYPE_C_JOURNAL_PARAGRAPH));
 
-            filters.add(new PropertyFilter(Article.ARTICLE_CREATE_TIME, FilterOperator.GREATER_THAN_OR_EQUAL, getTodayStartTime(time)));
-            filters.add(new PropertyFilter(Article.ARTICLE_CREATE_TIME, FilterOperator.LESS_THAN_OR_EQUAL, getTodayEndTime(time)));
+            filters.add(new PropertyFilter(Article.ARTICLE_CREATE_TIME, FilterOperator.GREATER_THAN_OR_EQUAL, Times.getDayStartTime(time)));
+            filters.add(new PropertyFilter(Article.ARTICLE_CREATE_TIME, FilterOperator.LESS_THAN_OR_EQUAL, Times.getDayEndTime(time)));
 
             query.setFilter(new CompositeFilter(CompositeFilterOperator.AND, filters));
 
@@ -278,7 +277,7 @@ public class JournalQueryService {
                     if (now > Times.getWeekEndTime(time)) {
                         day = 7;
                     } else {
-                        day = getWeekDay(now);
+                        day = Times.getWeekDay(now);
                     }
 
                     for (int i = 1; i <= day; i++) {
@@ -322,7 +321,7 @@ public class JournalQueryService {
                 final List<JSONObject> weekDays = getWeekDays(users, userName, time);
 
                 final long created = paragraph.optLong(Keys.OBJECT_ID);
-                final int day = getWeekDay(created);
+                final int day = Times.getWeekDay(created);
 
                 final List<JSONObject> paras = getWeekDayParagraphs(weekDays, day);
                 paras.add(paragraph);
@@ -393,7 +392,7 @@ public class JournalQueryService {
             final JSONObject maybeToday = journals.get(0);
             final long created = maybeToday.optLong(Article.ARTICLE_CREATE_TIME);
 
-            return isSameWeek(new Date(created), new Date());
+            return Times.isSameWeek(new Date(created), new Date());
         } catch (final RepositoryException e) {
             LOGGER.log(Level.ERROR, "Check chapter generated failed", e);
 
@@ -408,15 +407,19 @@ public class JournalQueryService {
      * @return {@code true} if post, returns {@code false} otherwise
      */
     public boolean hasPostParagraphToday(final String userId) {
+        final long now = System.currentTimeMillis();
+
         try {
             final Query query = new Query().addSort(Keys.OBJECT_ID, SortDirection.DESCENDING).
                     setCurrentPageNum(1).setPageSize(2).setFilter(CompositeFilterOperator.and(
                     new PropertyFilter(Article.ARTICLE_TYPE, FilterOperator.EQUAL, Article.ARTICLE_TYPE_C_JOURNAL_PARAGRAPH),
-                    new PropertyFilter(Article.ARTICLE_AUTHOR_ID, FilterOperator.EQUAL, userId)));
-
+                    new PropertyFilter(Article.ARTICLE_AUTHOR_ID, FilterOperator.EQUAL, userId),
+                    new PropertyFilter(Article.ARTICLE_CREATE_TIME, FilterOperator.GREATER_THAN_OR_EQUAL, Times.getDayStartTime(now)),
+                    new PropertyFilter(Article.ARTICLE_CREATE_TIME, FilterOperator.LESS_THAN_OR_EQUAL, Times.getDayEndTime(now))));
+            
             final JSONObject result = articleRepository.get(query);
             final List<JSONObject> journals = CollectionUtils.<JSONObject>jsonArrayToList(result.optJSONArray(Keys.RESULTS));
-
+            
             return journals.size() > 1;
         } catch (final RepositoryException e) {
             LOGGER.log(Level.ERROR, "Check today paragraph post failed", e);
@@ -576,61 +579,6 @@ public class JournalQueryService {
         }
 
         return null;
-    }
-
-    private static boolean isSameDay(final Date date1, final Date date2) {
-        final Calendar cal1 = Calendar.getInstance();
-        cal1.setTime(date1);
-        final Calendar cal2 = Calendar.getInstance();
-        cal2.setTime(date2);
-
-        return cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA) && cal1.get(Calendar.DATE) == cal2.get(Calendar.DATE);
-    }
-
-    private static boolean isSameWeek(final Date date1, final Date date2) {
-        final Calendar cal1 = Calendar.getInstance();
-        cal1.setTime(date1);
-        final Calendar cal2 = Calendar.getInstance();
-        cal2.setTime(date2);
-
-        return cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA)
-                && cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
-                && cal1.get(Calendar.WEEK_OF_YEAR) == cal2.get(Calendar.WEEK_OF_YEAR);
-    }
-
-    private long getTodayStartTime(final long time) {
-        final Calendar start = Calendar.getInstance();
-
-        start.setTimeInMillis(time);
-        start.set(Calendar.HOUR, 0);
-        start.set(Calendar.MINUTE, 0);
-        start.set(Calendar.SECOND, 0);
-        start.set(Calendar.MILLISECOND, 0);
-
-        return start.getTime().getTime();
-    }
-
-    private long getTodayEndTime(final long time) {
-        final Calendar end = Calendar.getInstance();
-
-        end.setTimeInMillis(time);
-        end.set(Calendar.HOUR, 23);
-        end.set(Calendar.MINUTE, 59);
-        end.set(Calendar.SECOND, 59);
-        end.set(Calendar.MILLISECOND, 999);
-
-        return end.getTime().getTime();
-    }
-
-    private int getWeekDay(final long time) {
-        final Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(time);
-        int ret = calendar.get(Calendar.DAY_OF_WEEK) - 1;
-        if (ret <= 0) {
-            ret = 7;
-        }
-
-        return ret;
     }
 
     private String[] getTeams(final JSONObject archive) {

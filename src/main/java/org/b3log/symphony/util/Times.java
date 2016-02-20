@@ -16,6 +16,7 @@
 package org.b3log.symphony.util;
 
 import java.util.Calendar;
+import java.util.Date;
 import org.b3log.latke.ioc.LatkeBeanManager;
 import org.b3log.latke.ioc.LatkeBeanManagerImpl;
 import org.b3log.latke.service.LangPropsService;
@@ -25,7 +26,7 @@ import org.b3log.latke.service.LangPropsServiceImpl;
  * Time utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.2.1.0, Feb 14, 2016
+ * @version 1.3.1.0, Feb 20, 2016
  * @since 1.3.0
  */
 public final class Times {
@@ -140,6 +141,93 @@ public final class Times {
         }
 
         return langService.get("justNowLabel");
+    }
+
+    /**
+     * Determines whether the specified date1 is the same day with the specified date2.
+     *
+     * @param date1 the specified date1
+     * @param date2 the specified date2
+     * @return {@code true} if it is the same day, returns {@code false} otherwise
+     */
+    public static boolean isSameDay(final Date date1, final Date date2) {
+        final Calendar cal1 = Calendar.getInstance();
+        cal1.setTime(date1);
+        final Calendar cal2 = Calendar.getInstance();
+        cal2.setTime(date2);
+
+        return cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA) && cal1.get(Calendar.DATE) == cal2.get(Calendar.DATE);
+    }
+
+    /**
+     * Determines whether the specified date1 is the same week with the specified date2.
+     *
+     * @param date1 the specified date1
+     * @param date2 the specified date2
+     * @return {@code true} if it is the same week, returns {@code false} otherwise
+     */
+    public static boolean isSameWeek(final Date date1, final Date date2) {
+        final Calendar cal1 = Calendar.getInstance();
+        cal1.setTime(date1);
+        final Calendar cal2 = Calendar.getInstance();
+        cal2.setTime(date2);
+
+        return cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA)
+                && cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
+                && cal1.get(Calendar.WEEK_OF_YEAR) == cal2.get(Calendar.WEEK_OF_YEAR);
+    }
+
+    /**
+     * Gets the day start time with the specified time.
+     *
+     * @param time the specified time
+     * @return day start time
+     */
+    public static long getDayStartTime(final long time) {
+        final Calendar start = Calendar.getInstance();
+
+        start.setTimeInMillis(time);
+        start.set(Calendar.HOUR, 0);
+        start.set(Calendar.MINUTE, 0);
+        start.set(Calendar.SECOND, 0);
+        start.set(Calendar.MILLISECOND, 0);
+
+        return start.getTime().getTime();
+    }
+
+    /**
+     * Gets the day end time with the specified time.
+     *
+     * @param time the specified time
+     * @return day end time
+     */
+    public static long getDayEndTime(final long time) {
+        final Calendar end = Calendar.getInstance();
+
+        end.setTimeInMillis(time);
+        end.set(Calendar.HOUR, 23);
+        end.set(Calendar.MINUTE, 59);
+        end.set(Calendar.SECOND, 59);
+        end.set(Calendar.MILLISECOND, 999);
+
+        return end.getTime().getTime();
+    }
+
+    /**
+     * Gets the week day with the specified time.
+     * 
+     * @param time the specified time
+     * @return week day
+     */
+    public static int getWeekDay(final long time) {
+        final Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(time);
+        int ret = calendar.get(Calendar.DAY_OF_WEEK) - 1;
+        if (ret <= 0) {
+            ret = 7;
+        }
+
+        return ret;
     }
 
     /**
