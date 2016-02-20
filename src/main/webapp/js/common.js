@@ -19,7 +19,7 @@
  *
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.16.10.15, Feb 18, 2016
+ * @version 1.16.11.15, Feb 20, 2016
  */
 
 /**
@@ -187,9 +187,41 @@ var Util = {
         };
     },
     /**
+     * @description 是否为移动端
+     */
+    isMobile: function () {
+        var u = navigator.userAgent;
+        var browser = {//移动终端浏览器版本信息
+            windowsPhone: u.indexOf('IEMobile') > -1, //手机版IE内核
+            trident: u.indexOf('Trident') > -1, //IE内核
+            presto: u.indexOf('Presto') > -1, //opera内核
+            webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+            gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') === -1, //火狐内核
+            mobile: !!u.match(/AppleWebKit.*Mobile.*/) || !!u.match(/AppleWebKit/) || !!u.match(/IEMobile/), //是否为移动终端
+            ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+            android: u.indexOf('Android') > -1 || u.indexOf('UCBrowser') > -1, //android终端或者uc浏览器
+            iPhone: u.indexOf('iPhone') > -1, //是否为iPhone或者QQHD浏览器
+            iPad: u.indexOf('iPad') > -1, //是否iPad
+            webApp: u.indexOf('Safari') === -1 //是否web应该程序，没有头部与底部
+        };
+        if (browser.mobile) {
+            if (browser.android || browser.iPhone || browser.iPad || browser.windowsPhone) {
+                return true;
+            }
+            return false;
+        }
+        return false;
+          
+    },
+    /**
      * @description 鼠标移动到文章列表标题上时，显示其开头内容
      */
     initArticlePreview: function () {
+        if (Util.isMobile()) {
+            $('.commenters').remove();
+            $('.cmts').css('display', 'inline-block');
+            return false;
+        }
         $(".article-list h2 > a").hover(function () {
             var $ele = $(this);
             
@@ -389,13 +421,16 @@ var Util = {
             data: JSON.stringify(requestJSONObject),
             success: function (result, textStatus) {
                 $("#voteUp").removeClass("disabled");
-
+                var upCnt = parseInt($("#voteUp").attr('title').substr(3)),
+                        downCnt = parseInt($("#voteDown").attr('title').substr(3));   
                 if (result.sc) {
                     if (0 == result.type) { // cancel up
-                        $("#voteUp").removeClass("ft-red");
+                        $("#voteUp").removeClass("ft-red").attr('title', Label.upLabel + ' ' + (upCnt - 1));
                     } else {
-                        $("#voteUp").addClass("ft-red");
-                        $("#voteDown").removeClass("ft-red");
+                        $("#voteUp").addClass("ft-red").attr('title', Label.upLabel + ' ' + (upCnt + 1));
+                        if ($("#voteDown").hasClass('ft-red')) {
+                            $("#voteDown").removeClass("ft-red").attr('title', Label.downLabel + ' ' + (downCnt - 1));
+                        }
                     }
 
                     return;
@@ -428,13 +463,16 @@ var Util = {
             data: JSON.stringify(requestJSONObject),
             success: function (result, textStatus) {
                 $("#voteDown").removeClass("disabled");
-
+                var upCnt = parseInt($("#voteUp").attr('title').substr(3)),
+                        downCnt = parseInt($("#voteDown").attr('title').substr(3)); 
                 if (result.sc) {
                     if (1 == result.type) { // cancel down
-                        $("#voteDown").removeClass("ft-red");
+                        $("#voteDown").removeClass("ft-red").attr('title', Label.downLabel + ' ' + (downCnt - 1));;
                     } else {
-                        $("#voteDown").addClass("ft-red");
-                        $("#voteUp").removeClass("ft-red");
+                        $("#voteDown").addClass("ft-red").attr('title', Label.downLabel + ' ' + (downCnt + 1));
+                        if ($("#voteUp").hasClass('ft-red')) {
+                            $("#voteUp").removeClass("ft-red").attr('title', Label.upLabel + ' ' + (upCnt - 1));
+                        }
                     }
 
                     return;

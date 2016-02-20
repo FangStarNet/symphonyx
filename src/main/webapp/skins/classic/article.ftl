@@ -174,9 +174,9 @@
                                                     <#if hasRewarded>
                                                     <span title="${thankedLabel}">
                                                     </#if>   
-                                                        <span class="icon-heart ft-smaller <#if hasRewarded>ft-red<#else>ft-fade</#if>"></span>
-                                                        <span class="ft-smaller <#if hasRewarded>ft-red<#else>ft-fade</#if>" 
-                                                              id='${comment.oId}RewardedCnt'>${comment.rewardedCnt}</span> 
+                                                        <span class="icon-heart ft-smaller <#if hasRewarded>ft-red<#else>ft-fade</#if>"></span><span 
+                                                            class="ft-smaller <#if hasRewarded>ft-red<#else>ft-fade</#if>" 
+                                                            id='${comment.oId}RewardedCnt'>${comment.rewardedCnt}</span> 
                                                     <#if hasRewarded>
                                                     </span>
                                                     </#if>
@@ -272,6 +272,8 @@
             Label.recordDeniedLabel = "${recordDeniedLabel}";
             Label.recordDeviceNotFoundLabel = "${recordDeviceNotFoundLabel}";
             Label.csrfToken = "${csrfToken}";
+            Label.upLabel = "${upLabel}";
+            Label.downLabel = "${downLabel}";
         </script>
         <script src="${staticServePath}/js/lib/jquery/jquery.bowknot.min.js"></script>
         <script src="${staticServePath}/js/lib/editor/codemirror.min.js?4.13"></script>
