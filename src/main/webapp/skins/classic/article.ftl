@@ -272,6 +272,8 @@
             Label.recordDeniedLabel = "${recordDeniedLabel}";
             Label.recordDeviceNotFoundLabel = "${recordDeviceNotFoundLabel}";
             Label.csrfToken = "${csrfToken}";
+            Label.upLabel = "${upLabel}";
+            Label.downLabel = "${downLabel}";
         </script>
         <script src="${staticServePath}/js/lib/jquery/jquery.bowknot.min.js"></script>
         <script src="${staticServePath}/js/lib/editor/codemirror.min.js?4.13"></script>
