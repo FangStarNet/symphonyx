@@ -64,7 +64,7 @@ import org.json.JSONObject;
  * Article management service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.7.15.12, Feb 19, 2016
+ * @version 2.7.15.13, Feb 20, 2016
  * @since 0.2.0
  */
 @Service
@@ -364,10 +364,6 @@ public class ArticleMgmtService {
                     break;
                 case Article.ARTICLE_TYPE_C_JOURNAL_SECTION:
                 case Article.ARTICLE_TYPE_C_JOURNAL_CHAPTER:
-                    pointtransferMgmtService.transfer(Pointtransfer.ID_C_SYS, authorId,
-                            Pointtransfer.TRANSFER_TYPE_C_ADD_JOURNAL,
-                            Pointtransfer.TRANSFER_SUM_C_ADD_JOURNAL, articleId);
-
                     break;
                 default:
                     final long followerCnt = followQueryService.getFollowerCount(authorId, Follow.FOLLOWING_TYPE_C_USER);

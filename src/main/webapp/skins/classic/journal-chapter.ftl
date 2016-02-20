@@ -31,7 +31,7 @@
                     <#list day.paragraphs as paragraph>
                     <li>
                         <div class="has-view">
-                            <a href='${paragraph.articlePermalink}'>${paragraph.articleTitle}</a><span class="ft-fade">&nbsp;•&nbsp;</span>
+                            <a href='${paragraph.articlePermalink}'>${paragraph.articleTitleEmoj}</a><span class="ft-fade">&nbsp;•&nbsp;</span>
                             <#list paragraph.articleTags?split(",") as articleTag>
                             <a rel="tag" class="tag" href="/tags/${articleTag?url('UTF-8')}">
                                 ${articleTag}

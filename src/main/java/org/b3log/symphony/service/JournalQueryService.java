@@ -19,9 +19,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import javax.inject.Inject;
 import org.apache.commons.lang.time.DateUtils;
 import org.b3log.latke.Keys;
+import org.b3log.latke.Latkes;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.Pagination;
@@ -66,6 +68,12 @@ public class JournalQueryService {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(JournalQueryService.class.getName());
+
+    /**
+     * User query service.
+     */
+    @Inject
+    private UserQueryService userQueryService;
 
     /**
      * Article query service.
@@ -205,6 +213,11 @@ public class JournalQueryService {
 
             for (final JSONObject paragraph : paragraphs) {
                 String articleContent = paragraph.optString(Article.ARTICLE_CONTENT);
+                final Set<String> userNames = userQueryService.getUserNames(articleContent);
+                for (final String userName : userNames) {
+                    articleContent = articleContent.replace('@' + userName, "@<a href='" + Latkes.getServePath()
+                            + "/member/" + userName + "'>" + userName + "</a>");
+                }
                 articleContent = shortLinkQueryService.linkArticle(articleContent);
                 articleContent = shortLinkQueryService.linkTag(articleContent);
                 articleContent = Emotions.convert(articleContent);
@@ -230,7 +243,7 @@ public class JournalQueryService {
             doneCount(ret, paragraphs);
 
             return ret;
-        } catch (final RepositoryException e) {
+        } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Gets section failed", e);
 
             return Collections.emptyList();
@@ -303,6 +316,11 @@ public class JournalQueryService {
 
             for (final JSONObject paragraph : paragraphs) {
                 String articleContent = paragraph.optString(Article.ARTICLE_CONTENT);
+                final Set<String> userNames = userQueryService.getUserNames(articleContent);
+                for (final String userName : userNames) {
+                    articleContent = articleContent.replace('@' + userName, "@<a href='" + Latkes.getServePath()
+                            + "/member/" + userName + "'>" + userName + "</a>");
+                }
                 articleContent = shortLinkQueryService.linkArticle(articleContent);
                 articleContent = shortLinkQueryService.linkTag(articleContent);
                 articleContent = Emotions.convert(articleContent);
@@ -331,7 +349,7 @@ public class JournalQueryService {
 
             userWeekDoneCount(ret);
             return ret;
-        } catch (final RepositoryException e) {
+        } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Gets chapter failed", e);
 
             return Collections.emptyList();
@@ -416,10 +434,10 @@ public class JournalQueryService {
                     new PropertyFilter(Article.ARTICLE_AUTHOR_ID, FilterOperator.EQUAL, userId),
                     new PropertyFilter(Article.ARTICLE_CREATE_TIME, FilterOperator.GREATER_THAN_OR_EQUAL, Times.getDayStartTime(now)),
                     new PropertyFilter(Article.ARTICLE_CREATE_TIME, FilterOperator.LESS_THAN_OR_EQUAL, Times.getDayEndTime(now))));
-            
+
             final JSONObject result = articleRepository.get(query);
             final List<JSONObject> journals = CollectionUtils.<JSONObject>jsonArrayToList(result.optJSONArray(Keys.RESULTS));
-            
+
             return journals.size() > 1;
         } catch (final RepositoryException e) {
             LOGGER.log(Level.ERROR, "Check today paragraph post failed", e);
