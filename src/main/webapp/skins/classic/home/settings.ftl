@@ -132,9 +132,9 @@
                             return;
                         }
 
-                        $('#avatarURL').attr("src", qiniuKey);
-                        $('#avatarURLMid').attr("src", qiniuKey);
-                        $('#avatarURLNor').attr("src", qiniuKey);
+                        $('#avatarURL').css("background-image", 'url(' + qiniuKey + ')');
+                        $('#avatarURLMid').css("background-image", 'url(' + qiniuKey + ')');
+                        $('#avatarURLNor').css("background-image", 'url(' + qiniuKey + ')');
                     },
                     fail: function (e, data) {
                         alert("Upload error: " + data.errorThrown);
