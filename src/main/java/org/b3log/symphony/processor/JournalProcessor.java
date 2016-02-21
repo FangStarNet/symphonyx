@@ -233,7 +233,6 @@ public class JournalProcessor {
         }
 
         try {
-
             final JSONObject admin = userQueryService.getSA();
 
             final JSONObject chapter = new JSONObject();
