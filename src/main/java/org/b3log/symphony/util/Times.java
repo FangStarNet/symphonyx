@@ -26,7 +26,7 @@ import org.b3log.latke.service.LangPropsServiceImpl;
  * Time utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.3.1.0, Feb 20, 2016
+ * @version 1.3.2.0, Feb 20, 2016
  * @since 1.3.0
  */
 public final class Times {
@@ -168,8 +168,11 @@ public final class Times {
      */
     public static boolean isSameWeek(final Date date1, final Date date2) {
         final Calendar cal1 = Calendar.getInstance();
+        cal1.setFirstDayOfWeek(Calendar.MONDAY);
         cal1.setTime(date1);
+        
         final Calendar cal2 = Calendar.getInstance();
+        cal2.setFirstDayOfWeek(Calendar.MONDAY);
         cal2.setTime(date2);
 
         return cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA)
