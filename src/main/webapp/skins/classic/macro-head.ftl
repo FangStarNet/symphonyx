@@ -9,5 +9,6 @@
 <link type="text/css" rel="stylesheet" href="${staticServePath}/css/base${miniPostfix}.css?${staticResourceVersion}" />
 <link type="text/css" rel="stylesheet" href="${staticServePath}/css/responsive${miniPostfix}.css?${staticResourceVersion}" />
 <link rel="icon" type="image/x-icon" href="${staticServePath}/images/favicon.ico" />
+<link rel="apple-touch-icon" href="${staticServePath}/images/favicon.png">
 ${siteVisitStatCode}
 </#macro>
