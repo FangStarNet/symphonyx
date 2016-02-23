@@ -18,7 +18,7 @@
 -->
 <!--
     Description: Static resources definition.
-    Version: 1.3.0.1, Jan 25, 2016
+    Version: 1.4.0.1, Feb 23, 2016
     Author: Liang Ding
 -->
 <static-files>
@@ -94,5 +94,6 @@
     <include path="/plugins/**.htm" />
     <include path="/plugins/**/*.htm" />
         
+    <include path="/emoji/**/*.*" />
 </static-files>
 
