@@ -21,7 +21,7 @@ import org.b3log.symphony.util.Symphonys;
  * This class defines all pointtransfer model relevant keys.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.10.1.0, Feb 18, 2016
+ * @version 1.11.1.0, Feb 23, 2016
  * @since 1.3.0
  */
 public final class Pointtransfer {
@@ -227,6 +227,11 @@ public final class Pointtransfer {
      * Transfer type - Exchange.
      */
     public static final int TRANSFER_TYPE_C_EXCHANGE = 17;
+
+    /**
+     * Transfer type - Abuse Deduct.
+     */
+    public static final int TRANSFER_TYPE_C_ABUSE_DEDUCT = 18;
 
     /**
      * Private constructor.
