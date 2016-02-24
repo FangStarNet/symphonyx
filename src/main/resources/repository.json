@@ -1,9 +1,91 @@
 {
     "description": "Description of repository structures, for generation (DDL: http://en.wikipedia.org/wiki/Data_Definition_Language) of the relational database table and persistence validation.",
-    "version": "3.14.4.3, Jan 29, 2016",
+    "version": "3.15.4.3, Feb 24, 2016",
     "authors": ["Liang Ding"],
     "since": "0.2.0",
     "repositories": [
+        {
+            "name": "order",
+            "keys": [
+                {
+                    "name": "oId",
+                    "type": "String",
+                    "length": 19
+                },
+                {
+                    "name": "orderUserId",
+                    "type": "String",
+                    "length": 19
+                },
+                {
+                    "name": "orderProductName",
+                    "type": "String",
+                    "length": 20
+                },
+                {
+                    "name": "orderPrice",
+                    "type": "double",
+                    "description": "in ￥"
+                },
+                {
+                    "name": "orderPoint",
+                    "type": "int"
+                },
+                {
+                    "name": "orderStatus",
+                    "type": "int",
+                    "description": "0: confirmed, 1: refunded"
+                },
+                {
+                    "name": "orderFinancialUserId",
+                    "type": "String",
+                    "length": 19
+                },
+                {
+                    "name": "orderCreateTime",
+                    "type": "long"
+                },
+                {
+                    "name": "orderConfirmTime",
+                    "type": "long"
+                }
+            ]
+        },
+        {
+            "name": "product",
+            "keys": [
+                {
+                    "name": "oId",
+                    "type": "String",
+                    "length": 19
+                },
+                {
+                    "name": "productName",
+                    "type": "String",
+                    "length": 255
+                },
+                {
+                    "name": "productCategory",
+                    "type": "String",
+                    "length": 20
+                },
+                {
+                    "name": "productDescription",
+                    "type": "String",
+                    "length": 512
+                },
+                {
+                    "name": "productPrice",
+                    "type": "double",
+                    "description": "in ￥"
+                },
+                {
+                    "name": "productStatus",
+                    "type": "int",
+                    "description": "0: onshelf, 1: offshelf"
+                }
+            ]
+        },
         {
             "name": "archive",
             "keys": [
