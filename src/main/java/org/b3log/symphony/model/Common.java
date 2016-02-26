@@ -23,6 +23,11 @@ package org.b3log.symphony.model;
  * @since 0.2.0
  */
 public final class Common {
+    
+    /**
+     * Key of product id.
+     */
+    public static final String PRODUCT_ID = "productId";
 
     /**
      * Key of title.

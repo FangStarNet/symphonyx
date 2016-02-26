@@ -24,6 +24,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.b3log.latke.Keys;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.Pagination;
+import org.b3log.latke.model.User;
+import org.b3log.latke.service.LangPropsService;
+import org.b3log.latke.service.ServiceException;
 import org.b3log.latke.servlet.HTTPRequestContext;
 import org.b3log.latke.servlet.HTTPRequestMethod;
 import org.b3log.latke.servlet.annotation.After;
@@ -32,11 +35,14 @@ import org.b3log.latke.servlet.annotation.RequestProcessing;
 import org.b3log.latke.servlet.annotation.RequestProcessor;
 import org.b3log.latke.servlet.renderer.freemarker.AbstractFreeMarkerRenderer;
 import org.b3log.latke.util.CollectionUtils;
+import org.b3log.latke.util.Requests;
 import org.b3log.latke.util.Strings;
 import org.b3log.symphony.model.Common;
 import org.b3log.symphony.model.Product;
 import org.b3log.symphony.processor.advice.AnonymousViewCheck;
+import org.b3log.symphony.processor.advice.CSRFCheck;
 import org.b3log.symphony.processor.advice.CSRFToken;
+import org.b3log.symphony.processor.advice.LoginCheck;
 import org.b3log.symphony.processor.advice.stopwatch.StopwatchEndAdvice;
 import org.b3log.symphony.processor.advice.stopwatch.StopwatchStartAdvice;
 import org.b3log.symphony.service.ProductMgmtService;
@@ -81,6 +87,43 @@ public class MallProcessor {
      */
     @Inject
     private Filler filler;
+
+    /**
+     * Language service.
+     */
+    @Inject
+    private LangPropsService langPropsService;
+
+    /**
+     * Buys a product.
+     *
+     * @param context the specified context
+     * @param request the specified request
+     * @param response the specified response
+     * @throws Exception exception
+     */
+    @RequestProcessing(value = "/mall/product/buy", method = HTTPRequestMethod.POST)
+    @Before(adviceClass = {StopwatchStartAdvice.class, LoginCheck.class, CSRFCheck.class})
+    @After(adviceClass = {StopwatchEndAdvice.class})
+    public void buyProduct(final HTTPRequestContext context,
+            final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+        context.renderJSON().renderFalseResult();
+
+        final JSONObject requestJSONObject = Requests.parseRequestJSONObject(request, context.getResponse());
+
+        final String productId = requestJSONObject.optString(Common.PRODUCT_ID);
+        final JSONObject currentUser = (JSONObject) request.getAttribute(User.USER);
+        final String userId = currentUser.optString(Keys.OBJECT_ID);
+
+        final JSONObject ret = productMgmtService.buyProduct(productId, userId);
+
+        if (ret.optBoolean(Keys.STATUS_CODE)) {
+            context.renderJSON().renderTrueResult().renderMsg(langPropsService.get("buySuccLabel"));
+        } else {
+            context.renderJSON().renderTrueResult().renderMsg(langPropsService.get("buyFailedLabel")
+                    + " - " + ret.optString(Keys.MSG));
+        }
+    }
 
     /**
      * Shows timeline.
@@ -145,6 +188,5 @@ public class MallProcessor {
         filler.fillHotArticles(dataModel);
         filler.fillSideTags(dataModel);
         filler.fillLatestCmts(dataModel);
-
     }
 }

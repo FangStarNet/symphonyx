@@ -23,6 +23,7 @@ import org.b3log.latke.repository.RepositoryException;
 import org.b3log.latke.repository.annotation.Transactional;
 import org.b3log.latke.service.ServiceException;
 import org.b3log.latke.service.annotation.Service;
+import org.b3log.symphony.model.Order;
 import org.b3log.symphony.repository.OrderRepository;
 import org.json.JSONObject;
 
@@ -51,12 +52,18 @@ public class OrderMgmtService {
      * Adds the specified order.
      *
      * @param order the specified order
+     * @return order id
      * @throws ServiceException service exception
      */
     @Transactional
-    public void addOrder(final JSONObject order) throws ServiceException {
+    public String addOrder(final JSONObject order) throws ServiceException {
         try {
-            orderRepository.add(order);
+            order.put(Order.ORDER_CONFIRM_TIME, 0);
+            order.put(Order.ORDER_CREATE_TIME, System.currentTimeMillis());
+            order.put(Order.ORDER_FINANCIAL_USER_ID, "");
+            order.put(Order.ORDER_STATUS, Order.ORDER_STATUS_C_INIT);
+
+            return orderRepository.add(order);
         } catch (final RepositoryException e) {
             LOGGER.log(Level.ERROR, "Adds order failed", e);
 
@@ -78,23 +85,6 @@ public class OrderMgmtService {
             orderRepository.update(orderId, order);
         } catch (final RepositoryException e) {
             LOGGER.log(Level.ERROR, "Updates order failed", e);
-
-            throw new ServiceException(e);
-        }
-    }
-
-    /**
-     * Removes the specified order.
-     *
-     * @param orderId the specified orderId
-     * @throws ServiceException service exception
-     */
-    @Transactional
-    public void removeOrder(final String orderId) throws ServiceException {
-        try {
-            orderRepository.remove(orderId);
-        } catch (final RepositoryException e) {
-            LOGGER.log(Level.ERROR, "Removes order failed", e);
 
             throw new ServiceException(e);
         }

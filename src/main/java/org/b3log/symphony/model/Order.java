@@ -73,4 +73,20 @@ public final class Order {
      * Key of order confirm time.
      */
     public static final String ORDER_CONFIRM_TIME = "orderConfirmTime";
+
+    //// Status constants
+    /**
+     * Order status - init.
+     */
+    public static final int ORDER_STATUS_C_INIT = 0;
+
+    /**
+     * Order status - confirmed.
+     */
+    public static final int ORDER_STATUS_C_CONFIRMED = 1;
+
+    /**
+     * Order status - refunded.
+     */
+    public static final int ORDER_STATUS_C_REFUNDED = 2;
 }

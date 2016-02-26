@@ -21,9 +21,18 @@ import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.RepositoryException;
 import org.b3log.latke.repository.annotation.Transactional;
+import org.b3log.latke.service.LangPropsService;
 import org.b3log.latke.service.ServiceException;
 import org.b3log.latke.service.annotation.Service;
+import org.b3log.symphony.model.Order;
+import org.b3log.symphony.model.Pointtransfer;
+import org.b3log.symphony.model.Product;
+import org.b3log.symphony.model.UserExt;
+import org.b3log.symphony.repository.OrderRepository;
 import org.b3log.symphony.repository.ProductRepository;
+import org.b3log.symphony.repository.UserRepository;
+import org.b3log.symphony.util.Results;
+import org.b3log.symphony.util.Symphonys;
 import org.json.JSONObject;
 
 /**
@@ -46,6 +55,30 @@ public class ProductMgmtService {
      */
     @Inject
     private ProductRepository productRepository;
+
+    /**
+     * User repository.
+     */
+    @Inject
+    private UserRepository userRepository;
+
+    /**
+     * Order manager service.
+     */
+    @Inject
+    private OrderMgmtService orderMgmtService;
+
+    /**
+     * Pointtransfer management service.
+     */
+    @Inject
+    private PointtransferMgmtService pointtransferMgmtService;
+
+    /**
+     * Language service.
+     */
+    @Inject
+    private LangPropsService langPropsService;
 
     /**
      * Adds the specified product.
@@ -85,19 +118,47 @@ public class ProductMgmtService {
     }
 
     /**
-     * Removes the specified product.
+     * Buys a product.
      *
      * @param productId the specified productId
-     * @throws ServiceException service exception
+     * @param userId the specified buyer id
+     * @return result
      */
-    @Transactional
-    public void removeOrder(final String productId) throws ServiceException {
-        try {
-            productRepository.remove(productId);
-        } catch (final RepositoryException e) {
-            LOGGER.log(Level.ERROR, "Removes product failed", e);
+    public synchronized JSONObject buyProduct(final String productId, final String userId) {
+        final JSONObject ret = Results.falseResult();
 
-            throw new ServiceException(e);
+        try {
+            final JSONObject product = productRepository.get(productId);
+            final double price = product.optDouble(Product.PRODUCT_PRICE);
+            final int point = (int) Math.floor(price * Symphonys.getInt("pointExchangeUnit"));
+
+            final JSONObject user = userRepository.get(userId);
+            final int balance = user.optInt(UserExt.USER_POINT);
+
+            if (balance - point < 0) {
+                ret.put(Keys.MSG, langPropsService.get("insufficientBalanceLabel"));
+
+                return ret;
+            }
+
+            final JSONObject order = new JSONObject();
+
+            order.put(Order.ORDER_POINT, point);
+            order.put(Order.ORDER_PRICE, price);
+            order.put(Order.ORDER_PRODUCT_NAME, product.optString(Product.PRODUCT_NAME));
+            order.put(Order.ORDER_USER_ID, userId);
+
+            final String orderId = orderMgmtService.addOrder(order);
+            final boolean succ = null != pointtransferMgmtService.transfer(userId, "sys",
+                    Pointtransfer.TRANSFER_TYPE_C_BUY_PRODUCT, point, orderId);
+
+            ret.put(Keys.STATUS_CODE, succ);
+        } catch (final Exception e) {
+            LOGGER.log(Level.ERROR, "Buys product failed", e);
+
+            ret.put(Keys.MSG, e.getMessage());
         }
+
+        return ret;
     }
 }

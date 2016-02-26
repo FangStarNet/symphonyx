@@ -33,6 +33,7 @@ import org.b3log.latke.servlet.annotation.Before;
 import org.b3log.latke.servlet.annotation.RequestProcessing;
 import org.b3log.latke.servlet.annotation.RequestProcessor;
 import org.b3log.latke.servlet.renderer.freemarker.AbstractFreeMarkerRenderer;
+import org.b3log.latke.util.Requests;
 import org.b3log.symphony.model.Common;
 import org.b3log.symphony.model.Pointtransfer;
 import org.b3log.symphony.processor.advice.CSRFCheck;
@@ -257,7 +258,7 @@ public class ActivityProcessor {
             final HttpServletRequest request, final HttpServletResponse response) throws Exception {
         context.renderJSON().renderFalseResult();
 
-        final JSONObject requestJSONObject = (JSONObject) request.getAttribute(Keys.REQUEST);
+        final JSONObject requestJSONObject = Requests.parseRequestJSONObject(request, context.getResponse());
 
         final int amount = requestJSONObject.optInt(Common.AMOUNT);
         final int smallOrLarge = requestJSONObject.optInt(Common.SMALL_OR_LARGE);

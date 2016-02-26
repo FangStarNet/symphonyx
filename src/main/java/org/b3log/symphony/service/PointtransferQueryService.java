@@ -39,11 +39,13 @@ import org.b3log.latke.util.CollectionUtils;
 import org.b3log.symphony.model.Article;
 import org.b3log.symphony.model.Comment;
 import org.b3log.symphony.model.Common;
+import org.b3log.symphony.model.Order;
 import org.b3log.symphony.model.Pointtransfer;
 import org.b3log.symphony.model.Reward;
 import org.b3log.symphony.model.UserExt;
 import org.b3log.symphony.repository.ArticleRepository;
 import org.b3log.symphony.repository.CommentRepository;
+import org.b3log.symphony.repository.OrderRepository;
 import org.b3log.symphony.repository.PointtransferRepository;
 import org.b3log.symphony.repository.RewardRepository;
 import org.b3log.symphony.repository.UserRepository;
@@ -54,7 +56,7 @@ import org.json.JSONObject;
  * Pointtransfer query service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.10.1.1, Feb 23, 2016
+ * @version 1.11.1.1, Feb 26, 2016
  * @since 1.3.0
  */
 @Service
@@ -94,6 +96,12 @@ public class PointtransferQueryService {
      */
     @Inject
     private RewardRepository rewardRepository;
+
+    /**
+     * Order repository.
+     */
+    @Inject
+    private OrderRepository orderRepository;
 
     /**
      * Language service.
@@ -357,7 +365,7 @@ public class PointtransferQueryService {
                     case Pointtransfer.TRANSFER_TYPE_C_ACTIVITY_CHECKIN_STREAK:
                         desTemplate = desTemplate.replace("{point}",
                                 String.valueOf(Pointtransfer.TRANSFER_SUM_C_ACTIVITY_CHECKINT_STREAK));
-                        
+
                         break;
                     case Pointtransfer.TRANSFER_TYPE_C_CHARGE:
                         final String yuan = dataId.split("-")[0];
@@ -367,6 +375,12 @@ public class PointtransferQueryService {
                     case Pointtransfer.TRANSFER_TYPE_C_EXCHANGE:
                         final String exYuan = dataId;
                         desTemplate = desTemplate.replace("{yuan}", exYuan);
+
+                        break;
+                    case Pointtransfer.TRANSFER_TYPE_C_BUY_PRODUCT:
+                        final String orderId = dataId;
+                        final JSONObject order = orderRepository.get(orderId);
+                        desTemplate = desTemplate.replace("{product}", order.optString(Order.ORDER_PRODUCT_NAME));
 
                         break;
                     case Pointtransfer.TRANSFER_TYPE_C_ABUSE_DEDUCT:

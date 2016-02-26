@@ -18,7 +18,7 @@
                             <#list products as product>
                             <li>
                                 ${product.productName} ${yuanLabel}${product.productPrice} - ${product.productPoint} ${pointLabel}
-                                <button class="green small" onclick="alert('pid: ' + ${product.oId} + ', token: ${csrfToken}');">${buyLabel}
+                                <button class="green small" onclick="Mall.buyProduct('${product.oId}', '${csrfToken}')">${buyLabel}
                                 </button>
                             </li>
                             </#list>
@@ -31,6 +31,6 @@
             </div>
         </div>
         <#include "footer.ftl">
-
+        <script type="text/javascript" src="${staticServePath}/js/mall${miniPostfix}.js?${staticResourceVersion}"></script>
     </body>
 </html>
