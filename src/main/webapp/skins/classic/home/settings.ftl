@@ -17,7 +17,7 @@
         <label>${teamLabel}</label><br/>
         <select id="userTeam" name="userTeam">
             <#list teams as team>
-            <option value="${team}"<#if team == currentUser.userTeam>selected</#if>>${team}</option>
+            <option value="${team}"<#if team == currentUser.userTeam> selected</#if>>${team}</option>
             </#list>
         </select>
         <br/>
