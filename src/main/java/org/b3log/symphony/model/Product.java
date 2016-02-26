@@ -58,4 +58,10 @@ public final class Product {
      * Key of product status.
      */
     public static final String PRODUCT_STATUS = "productStatus";
+    
+    //// Transient ////
+    /**
+     * Key of product point.
+     */
+    public static final String PRODUCT_T_POINT = "productPoint";
 }

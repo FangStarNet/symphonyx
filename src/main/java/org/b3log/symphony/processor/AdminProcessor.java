@@ -228,12 +228,12 @@ public class AdminProcessor {
     /**
      * Pagination window size.
      */
-    private static final int WINDOW_SIZE = 15;
+    public static final int WINDOW_SIZE = 15;
 
     /**
      * Pagination page size.
      */
-    private static final int PAGE_SIZE = 20;
+    public static final int PAGE_SIZE = 20;
 
     /**
      * Shows admin index.
