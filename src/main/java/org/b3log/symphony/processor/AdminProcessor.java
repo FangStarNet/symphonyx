@@ -48,6 +48,7 @@ import org.b3log.symphony.model.Common;
 import org.b3log.symphony.model.Notification;
 import org.b3log.symphony.model.Option;
 import org.b3log.symphony.model.Pointtransfer;
+import org.b3log.symphony.model.Product;
 import org.b3log.symphony.model.Tag;
 import org.b3log.symphony.model.UserExt;
 import org.b3log.symphony.processor.advice.AdminCheck;
@@ -63,6 +64,8 @@ import org.b3log.symphony.service.NotificationMgmtService;
 import org.b3log.symphony.service.OptionMgmtService;
 import org.b3log.symphony.service.OptionQueryService;
 import org.b3log.symphony.service.PointtransferMgmtService;
+import org.b3log.symphony.service.ProductMgmtService;
+import org.b3log.symphony.service.ProductQueryService;
 import org.b3log.symphony.service.SearchMgmtService;
 import org.b3log.symphony.service.TagMgmtService;
 import org.b3log.symphony.service.TagQueryService;
@@ -98,13 +101,18 @@ import org.json.JSONObject;
  * <li>Shows tags (/admin/tags), GET</li>
  * <li>Show a tag (/admin/tag/{tagId}), GET</li>
  * <li>Updates a tag (/admin/tag/{tagId}), POST</li>
+ * <li>Shows products (/admin/products), GET</li>
+ * <li>Shows add product (/admin/add-product), GET</li>
+ * <li>Adds a product (/admin/add-product), POST</li>
+ * <li>Shows a product (/admin/product/{productId}), GET</li>
+ * <li>Updates a product (/admin/product/{productId}), POST</li>
  * <li>Shows miscellaneous (/admin/misc), GET</li>
  * <li>Updates miscellaneous (/admin/misc), POST</li>
  * <li>Search index (/admin/search/index), POST</li>
  * </ul>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.13.2.1, Feb 23, 2016
+ * @version 2.14.2.1, Feb 26, 2016
  * @since 1.1.0
  */
 @RequestProcessor
@@ -176,10 +184,22 @@ public class AdminProcessor {
     private TagQueryService tagQueryService;
 
     /**
-     * Tag Management service.
+     * Tag management service.
      */
     @Inject
     private TagMgmtService tagMgmtService;
+
+    /**
+     * Product query service.
+     */
+    @Inject
+    private ProductQueryService productQueryService;
+
+    /**
+     * Product management service.
+     */
+    @Inject
+    private ProductMgmtService productMgmtService;
 
     /**
      * Pointtransfer management service.
@@ -209,6 +229,11 @@ public class AdminProcessor {
      * Pagination window size.
      */
     private static final int WINDOW_SIZE = 15;
+
+    /**
+     * Pagination page size.
+     */
+    private static final int PAGE_SIZE = 20;
 
     /**
      * Shows admin index.
@@ -255,7 +280,7 @@ public class AdminProcessor {
         }
 
         final int pageNum = Integer.valueOf(pageNumStr);
-        final int pageSize = Integer.valueOf("20");
+        final int pageSize = PAGE_SIZE;
         final int windowSize = WINDOW_SIZE;
 
         final JSONObject requestJSONObject = new JSONObject();
@@ -732,7 +757,7 @@ public class AdminProcessor {
         }
 
         final int pageNum = Integer.valueOf(pageNumStr);
-        final int pageSize = Integer.valueOf("20");
+        final int pageSize = PAGE_SIZE;
         final int windowSize = WINDOW_SIZE;
 
         final JSONObject requestJSONObject = new JSONObject();
@@ -860,7 +885,7 @@ public class AdminProcessor {
         }
 
         final int pageNum = Integer.valueOf(pageNumStr);
-        final int pageSize = Integer.valueOf("20");
+        final int pageSize = PAGE_SIZE;
         final int windowSize = WINDOW_SIZE;
 
         final JSONObject requestJSONObject = new JSONObject();
@@ -1045,7 +1070,7 @@ public class AdminProcessor {
         }
 
         final int pageNum = Integer.valueOf(pageNumStr);
-        final int pageSize = Integer.valueOf("20");
+        final int pageSize = PAGE_SIZE;
         final int windowSize = WINDOW_SIZE;
 
         final JSONObject requestJSONObject = new JSONObject();
@@ -1053,7 +1078,7 @@ public class AdminProcessor {
         requestJSONObject.put(Pagination.PAGINATION_PAGE_SIZE, pageSize);
         requestJSONObject.put(Pagination.PAGINATION_WINDOW_SIZE, windowSize);
 
-        final String tagTitle = request.getParameter("title");
+        final String tagTitle = request.getParameter(Common.TITLE);
         if (!Strings.isEmptyOrNull(tagTitle)) {
             requestJSONObject.put(Tag.TAG_TITLE, tagTitle);
         }
@@ -1149,6 +1174,195 @@ public class AdminProcessor {
 
         tag = tagQueryService.getTag(tagId);
         dataModel.put(Tag.TAG, tag);
+
+        filler.fillHeaderAndFooter(request, response, dataModel);
+    }
+
+    /**
+     * Shows admin products.
+     *
+     * @param context the specified context
+     * @param request the specified request
+     * @param response the specified response
+     * @throws Exception exception
+     */
+    @RequestProcessing(value = "/admin/products", method = HTTPRequestMethod.GET)
+    @Before(adviceClass = {StopwatchStartAdvice.class, AdminCheck.class})
+    @After(adviceClass = StopwatchEndAdvice.class)
+    public void showProducts(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response)
+            throws Exception {
+        final AbstractFreeMarkerRenderer renderer = new SkinRenderer();
+        context.setRenderer(renderer);
+        renderer.setTemplateName("admin/products.ftl");
+        final Map<String, Object> dataModel = renderer.getDataModel();
+
+        String pageNumStr = request.getParameter("p");
+        if (Strings.isEmptyOrNull(pageNumStr) || !Strings.isNumeric(pageNumStr)) {
+            pageNumStr = "1";
+        }
+
+        final int pageNum = Integer.valueOf(pageNumStr);
+        final int pageSize = PAGE_SIZE;
+        final int windowSize = WINDOW_SIZE;
+
+        final JSONObject requestJSONObject = new JSONObject();
+        requestJSONObject.put(Pagination.PAGINATION_CURRENT_PAGE_NUM, pageNum);
+        requestJSONObject.put(Pagination.PAGINATION_PAGE_SIZE, pageSize);
+        requestJSONObject.put(Pagination.PAGINATION_WINDOW_SIZE, windowSize);
+
+        final String name = request.getParameter(Common.NAME);
+        if (!Strings.isEmptyOrNull(name)) {
+            requestJSONObject.put(Product.PRODUCT_NAME, name);
+        }
+
+        final Map<String, Class<?>> fields = new HashMap<String, Class<?>>();
+        fields.put(Keys.OBJECT_ID, String.class);
+        fields.put(Product.PRODUCT_CATEGORY, String.class);
+        fields.put(Product.PRODUCT_DESCRIPTION, String.class);
+        fields.put(Product.PRODUCT_NAME, String.class);
+        fields.put(Product.PRODUCT_PRICE, Double.class);
+        fields.put(Product.PRODUCT_STATUS, Integer.class);
+
+        final JSONObject result = productQueryService.getProducts(requestJSONObject, fields);
+        dataModel.put(Product.PRODUCTS, CollectionUtils.jsonArrayToList(result.optJSONArray(Product.PRODUCTS)));
+
+        final JSONObject pagination = result.optJSONObject(Pagination.PAGINATION);
+        final int pageCount = pagination.optInt(Pagination.PAGINATION_PAGE_COUNT);
+        final JSONArray pageNums = pagination.optJSONArray(Pagination.PAGINATION_PAGE_NUMS);
+        dataModel.put(Pagination.PAGINATION_FIRST_PAGE_NUM, pageNums.opt(0));
+        dataModel.put(Pagination.PAGINATION_LAST_PAGE_NUM, pageNums.opt(pageNums.length() - 1));
+        dataModel.put(Pagination.PAGINATION_CURRENT_PAGE_NUM, pageNum);
+        dataModel.put(Pagination.PAGINATION_PAGE_COUNT, pageCount);
+        dataModel.put(Pagination.PAGINATION_PAGE_NUMS, CollectionUtils.jsonArrayToList(pageNums));
+
+        filler.fillHeaderAndFooter(request, response, dataModel);
+    }
+
+    /**
+     * Shows add product.
+     *
+     * @param context the specified context
+     * @param request the specified request
+     * @param response the specified response
+     * @throws Exception exception
+     */
+    @RequestProcessing(value = "/admin/add-product", method = HTTPRequestMethod.GET)
+    @Before(adviceClass = {StopwatchStartAdvice.class, AdminCheck.class})
+    @After(adviceClass = StopwatchEndAdvice.class)
+    public void showAddProduct(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response)
+            throws Exception {
+        final AbstractFreeMarkerRenderer renderer = new SkinRenderer();
+        context.setRenderer(renderer);
+        renderer.setTemplateName("admin/add-product.ftl");
+        final Map<String, Object> dataModel = renderer.getDataModel();
+
+        filler.fillHeaderAndFooter(request, response, dataModel);
+    }
+
+    /**
+     * Adds a product.
+     *
+     * @param context the specified context
+     * @param request the specified request
+     * @param response the specified response
+     * @throws Exception exception
+     */
+    @RequestProcessing(value = "/admin/add-product", method = HTTPRequestMethod.POST)
+    @Before(adviceClass = {StopwatchStartAdvice.class, AdminCheck.class})
+    @After(adviceClass = StopwatchEndAdvice.class)
+    public void addProduct(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response)
+            throws Exception {
+        final String category = request.getParameter(Product.PRODUCT_CATEGORY);
+        final String description = request.getParameter(Product.PRODUCT_DESCRIPTION);
+        final String name = request.getParameter(Product.PRODUCT_NAME);
+        final String price = request.getParameter(Product.PRODUCT_PRICE);
+        final String status = request.getParameter(Product.PRODUCT_STATUS);
+
+        String productId;
+        try {
+            final JSONObject product = new JSONObject();
+            product.put(Product.PRODUCT_CATEGORY, category);
+            product.put(Product.PRODUCT_DESCRIPTION, description);
+            product.put(Product.PRODUCT_NAME, name);
+            product.put(Product.PRODUCT_PRICE, price);
+            product.put(Product.PRODUCT_STATUS, status);
+
+            productId = productMgmtService.addProduct(product);
+        } catch (final Exception e) {
+            final AbstractFreeMarkerRenderer renderer = new SkinRenderer();
+            context.setRenderer(renderer);
+            renderer.setTemplateName("admin/error.ftl");
+            final Map<String, Object> dataModel = renderer.getDataModel();
+
+            dataModel.put(Keys.MSG, e.getMessage());
+            filler.fillHeaderAndFooter(request, response, dataModel);
+
+            return;
+        }
+
+        response.sendRedirect(Latkes.getServePath() + "/admin/product/" + productId);
+    }
+
+    /**
+     * Shows a product.
+     *
+     * @param context the specified context
+     * @param request the specified request
+     * @param response the specified response
+     * @param productId the specified product id
+     * @throws Exception exception
+     */
+    @RequestProcessing(value = "/admin/product/{productId}", method = HTTPRequestMethod.GET)
+    @Before(adviceClass = {StopwatchStartAdvice.class, AdminCheck.class})
+    @After(adviceClass = StopwatchEndAdvice.class)
+    public void showProduct(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response,
+            final String productId) throws Exception {
+        final AbstractFreeMarkerRenderer renderer = new SkinRenderer();
+        context.setRenderer(renderer);
+        renderer.setTemplateName("admin/product.ftl");
+        final Map<String, Object> dataModel = renderer.getDataModel();
+
+        final JSONObject product = productQueryService.getProduct(productId);
+        dataModel.put(Product.PRODUCT, product);
+
+        filler.fillHeaderAndFooter(request, response, dataModel);
+    }
+
+    /**
+     * Updates a product.
+     *
+     * @param context the specified context
+     * @param request the specified request
+     * @param response the specified response
+     * @param productId the specified product id
+     * @throws Exception exception
+     */
+    @RequestProcessing(value = "/admin/product/{productId}", method = HTTPRequestMethod.POST)
+    @Before(adviceClass = {StopwatchStartAdvice.class, AdminCheck.class})
+    @After(adviceClass = StopwatchEndAdvice.class)
+    public void updateProduct(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response,
+            final String productId) throws Exception {
+        final AbstractFreeMarkerRenderer renderer = new SkinRenderer();
+        context.setRenderer(renderer);
+        renderer.setTemplateName("admin/product.ftl");
+        final Map<String, Object> dataModel = renderer.getDataModel();
+
+        JSONObject product = productQueryService.getProduct(productId);
+        dataModel.put(Product.PRODUCT, product);
+        
+        final Enumeration<String> parameterNames = request.getParameterNames();
+        while (parameterNames.hasMoreElements()) {
+            final String name = parameterNames.nextElement();
+            final String value = request.getParameter(name);
+
+            product.put(name, value);
+            
+            if (name.equals(Product.PRODUCT_STATUS)) {
+                product.put(name, Integer.valueOf(value));
+            }
+        }
+
+        productMgmtService.updateProduct(product);
 
         filler.fillHeaderAndFooter(request, response, dataModel);
     }

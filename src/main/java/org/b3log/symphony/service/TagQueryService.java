@@ -56,7 +56,7 @@ import org.json.JSONObject;
  * Tag query service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.4.1.5, Aug 28, 2015
+ * @version 1.4.1.6, Feb 26, 2016
  * @since 0.2.0
  */
 @Service
@@ -465,13 +465,7 @@ public class TagQueryService {
      */
     public JSONObject getTag(final String tagId) throws ServiceException {
         try {
-            final JSONObject ret = tagRepository.get(tagId);
-
-            if (null == ret) {
-                return null;
-            }
-
-            return ret;
+            return tagRepository.get(tagId);
         } catch (final RepositoryException e) {
             LOGGER.log(Level.ERROR, "Gets a tag [tagId=" + tagId + "] failed", e);
             throw new ServiceException(e);

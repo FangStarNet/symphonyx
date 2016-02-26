@@ -4,7 +4,7 @@
 <html>
     <head>
         <#if type == "index">
-        <@head title="${symphonyLabel} - ${adminLabel}"></@head>
+        <@head title="${symphonyLabel} - ${consoleIndexLabel}"></@head>
         </#if>
         <#if type == "users">
         <@head title="${symphonyLabel} - ${userAdminLabel}"></@head>
@@ -21,6 +21,12 @@
         <#if type == "tags">
         <@head title="${symphonyLabel} - ${tagAdminLabel}"></@head>
         </#if>
+        <#if type == "products">
+        <@head title="${symphonyLabel} - ${productAdminLabel}"></@head>
+        </#if>
+        <#if type == "addProduct">
+        <@head title="${symphonyLabel} - ${addProductLabel}"></@head>
+        </#if>
         <#if type == "misc">
         <@head title="${symphonyLabel} - ${miscAdminLabel}"></@head>
         </#if>
@@ -33,11 +39,12 @@
                 <#nested>
                 <div class="side">
                     <ul class="note-list">
-                        <li<#if type == "index"> class="current"</#if>><a href="/admin">${adminLabel}</a></li>
+                        <li<#if type == "index"> class="current"</#if>><a href="/admin">${consoleIndexLabel}</a></li>
                         <li<#if type == "users" || type == "addUser"> class="current"</#if>><a href="/admin/users">${userAdminLabel}</a></li>
                         <li<#if type == "articles"> class="current"</#if>><a href="/admin/articles">${articleAdminLabel}</a></li>
                         <li<#if type == "comments"> class="current"</#if>><a href="/admin/comments">${commentAdminLabel}</a></li>
                         <li<#if type == "tags"> class="current"</#if>><a href="/admin/tags">${tagAdminLabel}</a></li>
+                        <li<#if type == "products"> class="current"</#if>><a href="/admin/products">${productAdminLabel}</a></li>
                         <li<#if type == "misc"> class="current"</#if>><a href="/admin/misc">${miscAdminLabel}</a></li>
                     </ul>
                 </div>

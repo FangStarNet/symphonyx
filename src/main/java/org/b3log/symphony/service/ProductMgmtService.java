@@ -51,12 +51,13 @@ public class ProductMgmtService {
      * Adds the specified product.
      *
      * @param product the specified product
+     * @return product id
      * @throws ServiceException service exception
      */
     @Transactional
-    public void addProduct(final JSONObject product) throws ServiceException {
+    public String addProduct(final JSONObject product) throws ServiceException {
         try {
-            productRepository.add(product);
+            return productRepository.add(product);
         } catch (final RepositoryException e) {
             LOGGER.log(Level.ERROR, "Adds product failed", e);
 
