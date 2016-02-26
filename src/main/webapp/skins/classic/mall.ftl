@@ -18,6 +18,7 @@
                             <#list products as product>
                             <li>
                                 ${product.productName} ${yuanLabel}${product.productPrice} - ${product.productPoint} ${pointLabel}
+                                <button class="green small" onclick="alert('pid: ' + ${product.oId} + ', token: ${csrfToken}');">${buyLabel}
                                 </button>
                             </li>
                             </#list>
