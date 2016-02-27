@@ -152,8 +152,7 @@ public class ArticleNotifier extends AbstractEventListener<JSONObject> {
             }
 
             // Timeline
-            final String articleTitle = Jsoup.parse(
-                    originalArticle.optString(Article.ARTICLE_TITLE)).text();
+            final String articleTitle = Jsoup.parse(originalArticle.optString(Article.ARTICLE_TITLE)).text();
             final String articlePermalink = Latkes.getServePath() + originalArticle.optString(Article.ARTICLE_PERMALINK);
 
             final JSONObject timeline = new JSONObject();

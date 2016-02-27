@@ -124,8 +124,7 @@ public class ArticleChannel {
         try {
             final JSONObject article = articleRepository.get(articleId);
 
-            String articleTitle = Jsoup.parse(
-                    article.optString(Article.ARTICLE_TITLE)).text();
+            String articleTitle = Jsoup.parse(article.optString(Article.ARTICLE_TITLE)).text();
             articleTitle = Emotions.convert(articleTitle);
 
             final String articlePermalink = Latkes.getServePath() + article.optString(Article.ARTICLE_PERMALINK);
@@ -352,8 +351,7 @@ public class ArticleChannel {
         try {
             final JSONObject article = articleRepository.get(articleId);
 
-            String articleTitle = Jsoup.parse(
-                    article.optString(Article.ARTICLE_TITLE)).text();
+            String articleTitle = Jsoup.parse(article.optString(Article.ARTICLE_TITLE)).text();
             articleTitle = Emotions.convert(articleTitle);
             final String articlePermalink = Latkes.getServePath() + article.optString(Article.ARTICLE_PERMALINK);
 

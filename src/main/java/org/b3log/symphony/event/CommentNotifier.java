@@ -19,7 +19,6 @@ import java.util.Date;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Named;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
@@ -174,7 +173,7 @@ public class CommentNotifier extends AbstractEventListener<JSONObject> {
                         + "/member/" + commenterName + "'>" + commenterName + "</a>")
                         .replace("{article}", "<a target='_blank' rel='nofollow' href='" + articlePermalink
                                 + "'>" + articleTitle + "</a>")
-                        .replace("{comment}", Jsoup.parse(cc).text());
+                        .replace("{comment}", cc.replaceAll("<p>", "").replaceAll("</p>", ""));
                 timeline.put(Common.CONTENT, content);
 
                 timelineMgmtService.addTimeline(timeline);
