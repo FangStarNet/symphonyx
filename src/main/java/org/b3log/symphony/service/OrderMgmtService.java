@@ -60,7 +60,7 @@ public class OrderMgmtService {
         try {
             order.put(Order.ORDER_CONFIRM_TIME, 0);
             order.put(Order.ORDER_CREATE_TIME, System.currentTimeMillis());
-            order.put(Order.ORDER_FINANCIAL_USER_ID, "");
+            order.put(Order.ORDER_HANDLER_ID, "");
             order.put(Order.ORDER_STATUS, Order.ORDER_STATUS_C_INIT);
 
             return orderRepository.add(order);

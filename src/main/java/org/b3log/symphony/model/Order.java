@@ -35,9 +35,9 @@ public final class Order {
     public static final String ORDERS = "orders";
 
     /**
-     * Key of order user id.
+     * Key of order buyer id.
      */
-    public static final String ORDER_USER_ID = "orderUserId";
+    public static final String ORDER_BUYER_ID = "orderBuyerId";
 
     /**
      * Key of order product name.
@@ -60,9 +60,9 @@ public final class Order {
     public static final String ORDER_STATUS = "orderStatus";
 
     /**
-     * Key of order financial user id.
+     * Key of order handler user id.
      */
-    public static final String ORDER_FINANCIAL_USER_ID = "orderFinancialUserId";
+    public static final String ORDER_HANDLER_ID = "orderHandlerId";
 
     /**
      * Key of order create time.
@@ -74,6 +74,27 @@ public final class Order {
      */
     public static final String ORDER_CONFIRM_TIME = "orderConfirmTime";
 
+    //// Transient ////
+    /**
+     * Key of buyer name.
+     */
+    public static final String ORDER_T_BUYER_NAME = "orderBuyerName";
+
+    /**
+     * Key of buyer real name.
+     */
+    public static final String ORDER_T_BUYER_REAL_NAME = "orderBuyerRealName";
+    
+    /**
+     * Key of handler name.
+     */
+    public static final String ORDER_T_HANDLER_NAME = "orderHandlerName";
+    
+    /**
+     * Key of handler real name.
+     */
+    public static final String ORDER_T_HANDLER_REAL_NAME = "orderHandlerRealName";
+    
     //// Status constants
     /**
      * Order status - init.

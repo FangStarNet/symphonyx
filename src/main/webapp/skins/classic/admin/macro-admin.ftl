@@ -27,6 +27,9 @@
         <#if type == "addProduct">
         <@head title="${symphonyLabel} - ${addProductLabel}"></@head>
         </#if>
+        <#if type == "orders">
+        <@head title="${symphonyLabel} - ${orderAdminLabel}"></@head>
+        </#if>
         <#if type == "misc">
         <@head title="${symphonyLabel} - ${miscAdminLabel}"></@head>
         </#if>
@@ -45,6 +48,7 @@
                         <li<#if type == "comments"> class="current"</#if>><a href="/admin/comments">${commentAdminLabel}</a></li>
                         <li<#if type == "tags"> class="current"</#if>><a href="/admin/tags">${tagAdminLabel}</a></li>
                         <li<#if type == "products"> class="current"</#if>><a href="/admin/products">${productAdminLabel}</a></li>
+                        <li<#if type == "orders"> class="current"</#if>><a href="/admin/orders">${orderAdminLabel}</a></li>
                         <li<#if type == "misc"> class="current"</#if>><a href="/admin/misc">${miscAdminLabel}</a></li>
                     </ul>
                 </div>

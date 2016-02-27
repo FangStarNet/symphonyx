@@ -47,11 +47,14 @@ import org.b3log.symphony.model.Comment;
 import org.b3log.symphony.model.Common;
 import org.b3log.symphony.model.Notification;
 import org.b3log.symphony.model.Option;
+import org.b3log.symphony.model.Order;
 import org.b3log.symphony.model.Pointtransfer;
 import org.b3log.symphony.model.Product;
 import org.b3log.symphony.model.Tag;
 import org.b3log.symphony.model.UserExt;
 import org.b3log.symphony.processor.advice.AdminCheck;
+import org.b3log.symphony.processor.advice.CSRFCheck;
+import org.b3log.symphony.processor.advice.CSRFToken;
 import org.b3log.symphony.processor.advice.stopwatch.StopwatchEndAdvice;
 import org.b3log.symphony.processor.advice.stopwatch.StopwatchStartAdvice;
 import org.b3log.symphony.processor.advice.validate.UserRegister2Validation;
@@ -63,6 +66,8 @@ import org.b3log.symphony.service.CommentQueryService;
 import org.b3log.symphony.service.NotificationMgmtService;
 import org.b3log.symphony.service.OptionMgmtService;
 import org.b3log.symphony.service.OptionQueryService;
+import org.b3log.symphony.service.OrderMgmtService;
+import org.b3log.symphony.service.OrderQueryService;
 import org.b3log.symphony.service.PointtransferMgmtService;
 import org.b3log.symphony.service.ProductMgmtService;
 import org.b3log.symphony.service.ProductQueryService;
@@ -106,6 +111,9 @@ import org.json.JSONObject;
  * <li>Adds a product (/admin/add-product), POST</li>
  * <li>Shows a product (/admin/product/{productId}), GET</li>
  * <li>Updates a product (/admin/product/{productId}), POST</li>
+ * <li>Shows orders (/admin/orders), GET</li>
+ * <li>Confirms an order (/admin/order/{orderId}/confirm)</li>
+ * <li>Refunds an order (/admin/order/{orderId}/refund)</li>
  * <li>Shows miscellaneous (/admin/misc), GET</li>
  * <li>Updates miscellaneous (/admin/misc), POST</li>
  * <li>Search index (/admin/search/index), POST</li>
@@ -200,6 +208,18 @@ public class AdminProcessor {
      */
     @Inject
     private ProductMgmtService productMgmtService;
+
+    /**
+     * Order query service.
+     */
+    @Inject
+    private OrderQueryService orderQueryService;
+
+    /**
+     * Order management service.
+     */
+    @Inject
+    private OrderMgmtService orderMgmtService;
 
     /**
      * Pointtransfer management service.
@@ -1349,14 +1369,14 @@ public class AdminProcessor {
 
         JSONObject product = productQueryService.getProduct(productId);
         dataModel.put(Product.PRODUCT, product);
-        
+
         final Enumeration<String> parameterNames = request.getParameterNames();
         while (parameterNames.hasMoreElements()) {
             final String name = parameterNames.nextElement();
             final String value = request.getParameter(name);
 
             product.put(name, value);
-            
+
             if (name.equals(Product.PRODUCT_STATUS)) {
                 product.put(name, Integer.valueOf(value));
             }
@@ -1365,6 +1385,149 @@ public class AdminProcessor {
         productMgmtService.updateProduct(product);
 
         filler.fillHeaderAndFooter(request, response, dataModel);
+    }
+
+    /**
+     * Shows admin orders.
+     *
+     * @param context the specified context
+     * @param request the specified request
+     * @param response the specified response
+     * @throws Exception exception
+     */
+    @RequestProcessing(value = "/admin/orders", method = HTTPRequestMethod.GET)
+    @Before(adviceClass = {StopwatchStartAdvice.class, AdminCheck.class})
+    @After(adviceClass = {CSRFToken.class, StopwatchEndAdvice.class})
+    public void showOrderss(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response)
+            throws Exception {
+        final AbstractFreeMarkerRenderer renderer = new SkinRenderer();
+        context.setRenderer(renderer);
+        renderer.setTemplateName("admin/orders.ftl");
+        final Map<String, Object> dataModel = renderer.getDataModel();
+
+        String pageNumStr = request.getParameter("p");
+        if (Strings.isEmptyOrNull(pageNumStr) || !Strings.isNumeric(pageNumStr)) {
+            pageNumStr = "1";
+        }
+
+        final int pageNum = Integer.valueOf(pageNumStr);
+        final int pageSize = PAGE_SIZE;
+        final int windowSize = WINDOW_SIZE;
+
+        final JSONObject requestJSONObject = new JSONObject();
+        requestJSONObject.put(Pagination.PAGINATION_CURRENT_PAGE_NUM, pageNum);
+        requestJSONObject.put(Pagination.PAGINATION_PAGE_SIZE, pageSize);
+        requestJSONObject.put(Pagination.PAGINATION_WINDOW_SIZE, windowSize);
+
+        final Map<String, Class<?>> fields = new HashMap<String, Class<?>>();
+        fields.put(Keys.OBJECT_ID, String.class);
+        fields.put(Order.ORDER_CONFIRM_TIME, Long.class);
+        fields.put(Order.ORDER_CREATE_TIME, Long.class);
+        fields.put(Order.ORDER_HANDLER_ID, String.class);
+        fields.put(Order.ORDER_POINT, Integer.class);
+        fields.put(Order.ORDER_PRICE, Double.class);
+        fields.put(Order.ORDER_PRODUCT_NAME, String.class);
+        fields.put(Order.ORDER_STATUS, Integer.class);
+        fields.put(Order.ORDER_BUYER_ID, String.class);
+
+        final JSONObject result = orderQueryService.getOrders(requestJSONObject, fields);
+        dataModel.put(Order.ORDERS, CollectionUtils.jsonArrayToList(result.optJSONArray(Order.ORDERS)));
+
+        final JSONObject pagination = result.optJSONObject(Pagination.PAGINATION);
+        final int pageCount = pagination.optInt(Pagination.PAGINATION_PAGE_COUNT);
+        final JSONArray pageNums = pagination.optJSONArray(Pagination.PAGINATION_PAGE_NUMS);
+        dataModel.put(Pagination.PAGINATION_FIRST_PAGE_NUM, pageNums.opt(0));
+        dataModel.put(Pagination.PAGINATION_LAST_PAGE_NUM, pageNums.opt(pageNums.length() - 1));
+        dataModel.put(Pagination.PAGINATION_CURRENT_PAGE_NUM, pageNum);
+        dataModel.put(Pagination.PAGINATION_PAGE_COUNT, pageCount);
+        dataModel.put(Pagination.PAGINATION_PAGE_NUMS, CollectionUtils.jsonArrayToList(pageNums));
+
+        filler.fillHeaderAndFooter(request, response, dataModel);
+    }
+
+    /**
+     * Confirms an order.
+     *
+     * @param context the specified context
+     * @param request the specified request
+     * @param response the specified response
+     * @param orderId the specified order id
+     * @throws Exception exception
+     */
+    @RequestProcessing(value = "/admin/order/{orderId}/confirm", method = HTTPRequestMethod.POST)
+    @Before(adviceClass = {StopwatchStartAdvice.class, AdminCheck.class, CSRFCheck.class})
+    @After(adviceClass = StopwatchEndAdvice.class)
+    public void confirmOrder(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response,
+            final String orderId) throws Exception {
+        context.renderJSON().renderFalseResult();
+
+        final JSONObject order = orderQueryService.getOrder(orderId);
+        if (null == order) {
+            context.renderMsg("Order not found");
+
+            return;
+        }
+
+        if (Order.ORDER_STATUS_C_INIT != order.optInt(Order.ORDER_STATUS)) {
+            context.renderMsg("Order has been handled");
+
+            return;
+        }
+
+        final JSONObject handler = (JSONObject) request.getAttribute(User.USER);
+
+        order.put(Order.ORDER_CONFIRM_TIME, System.currentTimeMillis());
+        order.put(Order.ORDER_HANDLER_ID, handler.optString(Keys.OBJECT_ID));
+        order.put(Order.ORDER_STATUS, Order.ORDER_STATUS_C_CONFIRMED);
+
+        orderMgmtService.updateOrder(order);
+
+        context.renderTrueResult().renderMsg(langPropsService.get("confirmSuccLabel"));
+    }
+
+    /**
+     * Refunds an order.
+     *
+     * @param context the specified context
+     * @param request the specified request
+     * @param response the specified response
+     * @param orderId the specified order id
+     * @throws Exception exception
+     */
+    @RequestProcessing(value = "/admin/order/{orderId}/refund", method = HTTPRequestMethod.POST)
+    @Before(adviceClass = {StopwatchStartAdvice.class, AdminCheck.class, CSRFCheck.class})
+    @After(adviceClass = StopwatchEndAdvice.class)
+    public void refundOrder(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response,
+            final String orderId) throws Exception {
+        context.renderJSON().renderFalseResult();
+
+        final JSONObject order = orderQueryService.getOrder(orderId);
+        if (null == order) {
+            context.renderMsg("Order not found");
+
+            return;
+        }
+
+        if (Order.ORDER_STATUS_C_INIT != order.optInt(Order.ORDER_STATUS)) {
+            context.renderMsg("Order has been handled");
+
+            return;
+        }
+
+        final JSONObject handler = (JSONObject) request.getAttribute(User.USER);
+
+        order.put(Order.ORDER_CONFIRM_TIME, System.currentTimeMillis());
+        order.put(Order.ORDER_HANDLER_ID, handler.optString(Keys.OBJECT_ID));
+        order.put(Order.ORDER_STATUS, Order.ORDER_STATUS_C_REFUNDED);
+
+        orderMgmtService.updateOrder(order);
+
+        final String buyerId = order.optString(Order.ORDER_BUYER_ID);
+        final int point = order.optInt(Order.ORDER_POINT);
+
+        pointtransferMgmtService.transfer("sys", buyerId, Pointtransfer.TRANSFER_TYPE_C_REFUND_PRODUCT, point, orderId);
+
+        context.renderTrueResult().renderMsg(langPropsService.get("refundSuccLabel"));
     }
 
     /**

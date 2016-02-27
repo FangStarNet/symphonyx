@@ -404,6 +404,13 @@ public class PointtransferQueryService {
                         desTemplate = desTemplate.replace("{article}", journalLink);
 
                         break;
+                    case Pointtransfer.TRANSFER_TYPE_C_REFUND_PRODUCT:
+                        final JSONObject order101 = orderRepository.get(dataId);
+
+                        desTemplate = desTemplate.replace("{product}", order101.optString(Order.ORDER_PRODUCT_NAME))
+                                .replace("{point}", String.valueOf(order101.optInt(Order.ORDER_POINT)));
+
+                        break;
                     default:
                         LOGGER.warn("Invalid point type [" + type + "]");
                 }

@@ -239,6 +239,11 @@ public final class Pointtransfer {
     public static final int TRANSFER_TYPE_C_BUY_PRODUCT = 19;
 
     /**
+     * Transfer type - Refund Product.
+     */
+    public static final int TRANSFER_TYPE_C_REFUND_PRODUCT = 20;
+
+    /**
      * Private constructor.
      */
     private Pointtransfer() {

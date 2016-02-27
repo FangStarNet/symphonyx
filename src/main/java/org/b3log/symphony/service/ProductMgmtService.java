@@ -146,7 +146,7 @@ public class ProductMgmtService {
             order.put(Order.ORDER_POINT, point);
             order.put(Order.ORDER_PRICE, price);
             order.put(Order.ORDER_PRODUCT_NAME, product.optString(Product.PRODUCT_NAME));
-            order.put(Order.ORDER_USER_ID, userId);
+            order.put(Order.ORDER_BUYER_ID, userId);
 
             final String orderId = orderMgmtService.addOrder(order);
             final boolean succ = null != pointtransferMgmtService.transfer(userId, "sys",
