@@ -162,8 +162,8 @@ public class CommentNotifier extends AbstractEventListener<JSONObject> {
 
             // Timeline
             if (!isDiscussion) {
-                String articleTitle = StringUtils.substring(Jsoup.parse(
-                        originalArticle.optString(Article.ARTICLE_TITLE)).text(), 0, 28);
+                String articleTitle = Jsoup.parse(
+                        originalArticle.optString(Article.ARTICLE_TITLE)).text();
                 articleTitle = Emotions.convert(articleTitle);
                 final String articlePermalink = Latkes.getServePath() + originalArticle.optString(Article.ARTICLE_PERMALINK);
 
@@ -174,7 +174,7 @@ public class CommentNotifier extends AbstractEventListener<JSONObject> {
                         + "/member/" + commenterName + "'>" + commenterName + "</a>")
                         .replace("{article}", "<a target='_blank' rel='nofollow' href='" + articlePermalink
                                 + "'>" + articleTitle + "</a>")
-                        .replace("{comment}", StringUtils.substring(Jsoup.parse(cc).text(), 0, 28));
+                        .replace("{comment}", Jsoup.parse(cc).text());
                 timeline.put(Common.CONTENT, content);
 
                 timelineMgmtService.addTimeline(timeline);
