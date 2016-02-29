@@ -528,6 +528,12 @@ a[class*=" icon-"]:hover {
     color: #4183c4;
 }
 
+.icon-points:before {
+    content: "\e900";
+}
+.icon-goods:before {
+    content: "\e904";
+}
 .icon-bold:before {
     content: "\e000";
 }
@@ -587,9 +593,6 @@ a[class*=" icon-"]:hover {
 }
 .icon-thumbs-up:before {
     content: "\e902";
-}
-.icon-locked:before {
-    content: "\e61e";
 }
 .icon-video:before {
     content: "\f057";
@@ -686,6 +689,9 @@ a[class*=" icon-"]:hover {
 }
 .icon-compass:before {
     content: "\e61c";
+}
+.icon-locked:before {
+    content: "\e61e";
 }
 
 .icon-search {

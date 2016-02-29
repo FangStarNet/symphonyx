@@ -7,7 +7,7 @@
         <button type="submit" class="green">${searchLabel}</button>
         <button type="button" class="btn red" onclick="searchIndex();">${searchIndexLabel}</button>
     </form>
-
+    <br/>
     <ul>
         <#list articles as item>
         <li>

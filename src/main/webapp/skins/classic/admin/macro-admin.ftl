@@ -47,7 +47,7 @@
                         <li<#if type == "articles"> class="current"</#if>><a href="/admin/articles">${articleAdminLabel}</a></li>
                         <li<#if type == "comments"> class="current"</#if>><a href="/admin/comments">${commentAdminLabel}</a></li>
                         <li<#if type == "tags"> class="current"</#if>><a href="/admin/tags">${tagAdminLabel}</a></li>
-                        <li<#if type == "products"> class="current"</#if>><a href="/admin/products">${productAdminLabel}</a></li>
+                        <li<#if type == "products" || type == "addProduct"> class="current"</#if>><a href="/admin/products">${productAdminLabel}</a></li>
                         <li<#if type == "orders"> class="current"</#if>><a href="/admin/orders">${orderAdminLabel}</a></li>
                         <li<#if type == "misc"> class="current"</#if>><a href="/admin/misc">${miscAdminLabel}</a></li>
                     </ul>
