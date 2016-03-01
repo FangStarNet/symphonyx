@@ -259,6 +259,16 @@
 .admin li > div.first {
     margin-bottom: 6px;
 }
+
+#goodsImg {
+    font-size: 80px;
+}
+
+#goodsImgUp {
+    position: absolute;
+    top: 395px;
+    right: 20px;
+}
 /* end admin */
 
 /* start points */
@@ -310,12 +320,12 @@
 /* end points */
 
 /* start settings */
-#avatarUpload input {
+.upload-file input {
     width: 1px;
     opacity: 0.001;
 }
 
-#avatarUpload {
+.upload-file {
     overflow: hidden;
 }
 /* end settings */

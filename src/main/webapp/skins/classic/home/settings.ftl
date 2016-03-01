@@ -34,7 +34,7 @@
 
         <label>${avatarLabel}</label><br/>
         <div class="fn-clear"></div>
-        <form class="fn-right" id="avatarUpload" method="POST" enctype="multipart/form-data">
+        <form class="fn-right upload-file" id="avatarUpload" method="POST" enctype="multipart/form-data">
             <label class="btn">
                 ${uploadLabel}<input type="file" name="file">
             </label>
@@ -112,78 +112,20 @@
 </@home>
 <script type="text/javascript" src="${staticServePath}/js/lib/jquery/file-upload-9.10.1/jquery.fileupload.min.js"></script>
 <script>
-
-            if ("" === '${qiniuUploadToken}') { // 说明没有使用七牛，而是使用本地
-                $('#avatarUpload').fileupload({
-                    acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-                    maxFileSize: 1024 * 1024, // 1M
-                    multipart: true,
-                    pasteZone: null,
-                    dropZone: null,
-                    url: "/upload",
-                    formData: function (form) {
-                        var data = form.serializeArray();
-                        return data;
-                    },
-                    submit: function (e, data) {
-                    },
-                    done: function (e, data) {
-                        // console.log(data.result)
-                        var qiniuKey = data.result.key;
-                        if (!qiniuKey) {
-                            alert("Upload error");
-                            return;
-                        }
-
-                        $('#avatarURL').css("background-image", 'url(' + qiniuKey + ')').data('imageurl', qiniuKey);
-                        $('#avatarURLMid').css("background-image", 'url(' + qiniuKey + ')').data('imageurl', qiniuKey);
-                        $('#avatarURLNor').css("background-image", 'url(' + qiniuKey + ')').data('imageurl', qiniuKey);
-                    },
-                    fail: function (e, data) {
-                        alert("Upload error: " + data.errorThrown);
-                    }
-                }).on('fileuploadprocessalways', function (e, data) {
-                    var currentFile = data.files[data.index];
-                    if (data.files.error && currentFile.error) {
-                        alert(currentFile.error);
-                    }
-                });
-            } else {
-                $('#avatarUpload').fileupload({
-                    acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-                    maxFileSize: 1024 * 1024, // 1M
-                    multipart: true,
-                    pasteZone: null,
-                    dropZone: null,
-                    url: "http://upload.qiniu.com/",
-                    formData: function (form) {
-                        var data = form.serializeArray();
-                        data.push({name: 'token', value: '${qiniuUploadToken}'});
-                        data.push({name: 'key', value: 'avatar/${currentUser.oId}'});
-                        return data;
-                    },
-                    submit: function (e, data) {
-                    },
-                    done: function (e, data) {
-                        var qiniuKey = data.result.key;
-                        if (!qiniuKey) {
-                            alert("Upload error");
-                            return;
-                        }
-
-                        var t = new Date().getTime();
-                        $('#avatarURL').css("background-image", 'url(${qiniuDomain}/' + qiniuKey + '?' + t + ')').data('imageurl', '${qiniuDomain}/' + qiniuKey);
-                        $('#avatarURLMid').css("background-image", 'url(${qiniuDomain}/' + qiniuKey + '?' + t + ')').data('imageurl', '${qiniuDomain}/' + qiniuKey);
-                        $('#avatarURLNor').css("background-image", 'url(${qiniuDomain}/' + qiniuKey + '?' + t + ')').data('imageurl', '${qiniuDomain}/' + qiniuKey);
-                    },
-                    fail: function (e, data) {
-                        alert("Upload error: " + data.errorThrown);
-                    }
-                }).on('fileuploadprocessalways', function (e, data) {
-                    var currentFile = data.files[data.index];
-                    if (data.files.error && currentFile.error) {
-                        alert(currentFile.error);
-                    }
-                });
-            }
+    Util.initUpload({
+        id: 'avatarUpload',
+        qiniuUploadToken: '${qiniuUploadToken}',
+        userId: '${currentUser.oId}'
+    }, function (data) {
+        var qiniuKey = data.result.key;
+        $('#avatarURL').css("background-image", 'url(' + qiniuKey + ')').data('imageurl', qiniuKey);
+        $('#avatarURLMid').css("background-image", 'url(' + qiniuKey + ')').data('imageurl', qiniuKey);
+        $('#avatarURLNor').css("background-image", 'url(' + qiniuKey + ')').data('imageurl', qiniuKey);
+    }, function (data) {
+        var qiniuKey = data.result.key,
+                t = new Date().getTime();
+        $('#avatarURL').css("background-image", 'url(${qiniuDomain}/' + qiniuKey + '?' + t + ')').data('imageurl', '${qiniuDomain}/' + qiniuKey);
+        $('#avatarURLMid').css("background-image", 'url(${qiniuDomain}/' + qiniuKey + '?' + t + ')').data('imageurl', '${qiniuDomain}/' + qiniuKey);
+        $('#avatarURLNor').css("background-image", 'url(${qiniuDomain}/' + qiniuKey + '?' + t + ')').data('imageurl', '${qiniuDomain}/' + qiniuKey);
+    });
 </script>

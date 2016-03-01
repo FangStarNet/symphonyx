@@ -3,7 +3,7 @@
 <@admin "products">
 <div class="list content admin">
     <button type="button" class="btn red" onclick="window.location = '/admin/add-product'">${addProductLabel}</button>
-    <br/>
+    <br/><br/>
     <ul>
         <#list products as item>
         <li>
