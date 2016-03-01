@@ -15,11 +15,26 @@
                     <h2>${mallLabel}</h2>
                     <div class="list">
                         <ul id="ul">
-                            <#list products as product>
-                            <li>
-                                ${product.productName} ${yuanLabel}${product.productPrice} - ${product.productPoint} ${pointLabel}
-                                <button class="green small" onclick="Mall.buyProduct('${product.oId}', '${csrfToken}')">${buyLabel}
-                                </button>
+                            <#list products as item>
+                            <li class="fn-flex comment-list-item">
+                                <div class="avatar icon-goods" style="<#if item.productImgURL?? && item.productImgURL != ''>font-size: 0;background-image:url(${item.productImgURL})</#if>"></div>
+                                <div class="fn-flex-1">
+                                    <div class="fn-clear">
+                                        <h2 class="fn-left">
+                                            <a href="/member/${item.productName}">${item.productName}</a>
+                                            <span class="tag">${item.productCategory}</span>
+                                        </h2>
+                                        <a href="/admin/product/${item.oId}" class="fn-right icon-edit" title="${editLabel}"></a> 
+                                    </div>
+                                    <div>
+                                        ￥${item.productPrice}.00 
+                                        <#if item.productStatus == 0>
+                                        <span class="ft-gray">${onShelfedLabel}</span>
+                                        <#elseif item.productStatus == 1>
+                                        <span class="ft-red">${offShelfedLabel}</span>
+                                        </#if>
+                                    </div>
+                                </div>
                             </li>
                             </#list>
                         </ul>
