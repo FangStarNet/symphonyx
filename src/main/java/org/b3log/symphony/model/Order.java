@@ -84,17 +84,17 @@ public final class Order {
      * Key of buyer real name.
      */
     public static final String ORDER_T_BUYER_REAL_NAME = "orderBuyerRealName";
-    
+
     /**
      * Key of handler name.
      */
     public static final String ORDER_T_HANDLER_NAME = "orderHandlerName";
-    
+
     /**
      * Key of handler real name.
      */
     public static final String ORDER_T_HANDLER_REAL_NAME = "orderHandlerRealName";
-    
+
     //// Status constants
     /**
      * Order status - init.

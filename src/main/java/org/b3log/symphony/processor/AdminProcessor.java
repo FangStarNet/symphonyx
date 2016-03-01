@@ -1299,7 +1299,7 @@ public class AdminProcessor {
         final String price = request.getParameter(Product.PRODUCT_PRICE);
         String imgURL = request.getParameter(Product.PRODUCT_IMG_URL);
         final String status = request.getParameter(Product.PRODUCT_STATUS);
-        
+
         if (StringUtils.isBlank(imgURL)) {
             imgURL = "";
         }
@@ -1398,7 +1398,7 @@ public class AdminProcessor {
     @RequestProcessing(value = "/admin/orders", method = HTTPRequestMethod.GET)
     @Before(adviceClass = {StopwatchStartAdvice.class, AdminCheck.class})
     @After(adviceClass = {CSRFToken.class, StopwatchEndAdvice.class})
-    public void showOrderss(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response)
+    public void showOrders(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response)
             throws Exception {
         final AbstractFreeMarkerRenderer renderer = new SkinRenderer();
         context.setRenderer(renderer);

@@ -43,7 +43,7 @@ import org.json.JSONObject;
  * Order query service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Feb 27, 2016
+ * @version 1.0.0.1, Mar 1, 2016
  * @since 1.4.0
  */
 @Service
@@ -88,6 +88,7 @@ public class OrderQueryService {
      *         "oId": "",
      *         "orderUserName": "",
      *         "orderRealUserName": "",
+     *
      *         ....
      *      }, ....]
      * }
@@ -140,7 +141,7 @@ public class OrderQueryService {
 
                 order.put(Order.ORDER_T_BUYER_NAME, userName);
                 order.put(Order.ORDER_T_BUYER_REAL_NAME, userRealName);
-                
+
                 order.put(Order.ORDER_T_HANDLER_NAME, "");
                 order.put(Order.ORDER_T_HANDLER_REAL_NAME, "");
 
@@ -155,10 +156,10 @@ public class OrderQueryService {
             } catch (final RepositoryException e) {
                 LOGGER.log(Level.ERROR, "Query user fialed", e);
             }
-            
+
             final long createTime = order.optLong(Order.ORDER_CREATE_TIME);
             order.put(Order.ORDER_CREATE_TIME, new Date(createTime));
-            
+
             final long confirmTime = order.optLong(Order.ORDER_CONFIRM_TIME);
             order.put(Order.ORDER_CONFIRM_TIME, new Date(confirmTime));
         }
