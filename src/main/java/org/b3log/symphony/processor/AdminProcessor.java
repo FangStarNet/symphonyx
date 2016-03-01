@@ -1296,18 +1296,23 @@ public class AdminProcessor {
         final String description = request.getParameter(Product.PRODUCT_DESCRIPTION);
         final String name = request.getParameter(Product.PRODUCT_NAME);
         final String price = request.getParameter(Product.PRODUCT_PRICE);
+        String imgURL = request.getParameter(Product.PRODUCT_IMG_URL);
         final String status = request.getParameter(Product.PRODUCT_STATUS);
+        
+        if (StringUtils.isBlank(imgURL)) {
+            imgURL = "";
+        }
 
-        String productId;
         try {
             final JSONObject product = new JSONObject();
             product.put(Product.PRODUCT_CATEGORY, category);
             product.put(Product.PRODUCT_DESCRIPTION, description);
             product.put(Product.PRODUCT_NAME, name);
             product.put(Product.PRODUCT_PRICE, price);
+            product.put(Product.PRODUCT_IMG_URL, imgURL);
             product.put(Product.PRODUCT_STATUS, status);
 
-            productId = productMgmtService.addProduct(product);
+            productMgmtService.addProduct(product);
         } catch (final Exception e) {
             final AbstractFreeMarkerRenderer renderer = new SkinRenderer();
             context.setRenderer(renderer);
@@ -1320,7 +1325,7 @@ public class AdminProcessor {
             return;
         }
 
-        response.sendRedirect(Latkes.getServePath() + "/admin/product/" + productId);
+        response.sendRedirect(Latkes.getServePath() + "/admin/products");
     }
 
     /**
@@ -1362,13 +1367,7 @@ public class AdminProcessor {
     @After(adviceClass = StopwatchEndAdvice.class)
     public void updateProduct(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response,
             final String productId) throws Exception {
-        final AbstractFreeMarkerRenderer renderer = new SkinRenderer();
-        context.setRenderer(renderer);
-        renderer.setTemplateName("admin/product.ftl");
-        final Map<String, Object> dataModel = renderer.getDataModel();
-
-        JSONObject product = productQueryService.getProduct(productId);
-        dataModel.put(Product.PRODUCT, product);
+        final JSONObject product = productQueryService.getProduct(productId);
 
         final Enumeration<String> parameterNames = request.getParameterNames();
         while (parameterNames.hasMoreElements()) {
@@ -1384,7 +1383,7 @@ public class AdminProcessor {
 
         productMgmtService.updateProduct(product);
 
-        filler.fillHeaderAndFooter(request, response, dataModel);
+        response.sendRedirect(Latkes.getServePath() + "/admin/products");
     }
 
     /**

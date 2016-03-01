@@ -80,6 +80,11 @@
                     "description": "in ￥"
                 },
                 {
+                    "name": "productImgURL",
+                    "type": "String",
+                    "length": 255
+                },
+                {
                     "name": "productStatus",
                     "type": "int",
                     "description": "0: onshelf, 1: offshelf"

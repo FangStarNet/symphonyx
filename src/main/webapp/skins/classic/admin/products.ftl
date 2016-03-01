@@ -2,11 +2,7 @@
 <#include "../macro-pagination.ftl">
 <@admin "products">
 <div class="list content admin">
-    <form method="GET" action="products" class="form">
-        <input name="name" type="text" placeholder="${productNameLabel}"/>
-        <button type="submit" class="green">${searchLabel}</button> &nbsp;
-        <button type="button" class="btn red" onclick="window.location = '/admin/add-product'">${addProductLabel}</button>
-    </form>
+    <button type="button" class="btn red" onclick="window.location = '/admin/add-product'">${addProductLabel}</button>
     <br/>
     <ul>
         <#list products as item>
