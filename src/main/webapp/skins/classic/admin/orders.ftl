@@ -5,17 +5,15 @@
     <ul>
         <#list orders as item>
         <li class="fn-flex comment-list-item">
-            <div class="avatar icon-goods" style="<#if item.img?? && item.img != ''>font-size: 0;background-image:url(${item.img})</#if>"></div>
             <div class="fn-flex-1">
                 <div class="fn-clear">
                     <h2 class="fn-left">
                         <a href="/member/${item.orderProductName}">${item.orderProductName}</a>
-                        <span class="tag">${item.productCategory}</span>
                     </h2>
                     <a href="/admin/product/${item.oId}" class="fn-right icon-edit" title="${editLabel}"></a> 
                 </div>
                 <div>
-                    ${yuanLabel}${item.orderPrice}.00  ==  ${item.orderPoint} ${pointLabel}
+                    ${yuanLabel}${item.orderPrice}.00
                     ${buyerLabel}
 
                     <div class="fn-clear">

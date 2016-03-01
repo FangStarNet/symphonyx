@@ -26,10 +26,10 @@
                                         </h2>
                                     </div>
                                     <div>
-                                        ${yuanLabel}${item.productPrice}.00 
+                                        ${item.productDescription}
                                     </div>
                                 </div>
-                                <button class="green" onclick="Mall.buyProduct('${item.oId}', '${csrfToken}', '${confirmConsumeLabel}', this)">${buyLabel}</button>
+                                <button class="green" onclick="Mall.buyProduct('${item.oId}', '${csrfToken}', '${confirmConsumeLabel}', this)">${item.productPoint} ${pointLabel} ${buyLabel}</button>
                             </li>
                             </#list>
                         </ul>
