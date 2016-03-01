@@ -19,7 +19,7 @@ package org.b3log.symphony.model;
  * This class defines product model relevant keys.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Feb 29, 2016
+ * @version 1.0.0.2, Mar 1, 2016
  * @since 1.4.0
  */
 public final class Product {
@@ -69,4 +69,15 @@ public final class Product {
      * Key of product point.
      */
     public static final String PRODUCT_T_POINT = "productPoint";
+
+    //// Status constants
+    /**
+     * Product status - on shelf.
+     */
+    public static final int PRODUCT_STATUS_C_ONSHELF = 0;
+
+    /**
+     * Product status - off shelf.
+     */
+    public static final int PRODUCT_STATUS_C_OFFSHELF = 1;
 }
