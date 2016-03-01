@@ -172,7 +172,7 @@ public class MallProcessor {
         fields.put(Product.PRODUCT_IMG_URL, String.class);
         fields.put(Product.PRODUCT_STATUS, Integer.class);
 
-        final JSONObject result = productQueryService.getProducts(requestJSONObject, fields);
+        final JSONObject result = productQueryService.getOnShelfProducts(requestJSONObject, fields);
         final List<JSONObject> products = CollectionUtils.jsonArrayToList(result.optJSONArray(Product.PRODUCTS));
 
         for (final JSONObject product : products) {

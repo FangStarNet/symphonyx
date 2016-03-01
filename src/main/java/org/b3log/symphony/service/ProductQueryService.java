@@ -131,6 +131,77 @@ public class ProductQueryService {
     }
 
     /**
+     * Gets on shelf products by the specified request json object.
+     *
+     * @param requestJSONObject the specified request json object, for example,      <pre>
+     * {
+     *     "productName": "", // optional
+     *     "paginationCurrentPageNum": 1,
+     *     "paginationPageSize": 20,
+     *     "paginationWindowSize": 10
+     * }, see {@link Pagination} for more details
+     * </pre>
+     *
+     * @param productFields the specified product fields to return
+     * @return for example,      <pre>
+     * {
+     *     "pagination": {
+     *         "paginationPageCount": 100,
+     *         "paginationPageNums": [1, 2, 3, 4, 5]
+     *     },
+     *     "products": [{
+     *         "oId": "",
+     *         "productName": "",
+     *         "productCategory": "",
+     *         ....
+     *      }, ....]
+     * }
+     * </pre>
+     *
+     * @throws ServiceException service exception
+     * @see Pagination
+     */
+    public JSONObject getOnShelfProducts(final JSONObject requestJSONObject, final Map<String, Class<?>> productFields) throws ServiceException {
+        final JSONObject ret = new JSONObject();
+
+        final int currentPageNum = requestJSONObject.optInt(Pagination.PAGINATION_CURRENT_PAGE_NUM);
+        final int pageSize = requestJSONObject.optInt(Pagination.PAGINATION_PAGE_SIZE);
+        final int windowSize = requestJSONObject.optInt(Pagination.PAGINATION_WINDOW_SIZE);
+        final Query query = new Query().setCurrentPageNum(currentPageNum).setPageSize(pageSize).
+                addSort(Keys.OBJECT_ID, SortDirection.DESCENDING);
+        for (final Map.Entry<String, Class<?>> field : productFields.entrySet()) {
+            query.addProjection(field.getKey(), field.getValue());
+        }
+
+        query.setFilter(new PropertyFilter(Product.PRODUCT_NAME, FilterOperator.EQUAL, Product.PRODUCT_STATUS_C_ONSHELF));
+
+        JSONObject result = null;
+
+        try {
+            result = productRepository.get(query);
+        } catch (final RepositoryException e) {
+            LOGGER.log(Level.ERROR, "Gets product failed", e);
+
+            throw new ServiceException(e);
+        }
+
+        final int pageCount = result.optJSONObject(Pagination.PAGINATION).optInt(Pagination.PAGINATION_PAGE_COUNT);
+
+        final JSONObject pagination = new JSONObject();
+        ret.put(Pagination.PAGINATION, pagination);
+        final List<Integer> pageNums = Paginator.paginate(currentPageNum, pageSize, pageCount, windowSize);
+        pagination.put(Pagination.PAGINATION_PAGE_COUNT, pageCount);
+        pagination.put(Pagination.PAGINATION_PAGE_NUMS, pageNums);
+
+        final JSONArray data = result.optJSONArray(Keys.RESULTS);
+        final List<JSONObject> products = CollectionUtils.<JSONObject>jsonArrayToList(data);
+
+        ret.put(Product.PRODUCTS, products);
+
+        return ret;
+    }
+
+    /**
      * Gets a product by the specified id.
      *
      * @param productId the specified id
