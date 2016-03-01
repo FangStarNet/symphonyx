@@ -422,6 +422,12 @@
 }
 /* end article list */
 
+/* start mall */
+.mall button {
+    margin-top: 8px;
+}
+/* end mall */
+
 /* start register */
 .register .intro {
     border-left: 1px dashed #C0C0C0;

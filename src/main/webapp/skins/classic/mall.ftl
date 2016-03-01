@@ -11,8 +11,8 @@
         <#include "header.ftl">
         <div class="main">
             <div class="wrapper">
-                <div class="content">
-                    <h2>${mallLabel}</h2>
+                <div class="content mall">
+                    <h2>${mallLabel}</h2><br/>
                     <div class="list">
                         <ul id="ul">
                             <#list products as item>
@@ -24,17 +24,12 @@
                                             <a href="/member/${item.productName}">${item.productName}</a>
                                             <span class="tag">${item.productCategory}</span>
                                         </h2>
-                                        <a href="/admin/product/${item.oId}" class="fn-right icon-edit" title="${editLabel}"></a> 
                                     </div>
                                     <div>
-                                        ￥${item.productPrice}.00 
-                                        <#if item.productStatus == 0>
-                                        <span class="ft-gray">${onShelfedLabel}</span>
-                                        <#elseif item.productStatus == 1>
-                                        <span class="ft-red">${offShelfedLabel}</span>
-                                        </#if>
+                                        ${yuanLabel}${item.productPrice}.00 
                                     </div>
                                 </div>
+                                <button class="green" onclick="Mall.buyProduct('${item.oId}', '${csrfToken}', '${confirmConsumeLabel}', this)">${buyLabel}</button>
                             </li>
                             </#list>
                         </ul>
