@@ -17,7 +17,7 @@
                     <a href="/admin/product/${item.oId}" class="fn-right icon-edit" title="${editLabel}"></a> 
                 </div>
                 <div>
-                    ￥${item.productPrice}.00 
+                    ${yuanLabel}${item.productPrice}.00 
                     <#if item.productStatus == 0>
                     <span class="ft-gray">${onShelfedLabel}</span>
                     <#elseif item.productStatus == 1>

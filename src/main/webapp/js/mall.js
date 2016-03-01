@@ -31,33 +31,30 @@ var Mall = {
      * @description Buy product
      * @argument {String} productId product id
      * @argument {String} csrfToken CSRF token
+     * @argument {String} tip confirm tip
      */
-    buyProduct: function (productId, csrfToken) {
-        var requestJSONObject = {
-            "productId": productId
-        };
+    buyProduct: function (productId, csrfToken, tip, it) {
+        if (confirm(tip)) {
+            $(it).prop('disabled', true);
+            var requestJSONObject = {
+                "productId": productId
+            };
 
-        $.ajax({
-            url: "/mall/product/buy",
-            type: "POST",
-            headers: {"csrfToken": csrfToken},
-            cache: false,
-            data: JSON.stringify(requestJSONObject),
-            beforeSend: function () {
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                alert(errorThrown);
-            },
-            success: function (result, textStatus) {
-                alert(result.msg);
-            }
-        });
-    },
-    /**
-     * @description Init
-     */
-    init: function () {
+            $.ajax({
+                url: "/mall/product/buy",
+                type: "POST",
+                headers: {"csrfToken": csrfToken},
+                cache: false,
+                data: JSON.stringify(requestJSONObject),
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert(errorThrown);
+                    $(it).prop('disabled', false);
+                },
+                success: function (result, textStatus) {
+                    alert(result.msg);
+                    $(it).prop('disabled', false);
+                }
+            });
+        }
     }
 };
-
-Mall.init();
