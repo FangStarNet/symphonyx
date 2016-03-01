@@ -4,43 +4,41 @@
 <div class="list content admin">
     <ul>
         <#list orders as item>
-        <li>
-            <div class="fn-clear first">
-                ${item.orderProductName}
-            </div>
+        <li class="fn-flex comment-list-item">
+            <div class="avatar icon-goods" style="<#if item.img?? && item.img != ''>font-size: 0;background-image:url(${item.img})</#if>"></div>
+            <div class="fn-flex-1">
+                <div class="fn-clear">
+                    <h2 class="fn-left">
+                        <a href="/member/${item.orderProductName}">${item.orderProductName}</a>
+                        <span class="tag">${item.productCategory}</span>
+                    </h2>
+                    <a href="/admin/product/${item.oId}" class="fn-right icon-edit" title="${editLabel}"></a> 
+                </div>
+                <div>
+                    ${yuanLabel}${item.orderPrice}.00  ==  ${item.orderPoint} ${pointLabel}
+                    ${buyerLabel}
 
-            <div class="fn-clear">
-                ${yuanLabel}${item.orderPrice}
-            </div>
+                    <div class="fn-clear">
+                        ${realNameLabel}${item.orderBuyerRealName}
+                    </div>
 
-            <div class="fn-clear">
-                ${item.orderPoint} ${pointLabel}
-            </div>
+                    <div class="fn-clear">
+                        ${orderTimeLabel}${item.orderCreateTime?string('yyyy-MM-dd HH:mm')}
+                    </div>
+                    ${item.orderStatus}
+                    <#if "" != item.orderHandlerName>
+                    <div class="fn-clear">
+                        ${handlerLabel}
 
-            ${buyerLabel}
-            <div class="fn-clear">
-                ${userNameLabel}${item.orderBuyerName}
+                        ${item.orderHandlerName}(${item.orderHandlerRealName})
+                        ${handleTimeLabel}${item.orderConfirmTime?string('yyyy-MM-dd HH:mm')}
+                    </div>
+                    <#else>
+                    <button class="small green" onclick="confirm('${item.oId}')">${confirmConsumeLabel}</button>
+                    <button class="small red" onclick="refund('${item.oId}')">${confirmRefundLabel}</button>
+                    </#if>
+                </div>
             </div>
-
-            <div class="fn-clear">
-                ${realNameLabel}${item.orderBuyerRealName}
-            </div>
-
-            <div class="fn-clear">
-                ${orderTimeLabel}${item.orderCreateTime?string('yyyy-MM-dd HH:mm')}
-            </div>
-
-            <#if "" != item.orderHandlerName>
-            <div class="fn-clear">
-                ${handlerLabel}
-
-                ${item.orderHandlerName}(${item.orderHandlerRealName})
-                ${handleTimeLabel}${item.orderConfirmTime?string('yyyy-MM-dd HH:mm')}
-            </div>
-            <#else>
-            <button class="small green" onclick="confirm('${item.oId}')">${confirmConsumeLabel}</button>
-            <button class="small red" onclick="refund('${item.oId}')">${confirmRefundLabel}</button>
-            </#if>
         </li>
         </#list>
     </ul>
