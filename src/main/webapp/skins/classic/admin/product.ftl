@@ -27,8 +27,8 @@
 
                 <label>${goodsImgLabel}</label>
                 <div class="fn-clear"></div>
-                <div class="avatar-mid icon-goods" id="goodsImg" style="<#if productImgURL?? && productImgURL != ''>font-size: 0;background-image:url(${productImgURL})</#if>"></div>
-                <input name="productImgURL" type="hidden" id="goodsImgInput" value="<#if productImgURL??>${productImgURL}</#if>"/>
+                <div class="avatar-mid icon-goods" id="goodsImg" style="<#if product.productImgURL?? && product.productImgURL != ''>font-size: 0;background-image:url(${product.productImgURL})</#if>"></div>
+                <input name="productImgURL" type="hidden" id="goodsImgInput" value="<#if product.productImgURL??>${product.productImgURL}</#if>"/>
                 <br/><br/>
                 <button type="submit" class="green fn-right">${submitLabel}</button>
             </form>
