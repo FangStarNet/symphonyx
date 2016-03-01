@@ -28,7 +28,6 @@ import org.b3log.symphony.model.Order;
 import org.b3log.symphony.model.Pointtransfer;
 import org.b3log.symphony.model.Product;
 import org.b3log.symphony.model.UserExt;
-import org.b3log.symphony.repository.OrderRepository;
 import org.b3log.symphony.repository.ProductRepository;
 import org.b3log.symphony.repository.UserRepository;
 import org.b3log.symphony.util.Results;
