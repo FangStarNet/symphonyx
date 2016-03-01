@@ -1241,6 +1241,7 @@ public class AdminProcessor {
         fields.put(Product.PRODUCT_DESCRIPTION, String.class);
         fields.put(Product.PRODUCT_NAME, String.class);
         fields.put(Product.PRODUCT_PRICE, Double.class);
+        fields.put(Product.PRODUCT_IMG_URL, String.class);
         fields.put(Product.PRODUCT_STATUS, Integer.class);
 
         final JSONObject result = productQueryService.getProducts(requestJSONObject, fields);
