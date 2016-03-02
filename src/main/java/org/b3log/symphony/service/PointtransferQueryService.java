@@ -49,6 +49,7 @@ import org.b3log.symphony.repository.OrderRepository;
 import org.b3log.symphony.repository.PointtransferRepository;
 import org.b3log.symphony.repository.RewardRepository;
 import org.b3log.symphony.repository.UserRepository;
+import org.b3log.symphony.util.Emotions;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -56,7 +57,7 @@ import org.json.JSONObject;
  * Pointtransfer query service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.11.1.1, Feb 26, 2016
+ * @version 1.11.2.1, Mar 2, 2016
  * @since 1.3.0
  */
 @Service
@@ -414,6 +415,8 @@ public class PointtransferQueryService {
                     default:
                         LOGGER.warn("Invalid point type [" + type + "]");
                 }
+                
+                desTemplate = Emotions.convert(desTemplate);
 
                 record.put(Common.DESCRIPTION, desTemplate);
             }
