@@ -19,7 +19,7 @@ package org.b3log.symphony.model;
  * This class defines ext of user model relevant keys.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 3.15.1.9, Jan 28, 2016
+ * @version 3.16.1.9, Mar 2, 2016
  * @since 0.2.0
  * @see org.b3log.latke.model.User
  */
@@ -234,7 +234,13 @@ public final class UserExt {
      * User avatar type - Upload.
      */
     public static final int USER_AVATAR_TYPE_C_UPLOAD = 2;
-
+    
+    //// User role constants
+    /**
+     * Mall admin role.
+     */
+    public static final String MALL_ADMIN_ROLE = "mallAdminRole";
+    
     //// App role constants
     /**
      * User app role - Hacker.

@@ -30,6 +30,9 @@
             <#if "adminRole" == userRole>
             <a href="/admin" title="${adminLabel}" class="icon-userrole"></a>
             </#if>
+            <#if "mallAdminRole" == userRole>
+            <a href="/admin/orders" title="${adminLabel}" class="icon-userrole"></a>
+            </#if>
             <a href="/settings" title="${settingsLabel}" class="icon-setting"></a>
             <a href="/activities" title="${activityLabel}" class="icon-flag"></a>
             <a href="/pre-post" title="${addArticleLabel}" 

@@ -42,14 +42,19 @@
                 <#nested>
                 <div class="side">
                     <ul class="note-list">
+                        <#if "adminRole" == userRole>
                         <li<#if type == "index"> class="current"</#if>><a href="/admin">${consoleIndexLabel}</a></li>
                         <li<#if type == "users" || type == "addUser"> class="current"</#if>><a href="/admin/users">${userAdminLabel}</a></li>
                         <li<#if type == "articles"> class="current"</#if>><a href="/admin/articles">${articleAdminLabel}</a></li>
                         <li<#if type == "comments"> class="current"</#if>><a href="/admin/comments">${commentAdminLabel}</a></li>
                         <li<#if type == "tags"> class="current"</#if>><a href="/admin/tags">${tagAdminLabel}</a></li>
-                        <li<#if type == "products" || type == "addProduct"> class="current"</#if>><a href="/admin/products">${productAdminLabel}</a></li>
                         <li<#if type == "orders"> class="current"</#if>><a href="/admin/orders">${orderAdminLabel}</a></li>
+                        <li<#if type == "products" || type == "addProduct"> class="current"</#if>><a href="/admin/products">${productAdminLabel}</a></li>
                         <li<#if type == "misc"> class="current"</#if>><a href="/admin/misc">${miscAdminLabel}</a></li>
+                        <#elseif "mallAdminRole" == userRole>
+                        <li<#if type == "orders"> class="current"</#if>><a href="/admin/orders">${orderAdminLabel}</a></li>
+                        <li<#if type == "products" || type == "addProduct"> class="current"</#if>><a href="/admin/products">${productAdminLabel}</a></li>
+                        </#if>
                     </ul>
                 </div>
             </div>

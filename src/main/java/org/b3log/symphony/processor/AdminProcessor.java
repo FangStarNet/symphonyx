@@ -55,6 +55,7 @@ import org.b3log.symphony.model.UserExt;
 import org.b3log.symphony.processor.advice.AdminCheck;
 import org.b3log.symphony.processor.advice.CSRFCheck;
 import org.b3log.symphony.processor.advice.CSRFToken;
+import org.b3log.symphony.processor.advice.MallAdminCheck;
 import org.b3log.symphony.processor.advice.stopwatch.StopwatchEndAdvice;
 import org.b3log.symphony.processor.advice.stopwatch.StopwatchStartAdvice;
 import org.b3log.symphony.processor.advice.validate.UserRegister2Validation;
@@ -1207,7 +1208,7 @@ public class AdminProcessor {
      * @throws Exception exception
      */
     @RequestProcessing(value = "/admin/products", method = HTTPRequestMethod.GET)
-    @Before(adviceClass = {StopwatchStartAdvice.class, AdminCheck.class})
+    @Before(adviceClass = {StopwatchStartAdvice.class, MallAdminCheck.class})
     @After(adviceClass = StopwatchEndAdvice.class)
     public void showProducts(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response)
             throws Exception {
@@ -1268,7 +1269,7 @@ public class AdminProcessor {
      * @throws Exception exception
      */
     @RequestProcessing(value = "/admin/add-product", method = HTTPRequestMethod.GET)
-    @Before(adviceClass = {StopwatchStartAdvice.class, AdminCheck.class})
+    @Before(adviceClass = {StopwatchStartAdvice.class, MallAdminCheck.class})
     @After(adviceClass = StopwatchEndAdvice.class)
     public void showAddProduct(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response)
             throws Exception {
@@ -1289,7 +1290,7 @@ public class AdminProcessor {
      * @throws Exception exception
      */
     @RequestProcessing(value = "/admin/add-product", method = HTTPRequestMethod.POST)
-    @Before(adviceClass = {StopwatchStartAdvice.class, AdminCheck.class})
+    @Before(adviceClass = {StopwatchStartAdvice.class, MallAdminCheck.class})
     @After(adviceClass = StopwatchEndAdvice.class)
     public void addProduct(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response)
             throws Exception {
@@ -1339,7 +1340,7 @@ public class AdminProcessor {
      * @throws Exception exception
      */
     @RequestProcessing(value = "/admin/product/{productId}", method = HTTPRequestMethod.GET)
-    @Before(adviceClass = {StopwatchStartAdvice.class, AdminCheck.class})
+    @Before(adviceClass = {StopwatchStartAdvice.class, MallAdminCheck.class})
     @After(adviceClass = StopwatchEndAdvice.class)
     public void showProduct(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response,
             final String productId) throws Exception {
@@ -1364,7 +1365,7 @@ public class AdminProcessor {
      * @throws Exception exception
      */
     @RequestProcessing(value = "/admin/product/{productId}", method = HTTPRequestMethod.POST)
-    @Before(adviceClass = {StopwatchStartAdvice.class, AdminCheck.class})
+    @Before(adviceClass = {StopwatchStartAdvice.class, MallAdminCheck.class})
     @After(adviceClass = StopwatchEndAdvice.class)
     public void updateProduct(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response,
             final String productId) throws Exception {
@@ -1396,7 +1397,7 @@ public class AdminProcessor {
      * @throws Exception exception
      */
     @RequestProcessing(value = "/admin/orders", method = HTTPRequestMethod.GET)
-    @Before(adviceClass = {StopwatchStartAdvice.class, AdminCheck.class})
+    @Before(adviceClass = {StopwatchStartAdvice.class, MallAdminCheck.class})
     @After(adviceClass = {CSRFToken.class, StopwatchEndAdvice.class})
     public void showOrders(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response)
             throws Exception {
@@ -1455,7 +1456,7 @@ public class AdminProcessor {
      * @throws Exception exception
      */
     @RequestProcessing(value = "/admin/order/{orderId}/confirm", method = HTTPRequestMethod.POST)
-    @Before(adviceClass = {StopwatchStartAdvice.class, AdminCheck.class, CSRFCheck.class})
+    @Before(adviceClass = {StopwatchStartAdvice.class, MallAdminCheck.class, CSRFCheck.class})
     @After(adviceClass = StopwatchEndAdvice.class)
     public void confirmOrder(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response,
             final String orderId) throws Exception {
@@ -1495,7 +1496,7 @@ public class AdminProcessor {
      * @throws Exception exception
      */
     @RequestProcessing(value = "/admin/order/{orderId}/refund", method = HTTPRequestMethod.POST)
-    @Before(adviceClass = {StopwatchStartAdvice.class, AdminCheck.class, CSRFCheck.class})
+    @Before(adviceClass = {StopwatchStartAdvice.class, MallAdminCheck.class, CSRFCheck.class})
     @After(adviceClass = StopwatchEndAdvice.class)
     public void refundOrder(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response,
             final String orderId) throws Exception {
