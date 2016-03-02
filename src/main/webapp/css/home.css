@@ -260,6 +260,18 @@
     margin-bottom: 6px;
 }
 
+.orders-button {
+    margin-top: 15px;
+}
+
+.orders-align {
+    text-align: right;
+}
+
+.orders-align .ft-red {
+    color: #911;
+}
+
 #goodsImg {
     font-size: 80px;
 }

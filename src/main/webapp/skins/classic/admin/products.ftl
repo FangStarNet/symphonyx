@@ -11,7 +11,7 @@
             <div class="fn-flex-1">
                 <div class="fn-clear">
                     <h2 class="fn-left">
-                        <a href="/member/${item.productName}">${item.productName}</a>
+                        ${item.productName}
                         <span class="tag">${item.productCategory}</span>
                     </h2>
                     <a href="/admin/product/${item.oId}" class="fn-right icon-edit" title="${editLabel}"></a> 

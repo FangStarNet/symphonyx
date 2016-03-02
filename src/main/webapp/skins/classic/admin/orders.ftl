@@ -4,38 +4,36 @@
 <div class="list content admin">
     <ul>
         <#list orders as item>
-        <li class="fn-flex comment-list-item">
-            <div class="fn-flex-1">
-                <div class="fn-clear">
-                    <h2 class="fn-left">
-                        <a href="/member/${item.orderProductName}">${item.orderProductName}</a>
-                    </h2>
-                    <a href="/admin/product/${item.oId}" class="fn-right icon-edit" title="${editLabel}"></a> 
-                </div>
+        <li class="fn-clear">
+            <div class="fn-left">
+                <h2>
+                    ${item.orderProductName}
+                    <span class="ft-gray"> ${yuanLabel}${item.orderPrice}.00</span>
+                </h2>
                 <div>
-                    ${yuanLabel}${item.orderPrice}.00
-                    ${buyerLabel}
-
-                    <div class="fn-clear">
-                        ${realNameLabel}${item.orderBuyerRealName}
-                    </div>
-
-                    <div class="fn-clear">
-                        ${orderTimeLabel}${item.orderCreateTime?string('yyyy-MM-dd HH:mm')}
-                    </div>
-                    ${item.orderStatus}
-                    <#if "" != item.orderHandlerName>
-                    <div class="fn-clear">
-                        ${handlerLabel}
-
-                        ${item.orderHandlerName}(${item.orderHandlerRealName})
-                        ${handleTimeLabel}${item.orderConfirmTime?string('yyyy-MM-dd HH:mm')}
-                    </div>
-                    <#else>
-                    <button class="small green" onclick="confirm('${item.oId}')">${confirmConsumeLabel}</button>
-                    <button class="small red" onclick="refund('${item.oId}')">${confirmRefundLabel}</button>
-                    </#if>
+                    <span class="ft-gray">${buyerLabel}</span>
+                    <a href="/member/${item.orderBuyerName}">${item.orderBuyerRealName}</a>
+                    <br/>
+                    <span class="icon-date ft-gray" title="${orderTimeLabel}"></span>
+                    <span class="ft-gray">${item.orderCreateTime?string('yyyy-MM-dd HH:mm')}</span>
                 </div>
+            </div>
+            <div class="fn-right orders-align">
+                <#if "" != item.orderHandlerName>
+                <#if item.orderStatus == 1>
+                <span class="tag">${buySuccLabel}</span>
+                <#else>
+                <span class="tag ft-red">${buyFailedLabel}</span>
+                </#if>
+                <br/>
+                <span class="ft-gray">${handlerLabel}</span>
+                <a href="/member/${item.orderHandlerName}">${item.orderHandlerRealName}</a> <br/>
+                <span class="icon-date ft-gray" title="${handleTimeLabel}"></span>
+                <span class="ft-gray">${item.orderConfirmTime?string('yyyy-MM-dd HH:mm')}</span>
+                <#else>
+                <button class="green orders-button" onclick="confirmSumbit('${item.oId}')">${confirmConsumeLabel}</button> &nbsp;
+                <button class="red orders-button" onclick="refund('${item.oId}')">${refundProcessLabel}</button>
+                </#if>
             </div>
         </li>
         </#list>
@@ -45,31 +43,35 @@
 </@admin>
 
 <script>
-    function confirm(orderId) {
-        $.ajax({
-            url: "/admin/order/" + orderId + "/confirm",
-            type: "POST",
-            headers: {"csrfToken": "${csrfToken}"},
-            cache: false,
-            success: function (result, textStatus) {
-                alert(result.msg);
+    function confirmSumbit(orderId) {
+        if (confirm('${confirmConsumeLabel}？')) {
+            $.ajax({
+                url: "/admin/order/" + orderId + "/confirm",
+                type: "POST",
+                headers: {"csrfToken": "${csrfToken}"},
+                cache: false,
+                success: function (result, textStatus) {
+                    alert(result.msg);
 
-                location.reload();
-            }
-        });
+                    location.reload();
+                }
+            });
+        }
     }
 
     function refund(orderId) {
-        $.ajax({
-            url: "/admin/order/" + orderId + "/refund",
-            type: "POST",
-            headers: {"csrfToken": "${csrfToken}"},
-            cache: false,
-            success: function (result, textStatus) {
-                alert(result.msg);
+        if (confirm('${confirmRefundLabel}？')) {
+            $.ajax({
+                url: "/admin/order/" + orderId + "/refund",
+                type: "POST",
+                headers: {"csrfToken": "${csrfToken}"},
+                cache: false,
+                success: function (result, textStatus) {
+                    alert(result.msg);
 
-                location.reload();
-            }
-        });
+                    location.reload();
+                }
+            });
+        }
     }
 </script>

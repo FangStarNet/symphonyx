@@ -3,8 +3,7 @@
 <@admin "chargeRecords">
 <div class="list content admin">
     <button type="button" class="btn red" onclick="window.location = '/admin/point-charge'">${chargePointLabel}</button>
-    <br/>
-
+    <br/><br/>
     <ul>
         <#list rslts as item>
         <li class="fn-flex comment-list-item">
