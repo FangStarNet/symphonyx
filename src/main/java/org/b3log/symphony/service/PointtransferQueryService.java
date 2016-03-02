@@ -36,6 +36,7 @@ import org.b3log.latke.service.LangPropsService;
 import org.b3log.latke.service.ServiceException;
 import org.b3log.latke.service.annotation.Service;
 import org.b3log.latke.util.CollectionUtils;
+import org.b3log.latke.util.Paginator;
 import org.b3log.symphony.model.Article;
 import org.b3log.symphony.model.Comment;
 import org.b3log.symphony.model.Common;
@@ -50,6 +51,7 @@ import org.b3log.symphony.repository.PointtransferRepository;
 import org.b3log.symphony.repository.RewardRepository;
 import org.b3log.symphony.repository.UserRepository;
 import org.b3log.symphony.util.Emotions;
+import org.b3log.symphony.util.Symphonys;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -115,6 +117,62 @@ public class PointtransferQueryService {
      */
     @Inject
     private AvatarQueryService avatarQueryService;
+
+    /**
+     * Gets point charge records.
+     *
+     * @param currentPageNum the specified current page number
+     * @param fetchSize the specified fetch size
+     * @return for example,      <pre>
+     * {
+     *     "pagination": {
+     *         "paginationPageCount": 100,
+     *         "paginationPageNums": [1, 2, 3, 4, 5]
+     *     },
+     *     "rslts": [{
+     *         "oId": "",
+     *         ....
+     *      }, ....]
+     * }
+     * </pre>
+     *
+     * @throws ServiceException service exception
+     */
+    public JSONObject getChargeRecords(final int currentPageNum, final int fetchSize) throws ServiceException {
+        final JSONObject ret = new JSONObject();
+
+        final Query query = new Query().setCurrentPageNum(currentPageNum).setPageSize(fetchSize)
+                .setFilter(new PropertyFilter(Pointtransfer.TYPE, FilterOperator.EQUAL, Pointtransfer.TRANSFER_TYPE_C_CHARGE))
+                .addSort(Keys.OBJECT_ID, SortDirection.DESCENDING);
+
+        JSONObject result = null;
+
+        try {
+            result = pointtransferRepository.get(query);
+        } catch (final RepositoryException e) {
+            LOGGER.log(Level.ERROR, "Gets articles failed", e);
+
+            throw new ServiceException(e);
+        }
+
+        final int pageCount = result.optJSONObject(Pagination.PAGINATION).optInt(Pagination.PAGINATION_PAGE_COUNT);
+
+        final JSONObject pagination = new JSONObject();
+        ret.put(Pagination.PAGINATION, pagination);
+
+        final int windowSize = Symphonys.getInt("defaultPaginationWindowSize");
+
+        final List<Integer> pageNums = Paginator.paginate(currentPageNum, fetchSize, pageCount, windowSize);
+        pagination.put(Pagination.PAGINATION_PAGE_COUNT, pageCount);
+        pagination.put(Pagination.PAGINATION_PAGE_NUMS, pageNums);
+
+        final JSONArray data = result.optJSONArray(Keys.RESULTS);
+        final List<JSONObject> articles = CollectionUtils.<JSONObject>jsonArrayToList(data);
+
+        ret.put(Keys.RESULTS, (Object) articles);
+
+        return ret;
+    }
 
     /**
      * Gets the latest pointtransfers with the specified user id, type and fetch size.
@@ -415,7 +473,7 @@ public class PointtransferQueryService {
                     default:
                         LOGGER.warn("Invalid point type [" + type + "]");
                 }
-                
+
                 desTemplate = Emotions.convert(desTemplate);
 
                 record.put(Common.DESCRIPTION, desTemplate);

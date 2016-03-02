@@ -23,7 +23,7 @@ import org.b3log.latke.RuntimeMode;
  * Symphony utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.0.3, Jul 13, 2015
+ * @version 1.1.0.4, Mar 2, 2015
  * @since 0.1.0
  */
 public final class Symphonys {
@@ -37,6 +37,16 @@ public final class Symphonys {
      * Reserved tags.
      */
     public static final String[] RESERVED_TAGS;
+
+    /**
+     * Pagination page size.
+     */
+    public static final int PAGE_SIZE = Symphonys.getInt("defaultPaginationCnt");
+
+    /**
+     * Pagination window size.
+     */
+    public static final int WINDOW_SIZE = Symphonys.getInt("defaultPaginationWindowSize");
 
     static {
         final String reservedTags = CFG.getString("reservedTags");

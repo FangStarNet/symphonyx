@@ -149,8 +149,8 @@ public class MallProcessor {
         }
 
         final int pageNum = Integer.valueOf(pageNumStr);
-        final int pageSize = AdminProcessor.PAGE_SIZE;
-        final int windowSize = AdminProcessor.WINDOW_SIZE;
+        final int pageSize = Symphonys.PAGE_SIZE;
+        final int windowSize = Symphonys.WINDOW_SIZE;
 
         final JSONObject requestJSONObject = new JSONObject();
         requestJSONObject.put(Pagination.PAGINATION_CURRENT_PAGE_NUM, pageNum);

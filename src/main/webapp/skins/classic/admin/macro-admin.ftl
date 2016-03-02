@@ -30,6 +30,12 @@
         <#if type == "orders">
         <@head title="${symphonyLabel} - ${orderAdminLabel}"></@head>
         </#if>
+        <#if type == "chargeRecords">
+        <@head title="${symphonyLabel} - ${chargePointLabel}"></@head>
+        </#if>
+        <#if type == "pointCharge">
+        <@head title="${symphonyLabel} - ${chargePointLabel}"></@head>
+        </#if>
         <#if type == "misc">
         <@head title="${symphonyLabel} - ${miscAdminLabel}"></@head>
         </#if>
@@ -50,9 +56,11 @@
                         <li<#if type == "tags"> class="current"</#if>><a href="/admin/tags">${tagAdminLabel}</a></li>
                         <li<#if type == "orders"> class="current"</#if>><a href="/admin/orders">${orderAdminLabel}</a></li>
                         <li<#if type == "products" || type == "addProduct"> class="current"</#if>><a href="/admin/products">${productAdminLabel}</a></li>
+                        <li<#if type == "chargeRecords"  || type == "pointCharge"> class="current"</#if>><a href="/admin/charge-records">${chargeAdminLabel}</a></li>
                         <li<#if type == "misc"> class="current"</#if>><a href="/admin/misc">${miscAdminLabel}</a></li>
                         <#elseif "mallAdminRole" == userRole>
                         <li<#if type == "orders"> class="current"</#if>><a href="/admin/orders">${orderAdminLabel}</a></li>
+                        <li<#if type == "chargeRecords"  || type == "pointCharge"> class="current"</#if>><a href="/admin/charge-records">${chargeAdminLabel}</a></li>
                         <li<#if type == "products" || type == "addProduct"> class="current"</#if>><a href="/admin/products">${productAdminLabel}</a></li>
                         </#if>
                     </ul>

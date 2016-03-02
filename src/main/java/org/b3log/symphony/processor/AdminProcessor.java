@@ -16,6 +16,7 @@
 package org.b3log.symphony.processor;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -70,6 +71,7 @@ import org.b3log.symphony.service.OptionQueryService;
 import org.b3log.symphony.service.OrderMgmtService;
 import org.b3log.symphony.service.OrderQueryService;
 import org.b3log.symphony.service.PointtransferMgmtService;
+import org.b3log.symphony.service.PointtransferQueryService;
 import org.b3log.symphony.service.ProductMgmtService;
 import org.b3log.symphony.service.ProductQueryService;
 import org.b3log.symphony.service.SearchMgmtService;
@@ -115,6 +117,7 @@ import org.json.JSONObject;
  * <li>Shows orders (/admin/orders), GET</li>
  * <li>Confirms an order (/admin/order/{orderId}/confirm)</li>
  * <li>Refunds an order (/admin/order/{orderId}/refund)</li>
+ * <li>Shows point charge records (/admin/charge-records), GET</li>
  * <li>Shows miscellaneous (/admin/misc), GET</li>
  * <li>Updates miscellaneous (/admin/misc), POST</li>
  * <li>Search index (/admin/search/index), POST</li>
@@ -229,6 +232,12 @@ public class AdminProcessor {
     private PointtransferMgmtService pointtransferMgmtService;
 
     /**
+     * Pointtransfer query service.
+     */
+    @Inject
+    private PointtransferQueryService pointtransferQueryService;
+
+    /**
      * Notification management service.
      */
     @Inject
@@ -245,16 +254,6 @@ public class AdminProcessor {
      */
     @Inject
     private Filler filler;
-
-    /**
-     * Pagination window size.
-     */
-    public static final int WINDOW_SIZE = 15;
-
-    /**
-     * Pagination page size.
-     */
-    public static final int PAGE_SIZE = 20;
 
     /**
      * Shows admin index.
@@ -301,8 +300,8 @@ public class AdminProcessor {
         }
 
         final int pageNum = Integer.valueOf(pageNumStr);
-        final int pageSize = PAGE_SIZE;
-        final int windowSize = WINDOW_SIZE;
+        final int pageSize = Symphonys.PAGE_SIZE;
+        final int windowSize = Symphonys.WINDOW_SIZE;
 
         final JSONObject requestJSONObject = new JSONObject();
         requestJSONObject.put(Pagination.PAGINATION_CURRENT_PAGE_NUM, pageNum);
@@ -591,33 +590,52 @@ public class AdminProcessor {
      * @param context the specified context
      * @param request the specified request
      * @param response the specified response
-     * @param userId the specified user id
      * @throws Exception exception
      */
-    @RequestProcessing(value = "/admin/user/{userId}/charge-point", method = HTTPRequestMethod.POST)
-    @Before(adviceClass = {StopwatchStartAdvice.class, AdminCheck.class})
+    @RequestProcessing(value = "/admin/charge-point", method = HTTPRequestMethod.POST)
+    @Before(adviceClass = {StopwatchStartAdvice.class, MallAdminCheck.class})
     @After(adviceClass = StopwatchEndAdvice.class)
-    public void chargePoint(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response,
-            final String userId) throws Exception {
+    public void chargePoint(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response)
+            throws Exception {
+        final String userName = request.getParameter(User.USER_NAME);
         final String pointStr = request.getParameter(Common.POINT);
-        final String memo = request.getParameter("memo");
+        final String memo = request.getParameter(Common.MEMO);
 
-        if (StringUtils.isBlank(pointStr) || StringUtils.isBlank(memo) || !Strings.isNumeric(memo.split("-")[0])) {
-            LOGGER.warn("Charge point memo format error");
+        if (StringUtils.isBlank(pointStr) || !StringUtils.isNumeric(memo)) {
+            final AbstractFreeMarkerRenderer renderer = new SkinRenderer();
+            context.setRenderer(renderer);
+            renderer.setTemplateName("admin/error.ftl");
+            final Map<String, Object> dataModel = renderer.getDataModel();
 
-            response.sendRedirect(Latkes.getServePath() + "/admin/user/" + userId);
+            dataModel.put(Keys.MSG, "Charge point memo format error");
+            filler.fillHeaderAndFooter(request, response, dataModel);
 
             return;
         }
 
+        final JSONObject user = userQueryService.getUserByName(userName);
+        if (null == user) {
+            final AbstractFreeMarkerRenderer renderer = new SkinRenderer();
+            context.setRenderer(renderer);
+            renderer.setTemplateName("admin/error.ftl");
+            final Map<String, Object> dataModel = renderer.getDataModel();
+
+            dataModel.put(Keys.MSG, "User [name=" + userName + "] not found");
+            filler.fillHeaderAndFooter(request, response, dataModel);
+
+            return;
+        }
+
+        final JSONObject currentUser = (JSONObject) request.getAttribute(User.USER);
+
         try {
             final int point = Integer.valueOf(pointStr);
 
-            final String transferId = pointtransferMgmtService.transfer(Pointtransfer.ID_C_SYS, userId,
-                    Pointtransfer.TRANSFER_TYPE_C_CHARGE, point, memo);
+            final String transferId = pointtransferMgmtService.transfer(Pointtransfer.ID_C_SYS, user.optString(Keys.OBJECT_ID),
+                    Pointtransfer.TRANSFER_TYPE_C_CHARGE, point, memo + "-" + currentUser.optString(Keys.OBJECT_ID));
 
             final JSONObject notification = new JSONObject();
-            notification.put(Notification.NOTIFICATION_USER_ID, userId);
+            notification.put(Notification.NOTIFICATION_USER_ID, user.optString(Keys.OBJECT_ID));
             notification.put(Notification.NOTIFICATION_DATA_ID, transferId);
 
             notificationMgmtService.addPointChargeNotification(notification);
@@ -633,7 +651,7 @@ public class AdminProcessor {
             return;
         }
 
-        response.sendRedirect(Latkes.getServePath() + "/admin/user/" + userId);
+        response.sendRedirect(Latkes.getServePath() + "/admin/charge-records");
     }
 
     /**
@@ -778,8 +796,8 @@ public class AdminProcessor {
         }
 
         final int pageNum = Integer.valueOf(pageNumStr);
-        final int pageSize = PAGE_SIZE;
-        final int windowSize = WINDOW_SIZE;
+        final int pageSize = Symphonys.PAGE_SIZE;
+        final int windowSize = Symphonys.WINDOW_SIZE;
 
         final JSONObject requestJSONObject = new JSONObject();
         requestJSONObject.put(Pagination.PAGINATION_CURRENT_PAGE_NUM, pageNum);
@@ -906,8 +924,8 @@ public class AdminProcessor {
         }
 
         final int pageNum = Integer.valueOf(pageNumStr);
-        final int pageSize = PAGE_SIZE;
-        final int windowSize = WINDOW_SIZE;
+        final int pageSize = Symphonys.PAGE_SIZE;
+        final int windowSize = Symphonys.WINDOW_SIZE;
 
         final JSONObject requestJSONObject = new JSONObject();
         requestJSONObject.put(Pagination.PAGINATION_CURRENT_PAGE_NUM, pageNum);
@@ -1091,8 +1109,8 @@ public class AdminProcessor {
         }
 
         final int pageNum = Integer.valueOf(pageNumStr);
-        final int pageSize = PAGE_SIZE;
-        final int windowSize = WINDOW_SIZE;
+        final int pageSize = Symphonys.PAGE_SIZE;
+        final int windowSize = Symphonys.WINDOW_SIZE;
 
         final JSONObject requestJSONObject = new JSONObject();
         requestJSONObject.put(Pagination.PAGINATION_CURRENT_PAGE_NUM, pageNum);
@@ -1223,8 +1241,8 @@ public class AdminProcessor {
         }
 
         final int pageNum = Integer.valueOf(pageNumStr);
-        final int pageSize = PAGE_SIZE;
-        final int windowSize = WINDOW_SIZE;
+        final int pageSize = Symphonys.PAGE_SIZE;
+        final int windowSize = Symphonys.WINDOW_SIZE;
 
         final JSONObject requestJSONObject = new JSONObject();
         requestJSONObject.put(Pagination.PAGINATION_CURRENT_PAGE_NUM, pageNum);
@@ -1412,8 +1430,8 @@ public class AdminProcessor {
         }
 
         final int pageNum = Integer.valueOf(pageNumStr);
-        final int pageSize = PAGE_SIZE;
-        final int windowSize = WINDOW_SIZE;
+        final int pageSize = Symphonys.PAGE_SIZE;
+        final int windowSize = Symphonys.WINDOW_SIZE;
 
         final JSONObject requestJSONObject = new JSONObject();
         requestJSONObject.put(Pagination.PAGINATION_CURRENT_PAGE_NUM, pageNum);
@@ -1529,6 +1547,84 @@ public class AdminProcessor {
         pointtransferMgmtService.transfer("sys", buyerId, Pointtransfer.TRANSFER_TYPE_C_REFUND_PRODUCT, point, orderId);
 
         context.renderTrueResult().renderMsg(langPropsService.get("refundSuccLabel"));
+    }
+
+    /**
+     * Shows admin point charge records.
+     *
+     * @param context the specified context
+     * @param request the specified request
+     * @param response the specified response
+     * @throws Exception exception
+     */
+    @RequestProcessing(value = "/admin/charge-records", method = HTTPRequestMethod.GET)
+    @Before(adviceClass = {StopwatchStartAdvice.class, MallAdminCheck.class})
+    @After(adviceClass = {CSRFToken.class, StopwatchEndAdvice.class})
+    public void showChargeRecords(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response)
+            throws Exception {
+        final AbstractFreeMarkerRenderer renderer = new SkinRenderer();
+        context.setRenderer(renderer);
+        renderer.setTemplateName("admin/charge-records.ftl");
+        final Map<String, Object> dataModel = renderer.getDataModel();
+
+        String pageNumStr = request.getParameter("p");
+        if (Strings.isEmptyOrNull(pageNumStr) || !Strings.isNumeric(pageNumStr)) {
+            pageNumStr = "1";
+        }
+
+        final int pageNum = Integer.valueOf(pageNumStr);
+        final int pageSize = Symphonys.PAGE_SIZE;
+
+        final JSONObject result = pointtransferQueryService.getChargeRecords(pageNum, pageSize);
+        final List<JSONObject> results = (List<JSONObject>) result.opt(Keys.RESULTS);
+        for (final JSONObject record : results) {
+            final String toUserId = record.optString(Pointtransfer.TO_ID);
+            final JSONObject toUser = userQueryService.getUser(toUserId);
+            record.put(User.USER_NAME, toUser.optString(User.USER_NAME));
+            record.put(UserExt.USER_REAL_NAME, toUser.optString(UserExt.USER_REAL_NAME));
+            
+            final String handlerId = StringUtils.substringAfterLast(record.optString(Pointtransfer.DATA_ID), "-");
+            final JSONObject handler = userQueryService.getUser(handlerId);
+            record.put(Common.HANDLER_NAME, handler.optString(User.USER_NAME));
+            record.put(Common.HANDLER_REAL_NAME, handler.optString(UserExt.USER_REAL_NAME));
+            
+            record.put(Pointtransfer.TIME, new Date(record.optLong(Pointtransfer.TIME)));
+            record.put(Common.MONEY, StringUtils.substringBefore(record.optString(Pointtransfer.DATA_ID), "-"));
+        }
+        
+        dataModel.put(Keys.RESULTS, results);
+
+        final JSONObject pagination = result.optJSONObject(Pagination.PAGINATION);
+        final int pageCount = pagination.optInt(Pagination.PAGINATION_PAGE_COUNT);
+        final JSONArray pageNums = pagination.optJSONArray(Pagination.PAGINATION_PAGE_NUMS);
+        dataModel.put(Pagination.PAGINATION_FIRST_PAGE_NUM, pageNums.opt(0));
+        dataModel.put(Pagination.PAGINATION_LAST_PAGE_NUM, pageNums.opt(pageNums.length() - 1));
+        dataModel.put(Pagination.PAGINATION_CURRENT_PAGE_NUM, pageNum);
+        dataModel.put(Pagination.PAGINATION_PAGE_COUNT, pageCount);
+        dataModel.put(Pagination.PAGINATION_PAGE_NUMS, CollectionUtils.jsonArrayToList(pageNums));
+
+        filler.fillHeaderAndFooter(request, response, dataModel);
+    }
+
+    /**
+     * Shows admin point charge.
+     *
+     * @param context the specified context
+     * @param request the specified request
+     * @param response the specified response
+     * @throws Exception exception
+     */
+    @RequestProcessing(value = "/admin/point-charge", method = HTTPRequestMethod.GET)
+    @Before(adviceClass = {StopwatchStartAdvice.class, MallAdminCheck.class})
+    @After(adviceClass = {CSRFToken.class, StopwatchEndAdvice.class})
+    public void showPointCharge(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response)
+            throws Exception {
+        final AbstractFreeMarkerRenderer renderer = new SkinRenderer();
+        context.setRenderer(renderer);
+        renderer.setTemplateName("admin/point-charge.ftl");
+        final Map<String, Object> dataModel = renderer.getDataModel();
+
+        filler.fillHeaderAndFooter(request, response, dataModel);
     }
 
     /**

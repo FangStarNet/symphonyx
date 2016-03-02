@@ -123,7 +123,7 @@
             <h2>${chargePointLabel}</h2>
         </div>
         <div class="module-panel form fn-clear">
-            <form action="/admin/user/${user.oId}/charge-point" method="POST">
+            <form action="/admin/charge-point" method="POST">
                 <label>${userNameLabel}</label>
                 <input type="text" name="userName" value="${user.userName}" readonly="readonly" />
 
