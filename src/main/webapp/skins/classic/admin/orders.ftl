@@ -23,7 +23,7 @@
                 <#if item.orderStatus == 1>
                 <span class="tag">${buySuccLabel}</span>
                 <#else>
-                <span class="tag ft-red">${buyFailedLabel}</span>
+                <span class="tag ft-red">${refundProcessLabel}</span>
                 </#if>
                 <br/>
                 <span class="ft-gray">${handlerLabel}</span>
