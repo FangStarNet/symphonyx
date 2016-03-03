@@ -107,7 +107,7 @@
                     <#include 'journal-chapter.ftl'/>
                     </#if>
                     <#else>
-                    <div id="thoughtProgress"><div></div></div>
+                    <div id="thoughtProgress"><span class="bar"></span><span class="icon-video"></span><div data-text="" class="content-reset" id="thoughtProgressPreview"></div></div>
                     <div class="content-reset article-content"></div>
                     </#if>
 
@@ -261,7 +261,6 @@
             <i class="heat" style="width:${article.articleHeat*3}px"></i>
         </div>
         <#include "footer.ftl">
-        <div id="preview" class="content-reset"></div>
         <script>
             Label.commentErrorLabel = "${commentErrorLabel}";
             Label.symphonyLabel = "${symphonyLabel}";
