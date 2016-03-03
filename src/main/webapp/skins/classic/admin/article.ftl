@@ -71,11 +71,11 @@
                 <select id="articleType" name="articleType">
                     <option value="0"<#if 0 == article.articleType> selected</#if>>${articleLabel}</option>
                     <option value="1"<#if 1 == article.articleType> selected</#if>>${discussionLabel}</option>
-                    <option value="1"<#if 2 == article.articleType> selected</#if>>${cityBroadcastLabel}</option>
-                    <option value="1"<#if 3 == article.articleType> selected</#if>>${thoughtLabel}</option>
-                    <option value="1"<#if 4 == article.articleType> selected</#if>>${journalLabel}${paragraphLabel}</option>
-                    <option value="1"<#if 5 == article.articleType> selected</#if>>${journalLabel}${sectionLabel}</option>
-                    <option value="1"<#if 6 == article.articleType> selected</#if>>${journalLabel}${chapterLabel}</option>
+                    <option value="2"<#if 2 == article.articleType> selected</#if>>${cityBroadcastLabel}</option>
+                    <option value="3"<#if 3 == article.articleType> selected</#if>>${thoughtLabel}</option>
+                    <option value="4"<#if 4 == article.articleType> selected</#if>>${journalLabel}${paragraphLabel}</option>
+                    <option value="5"<#if 5 == article.articleType> selected</#if>>${journalLabel}${sectionLabel}</option>
+                    <option value="6"<#if 6 == article.articleType> selected</#if>>${journalLabel}${chapterLabel}</option>
                 </select>
 
                 <label for="articleGoodCnt">${goodCntLabel}</label>
