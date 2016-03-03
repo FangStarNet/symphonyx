@@ -729,6 +729,11 @@ a[class*=" icon-"]:hover {
 .icon-up:hover {
     background-color: #d8e0e3 !important;
 }
+
+.icon-goods {
+    font-size: 48px;
+    color: #D26911;
+}
 /* end icon */
 
 /* start tip */
