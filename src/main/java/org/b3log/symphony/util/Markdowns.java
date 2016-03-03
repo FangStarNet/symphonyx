@@ -19,7 +19,6 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.ioc.LatkeBeanManagerImpl;
-import org.b3log.latke.logging.Logger;
 import org.b3log.latke.service.LangPropsService;
 import org.b3log.latke.service.LangPropsServiceImpl;
 import org.b3log.latke.util.Strings;
@@ -40,7 +39,7 @@ import org.tautua.markdownpapers.parser.ParseException;
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.4.3.7, Dec 22, 2015
+ * @version 1.5.3.7, Mar 3, 2016
  * @since 0.2.0
  */
 public final class Markdowns {
@@ -70,7 +69,7 @@ public final class Markdowns {
         final Elements iframes = doc.getElementsByTag("iframe");
         for (final Element iframe : iframes) {
             final String src = iframe.attr("src");
-            if (!src.startsWith("https://wide.b3log.org")) {
+            if (!src.startsWith("https://wide.b3log.org") && !src.startsWith("http://www.chaojibiaoge.com")) {
                 iframe.remove();
             }
         }
