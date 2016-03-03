@@ -31,7 +31,8 @@
                 <#if item.userRole == "adminRole">
                 ${administratorLabel}
                 <#elseif item.userRole == "defaultCommenterRole">
-                ${defaultCommenterLabel}
+                <#elseif item.userRole == "mallAdminRole">
+                ${mallAdminLabel}
                 <#else>
                 ${defaultUserLabel}
                 </#if>

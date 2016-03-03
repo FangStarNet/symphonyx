@@ -73,20 +73,29 @@
                 <label for="userIntro">${userIntroLabel}</label>
                 <input type="text" id="userIntro" name="userIntro" value="${user.userIntro}" />
 
-                <label for="userIntro">${avatarTypeLabel}</label>
-                <input type="text" id="userAvatarType" name="userAvatarType" value="${user.userAvatarType}" />
-
                 <label for="userIntro">${avatarURLLabel}</label>
                 <input type="text" id="userAvatarURL" name="userAvatarURL" value="${user.userAvatarURL}" />
 
-                <label for="userRole">${roleLabel}</label>
-                <input type="text" id="userRole" name="userRole" value="${user.userRole}" />
+                <label>${roleLabel}</label>
+                <select id="userRole" name="userRole">
+                    <option value="defaultRole"<#if "defaultRole" == user.userRole> selected</#if>>${defaultUserLabel}</option>
+                    <option value="mallAdminRole"<#if "mallAdminRole" == user.userRole> selected</#if>>${mallAdminLabel}</option>
+                    <option value="adminRole"<#if "adminRole" == user.userRole> selected</#if>>${administratorLabel}</option>
+                </select>
 
-                <label for="userStatus">${userStatusLabel}</label>
-                <input type="text" id="userStatus" name="userStatus" value="${user.userStatus}" />
+                <label>${userStatusLabel}</label>
+                <select id="userStatus" name="userStatus">
+                    <option value="0"<#if 0 == user.userStatus> selected</#if>>${validLabel}</option>
+                    <option value="1"<#if 1 == user.userStatus> selected</#if>>${banLabel}</option>
+                    <option value="1"<#if 2 == user.userStatus> selected</#if>>${notVerifiedLabel}</option>
+                </select>
 
-                <label for="userTeam">${teamLabel}</label>
-                <input type="text" id="userTeam" name="userTeam" value="${user.userTeam}" />
+                <label>${teamLabel}</label><br/>
+                <select id="userTeam" name="userTeam">
+                    <#list teams as team>
+                    <option value="${team}"<#if team == user.userTeam> selected</#if>>${team}</option>
+                    </#list>
+                </select>
 
                 <br/><br/>
                 <button type="submit" class="green fn-right">${submitLabel}</button>

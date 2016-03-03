@@ -351,6 +351,9 @@ public class AdminProcessor {
         final JSONObject user = userQueryService.getUser(userId);
         dataModel.put(User.USER, user);
 
+        final String teamsStr = Symphonys.get("teams");
+        dataModel.put(Common.TEAMS, teamsStr.split(","));
+
         filler.fillHeaderAndFooter(request, response, dataModel);
     }
 
@@ -481,7 +484,7 @@ public class AdminProcessor {
             final String name = parameterNames.nextElement();
             final String value = request.getParameter(name);
 
-            if (name.equals(UserExt.USER_POINT)) {
+            if (name.equals(UserExt.USER_POINT) || name.equals(UserExt.USER_STATUS)) {
                 user.put(name, Integer.valueOf(value));
             } else if (name.equals(User.USER_PASSWORD)) {
                 final String oldPwd = (String) user.getString(name);
@@ -494,6 +497,9 @@ public class AdminProcessor {
         }
 
         userMgmtService.updateUser(userId, user);
+
+        final String teamsStr = Symphonys.get("teams");
+        dataModel.put(Common.TEAMS, teamsStr.split(","));
 
         filler.fillHeaderAndFooter(request, response, dataModel);
     }
@@ -1582,16 +1588,16 @@ public class AdminProcessor {
             final JSONObject toUser = userQueryService.getUser(toUserId);
             record.put(User.USER_NAME, toUser.optString(User.USER_NAME));
             record.put(UserExt.USER_REAL_NAME, toUser.optString(UserExt.USER_REAL_NAME));
-            
+
             final String handlerId = StringUtils.substringAfterLast(record.optString(Pointtransfer.DATA_ID), "-");
             final JSONObject handler = userQueryService.getUser(handlerId);
             record.put(Common.HANDLER_NAME, handler.optString(User.USER_NAME));
             record.put(Common.HANDLER_REAL_NAME, handler.optString(UserExt.USER_REAL_NAME));
-            
+
             record.put(Pointtransfer.TIME, new Date(record.optLong(Pointtransfer.TIME)));
             record.put(Common.MONEY, StringUtils.substringBefore(record.optString(Pointtransfer.DATA_ID), "-"));
         }
-        
+
         dataModel.put(Keys.RESULTS, results);
 
         final JSONObject pagination = result.optJSONObject(Pagination.PAGINATION);
