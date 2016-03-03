@@ -38,7 +38,7 @@ import org.json.JSONObject;
  * Product management service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Feb 24, 2016
+ * @version 1.0.0.1, Mar 3, 2016
  * @since 1.4.0
  */
 @Service
@@ -134,8 +134,11 @@ public class ProductMgmtService {
             final JSONObject user = userRepository.get(userId);
             final int balance = user.optInt(UserExt.USER_POINT);
 
-            if (balance - point < 0) {
-                ret.put(Keys.MSG, langPropsService.get("insufficientBalanceLabel"));
+            if (balance - point < Symphonys.getInt("pointExchangeMin")) {
+                String msg = langPropsService.get("exchangeMinLabel");
+                msg = msg.replace("{point}", Symphonys.get("pointExchangeMin"));
+                ret.put(Keys.MSG, langPropsService.get("insufficientBalanceLabel") + langPropsService.get("colonLabel")
+                        + msg);
 
                 return ret;
             }

@@ -55,7 +55,7 @@ var Mall = {
                     $(it).prop('disabled', false);
 
                     if (result.sc) {
-                        window.location.href = result.goto;
+                        window.location.href = result["goto"];
                     }
                 }
             });
