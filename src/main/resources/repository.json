@@ -758,7 +758,7 @@
                 {
                     "name": "articleType",
                     "type": "int",
-                    "description": "0: normal article, 1: discussion"
+                    "description": "0: valid, 1: invalid, 2: city broadcast, 3: thought, 4: journal paragraph, 5: journal section, 6: journal chapter"
                 },
                 {
                     "name": "articleGoodCnt",
