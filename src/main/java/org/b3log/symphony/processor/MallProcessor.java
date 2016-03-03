@@ -58,7 +58,7 @@ import org.json.JSONObject;
  * </ul>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Feb 26, 2016
+ * @version 1.0.0.1, Mar 3, 2016
  * @since 1.4.0
  */
 @RequestProcessor
@@ -106,8 +106,6 @@ public class MallProcessor {
     @After(adviceClass = {StopwatchEndAdvice.class})
     public void buyProduct(final HTTPRequestContext context,
             final HttpServletRequest request, final HttpServletResponse response) throws Exception {
-        context.renderJSON().renderFalseResult();
-
         final JSONObject requestJSONObject = Requests.parseRequestJSONObject(request, context.getResponse());
 
         final String productId = requestJSONObject.optString(Common.PRODUCT_ID);
@@ -117,9 +115,12 @@ public class MallProcessor {
         final JSONObject ret = productMgmtService.buyProduct(productId, userId);
 
         if (ret.optBoolean(Keys.STATUS_CODE)) {
-            context.renderJSON().renderTrueResult().renderMsg(langPropsService.get("buySuccLabel"));
+            final JSONObject data = new JSONObject();
+            data.put(Common.GOTO, "/member/" + currentUser.optString(User.USER_NAME) + "/points");
+            context.renderJSON(data).renderTrueResult().renderMsg(langPropsService.get("buySuccLabel"));
+
         } else {
-            context.renderJSON().renderTrueResult().renderMsg(langPropsService.get("buyFailedLabel")
+            context.renderJSON().renderFalseResult().renderMsg(langPropsService.get("buyFailedLabel")
                     + " - " + ret.optString(Keys.MSG));
         }
     }
