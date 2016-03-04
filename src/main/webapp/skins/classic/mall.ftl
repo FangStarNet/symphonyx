@@ -13,9 +13,7 @@
             <div class="wrapper">
                 <div class="content mall">
                     <div>
-                        充值请联系财务 <a href='/member/liyan'>李颜</a> <br/>
-                        微信：<span class="ft-red">13888678513</span> 
-                        支付宝账号：<span class="ft-red">yuwenbin@163.com</span>
+                        <font style="color: red;">♥</font> <a href="/charge/point">${chargePointLabel}</a>
                     </div>
                     <br/>
                     <div class="list">
