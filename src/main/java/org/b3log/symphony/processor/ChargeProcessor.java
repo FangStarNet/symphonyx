@@ -30,6 +30,7 @@ import org.b3log.latke.servlet.renderer.freemarker.AbstractFreeMarkerRenderer;
 import org.b3log.symphony.processor.advice.stopwatch.StopwatchEndAdvice;
 import org.b3log.symphony.processor.advice.stopwatch.StopwatchStartAdvice;
 import org.b3log.symphony.util.Filler;
+import org.b3log.symphony.util.Symphonys;
 
 /**
  * Charge processor.
@@ -39,7 +40,7 @@ import org.b3log.symphony.util.Filler;
  * </ul>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Aug 7, 2015
+ * @version 1.0.0.1, Mar 4, 2016
  * @since 1.3.0
  */
 @RequestProcessor
@@ -73,6 +74,8 @@ public class ChargeProcessor {
         context.setRenderer(renderer);
         renderer.setTemplateName("charge-point.ftl");
         final Map<String, Object> dataModel = renderer.getDataModel();
+        
+        dataModel.put("chargePointContentLabel", Symphonys.get("chargePointContentLabel"));
 
         filler.fillHeaderAndFooter(request, response, dataModel);
         filler.fillRandomArticles(dataModel);
