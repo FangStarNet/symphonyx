@@ -21,6 +21,6 @@
     <br/>
     <span class="fn-right">${chargeSumLabel}<b class="ft-red">${yuanLabel} ${chargeSum}.00</b></span>
     <div class="fn-clear"></div>
-    <@pagination url="/admin/charge"/>
+    <@pagination url="/admin/charge-records"/>
 </div>
 </@admin>
