@@ -12,7 +12,12 @@
         <div class="main">
             <div class="wrapper">
                 <div class="content mall">
-                    <h2>${mallLabel}</h2><br/>
+                    <div>
+                        充值请联系财务 <a href='/member/liyan'>李颜</a> <br/>
+                        微信：<span class="ft-red">13888678513</span> 
+                        支付宝账号：<span class="ft-red">yuwenbin@163.com</span>
+                    </div>
+                    <br/>
                     <div class="list">
                         <ul id="ul">
                             <#list products as item>
