@@ -119,6 +119,30 @@ public class PointtransferQueryService {
     private AvatarQueryService avatarQueryService;
 
     /**
+     * Gets charge point sum.
+     *
+     * @return charge point sum
+     */
+    public long getChargePointSum() {
+        final Query query = new Query().setPageCount(-1)
+                .setFilter(new PropertyFilter(Pointtransfer.TYPE, FilterOperator.EQUAL, Pointtransfer.TRANSFER_TYPE_C_CHARGE));
+
+        long ret = 0;
+        try {
+            final JSONObject result = pointtransferRepository.get(query);
+            final JSONArray data = result.optJSONArray(Keys.RESULTS);
+            for (int i = 0; i < data.length(); i++) {
+                final int sum = data.optJSONObject(i).optInt(Pointtransfer.SUM);
+                ret += sum;
+            }
+        } catch (final RepositoryException e) {
+            LOGGER.log(Level.ERROR, "Gets charge sum failed", e);
+        }
+
+        return ret;
+    }
+
+    /**
      * Gets point charge records.
      *
      * @param currentPageNum the specified current page number
@@ -150,7 +174,7 @@ public class PointtransferQueryService {
         try {
             result = pointtransferRepository.get(query);
         } catch (final RepositoryException e) {
-            LOGGER.log(Level.ERROR, "Gets articles failed", e);
+            LOGGER.log(Level.ERROR, "Gets charge records failed", e);
 
             throw new ServiceException(e);
         }

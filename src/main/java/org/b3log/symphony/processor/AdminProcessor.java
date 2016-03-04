@@ -1600,6 +1600,10 @@ public class AdminProcessor {
 
         dataModel.put(Keys.RESULTS, results);
 
+        final long chargePointSum = pointtransferQueryService.getChargePointSum();
+        final int pointExchangeUnit = Symphonys.getInt("pointExchangeUnit");
+        dataModel.put(Common.CHARGE_SUM, chargePointSum / pointExchangeUnit);
+
         final JSONObject pagination = result.optJSONObject(Pagination.PAGINATION);
         final int pageCount = pagination.optInt(Pagination.PAGINATION_PAGE_COUNT);
         final JSONArray pageNums = pagination.optJSONArray(Pagination.PAGINATION_PAGE_NUMS);

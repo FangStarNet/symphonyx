@@ -8,8 +8,8 @@
         <#list rslts as item>
         <tr<#if item_index % 2 == 1> class="even"</#if>>
             <td class="date">
-                2016-03-03
-                <span class="ft-gray">15:33</span>
+                ${item.time?string('yyyy-MM-dd')} 
+                <span class="ft-gray">${item.time?string('HH:mm')}</span>
             </td> 
             <td class="name">  ${chargeUserNameLabel} <a href="/member/${item.userName}">${item.userRealName}</a></td>
             <td class="name">  ${handlerLabel} <a href="/member/${item.handlerName}">${item.handlerRealName}</a></td>
@@ -19,7 +19,7 @@
         </#list>
     </table>
     <br/>
-    <span class="fn-right">充值总计：<b class="ft-red">￥ 2000.00</b></span>
+    <span class="fn-right">${chargeSumLabel}<b class="ft-red">${yuanLabel} ${chargeSum}.00</b></span>
     <div class="fn-clear"></div>
     <@pagination url="/admin/charge"/>
 </div>

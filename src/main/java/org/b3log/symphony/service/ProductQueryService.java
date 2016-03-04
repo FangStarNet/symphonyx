@@ -95,6 +95,7 @@ public class ProductQueryService {
         final int pageSize = requestJSONObject.optInt(Pagination.PAGINATION_PAGE_SIZE);
         final int windowSize = requestJSONObject.optInt(Pagination.PAGINATION_WINDOW_SIZE);
         final Query query = new Query().setCurrentPageNum(currentPageNum).setPageSize(pageSize).
+                addSort(Product.PRODUCT_STATUS, SortDirection.ASCENDING).
                 addSort(Keys.OBJECT_ID, SortDirection.DESCENDING);
         for (final Map.Entry<String, Class<?>> field : productFields.entrySet()) {
             query.addProjection(field.getKey(), field.getValue());
@@ -173,7 +174,7 @@ public class ProductQueryService {
             query.addProjection(field.getKey(), field.getValue());
         }
 
-        query.setFilter(new PropertyFilter(Product.PRODUCT_NAME, FilterOperator.EQUAL, Product.PRODUCT_STATUS_C_ONSHELF));
+        query.setFilter(new PropertyFilter(Product.PRODUCT_STATUS, FilterOperator.EQUAL, Product.PRODUCT_STATUS_C_ONSHELF));
 
         JSONObject result = null;
 

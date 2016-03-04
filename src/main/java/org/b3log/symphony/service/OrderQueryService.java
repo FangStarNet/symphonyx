@@ -103,8 +103,9 @@ public class OrderQueryService {
         final int currentPageNum = requestJSONObject.optInt(Pagination.PAGINATION_CURRENT_PAGE_NUM);
         final int pageSize = requestJSONObject.optInt(Pagination.PAGINATION_PAGE_SIZE);
         final int windowSize = requestJSONObject.optInt(Pagination.PAGINATION_WINDOW_SIZE);
-        final Query query = new Query().setCurrentPageNum(currentPageNum).setPageSize(pageSize).
-                addSort(Keys.OBJECT_ID, SortDirection.DESCENDING);
+        final Query query = new Query().setCurrentPageNum(currentPageNum).setPageSize(pageSize)
+                .addSort(Order.ORDER_STATUS, SortDirection.ASCENDING)
+                .addSort(Keys.OBJECT_ID, SortDirection.DESCENDING);
         for (final Map.Entry<String, Class<?>> field : orderFields.entrySet()) {
             query.addProjection(field.getKey(), field.getValue());
         }
