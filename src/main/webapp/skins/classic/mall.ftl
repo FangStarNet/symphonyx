@@ -33,8 +33,8 @@
                                     </div>
                                 </div>
                                 <div class="action">
-                                    <input type="number" value="1" max="99" min="1"/>
-                                    <button class="green" onclick="Mall.buyProduct('${item.oId}', '${csrfToken}', '${confirmConsumeLabel}', this)">${item.productPoint?c} ${pointLabel} ${buyLabel}</button>
+                                    <input id="${item.oId}Num" type="number" max="99" min="1" value="1" onchange="sum(${item.productPoint?c}, this.value, ${item.oId})" />
+                                    <button id="${item.oId}Btn" class="green" onclick="Mall.buyProduct('${item.oId}', '${csrfToken}', '${confirmConsumeLabel}', this)">${item.productPoint?c} ${pointLabel} ${buyLabel}</button>
                                 </div>
                             </li>
                             </#list>
@@ -48,5 +48,15 @@
         </div>
         <#include "footer.ftl">
         <script type="text/javascript" src="${staticServePath}/js/mall${miniPostfix}.js?${staticResourceVersion}"></script>
+
+        <script>
+                                        function sum(singlePoint, num, productId) {
+                                        var sum = num * singlePoint;
+                                        console.log(productId)
+
+                                                $("#" + productId + "Btn").text(sum + ' ${pointLabel} ${buyLabel}');
+                                        }
+
+        </script>
     </body>
 </html>

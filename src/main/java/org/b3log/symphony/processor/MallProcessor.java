@@ -94,7 +94,7 @@ public class MallProcessor {
     private LangPropsService langPropsService;
 
     /**
-     * Buys a product.
+     * Buys products.
      *
      * @param context the specified context
      * @param request the specified request
@@ -109,10 +109,11 @@ public class MallProcessor {
         final JSONObject requestJSONObject = Requests.parseRequestJSONObject(request, context.getResponse());
 
         final String productId = requestJSONObject.optString(Common.PRODUCT_ID);
+        final int num = requestJSONObject.optInt(Common.NUM, 1);
         final JSONObject currentUser = (JSONObject) request.getAttribute(User.USER);
         final String userId = currentUser.optString(Keys.OBJECT_ID);
 
-        final JSONObject ret = productMgmtService.buyProduct(productId, userId);
+        final JSONObject ret = productMgmtService.buyProduct(productId, userId, num);
 
         if (ret.optBoolean(Keys.STATUS_CODE)) {
             final JSONObject data = new JSONObject();

@@ -19,7 +19,7 @@
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
- * @version 1.0.0.1, Mar 3, 2016
+ * @version 1.1.0.1, Mar 6, 2016
  */
 
 /**
@@ -37,7 +37,8 @@ var Mall = {
         if (confirm(tip)) {
             $(it).prop('disabled', true);
             var requestJSONObject = {
-                "productId": productId
+                "productId": productId,
+                "num": $("#" + productId + "Num").val()
             };
 
             $.ajax({

@@ -38,7 +38,7 @@ import org.json.JSONObject;
  * Product management service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Mar 3, 2016
+ * @version 1.1.0.1, Mar 6, 2016
  * @since 1.4.0
  */
 @Service
@@ -121,20 +121,33 @@ public class ProductMgmtService {
      *
      * @param productId the specified productId
      * @param userId the specified buyer id
+     * @param num the specified number
      * @return result
      */
-    public synchronized JSONObject buyProduct(final String productId, final String userId) {
+    public synchronized JSONObject buyProduct(final String productId, final String userId, final int num) {
         final JSONObject ret = Results.falseResult();
 
         try {
+            if (num < 0) {
+                ret.put(Keys.MSG, langPropsService.get("invalidOrderStatusLabel"));
+
+                return ret;
+            }
+
             final JSONObject product = productRepository.get(productId);
+            if (Product.PRODUCT_STATUS_C_ONSHELF != product.optInt(Product.PRODUCT_STATUS)) {
+                ret.put(Keys.MSG, langPropsService.get("invalidProductStatusLabel"));
+
+                return ret;
+            }
+
             final double price = product.optDouble(Product.PRODUCT_PRICE);
             final int point = (int) Math.floor(price * Symphonys.getInt("pointExchangeUnit"));
 
             final JSONObject user = userRepository.get(userId);
             final int balance = user.optInt(UserExt.USER_POINT);
 
-            if (balance - point < Symphonys.getInt("pointExchangeMin")) {
+            if (balance - point * num < Symphonys.getInt("pointExchangeMin")) {
                 String msg = langPropsService.get("exchangeMinLabel");
                 msg = msg.replace("{point}", Symphonys.get("pointExchangeMin"));
                 ret.put(Keys.MSG, langPropsService.get("insufficientBalanceLabel") + langPropsService.get("colonLabel")
@@ -143,18 +156,25 @@ public class ProductMgmtService {
                 return ret;
             }
 
-            final JSONObject order = new JSONObject();
+            for (int i = 0; i < num; i++) {
+                final JSONObject order = new JSONObject();
 
-            order.put(Order.ORDER_POINT, point);
-            order.put(Order.ORDER_PRICE, price);
-            order.put(Order.ORDER_PRODUCT_NAME, product.optString(Product.PRODUCT_NAME));
-            order.put(Order.ORDER_BUYER_ID, userId);
+                order.put(Order.ORDER_POINT, point);
+                order.put(Order.ORDER_PRICE, price);
+                order.put(Order.ORDER_PRODUCT_NAME, product.optString(Product.PRODUCT_NAME));
+                order.put(Order.ORDER_BUYER_ID, userId);
 
-            final String orderId = orderMgmtService.addOrder(order);
-            final boolean succ = null != pointtransferMgmtService.transfer(userId, "sys",
-                    Pointtransfer.TRANSFER_TYPE_C_BUY_PRODUCT, point, orderId);
+                final String orderId = orderMgmtService.addOrder(order);
+                final boolean succ = null != pointtransferMgmtService.transfer(userId, "sys",
+                        Pointtransfer.TRANSFER_TYPE_C_BUY_PRODUCT, point, orderId);
+                ret.put(Keys.STATUS_CODE, succ);
 
-            ret.put(Keys.STATUS_CODE, succ);
+                if (!succ) {
+                    LOGGER.log(Level.ERROR, "Order [id=" + orderId + "] failed");
+
+                    return ret;
+                }
+            }
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Buys product failed", e);
 
