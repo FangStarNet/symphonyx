@@ -431,8 +431,17 @@
 /* end article list */
 
 /* start mall */
-.mall button {
+.mall .action {
     margin-top: 8px;
+}
+
+.mall .action input {
+    width: 50px;
+    margin-right: 10px;
+}
+
+.mall .action .green {
+    width: 122px;
 }
 /* end mall */
 

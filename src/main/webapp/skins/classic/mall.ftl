@@ -15,9 +15,9 @@
                     <div>
                         <font style="color: red;">♥</font> <a href="/charge/point">${chargePointLabel}</a>
                     </div>
-                    <br/>
-                    <div class="list">
-                        <ul id="ul">
+                    <br/>   
+                    <div class="list form">
+                        <ul>
                             <#list products as item>
                             <li class="fn-flex comment-list-item">
                                 <div class="avatar icon-goods" style="<#if item.productImgURL?? && item.productImgURL != ''>font-size: 0;background-image:url(${item.productImgURL})</#if>"></div>
@@ -32,7 +32,10 @@
                                         ${item.productDescription}
                                     </div>
                                 </div>
-                                <button class="green" onclick="Mall.buyProduct('${item.oId}', '${csrfToken}', '${confirmConsumeLabel}', this)">${item.productPoint} ${pointLabel} ${buyLabel}</button>
+                                <div class="action">
+                                    <input type="number" value="1" max="10" min="1"/>
+                                    <button class="green" onclick="Mall.buyProduct('${item.oId}', '${csrfToken}', '${confirmConsumeLabel}', this)">${item.productPoint?c} ${pointLabel} ${buyLabel}</button>
+                                </div>
                             </li>
                             </#list>
                         </ul>
