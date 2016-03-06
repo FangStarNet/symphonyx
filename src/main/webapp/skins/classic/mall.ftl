@@ -33,7 +33,7 @@
                                     </div>
                                 </div>
                                 <div class="action">
-                                    <input type="number" value="1" max="10" min="1"/>
+                                    <input type="number" value="1" max="99" min="1"/>
                                     <button class="green" onclick="Mall.buyProduct('${item.oId}', '${csrfToken}', '${confirmConsumeLabel}', this)">${item.productPoint?c} ${pointLabel} ${buyLabel}</button>
                                 </div>
                             </li>
