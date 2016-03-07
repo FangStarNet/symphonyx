@@ -19,7 +19,7 @@
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
- * @version 1.1.2.1, Mar 7, 2016
+ * @version 1.1.3.1, Mar 7, 2016
  */
 
 /**
@@ -42,6 +42,7 @@ var Mall = {
         }
         if (!/^[1-9][0-9]?$/.test(count)) {
             $(it).val(99);
+            count = 99;
         }
 
         var sum = count * singlePoint;
