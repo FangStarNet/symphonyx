@@ -24,7 +24,7 @@
                                 <div class="fn-flex-1">
                                     <div class="fn-clear">
                                         <h2 class="fn-left">
-                                            ${item.productName}
+                                            <font>${item.productName}</font>
                                             <span class="tag">${item.productCategory}</span>
                                         </h2>
                                     </div>
@@ -33,8 +33,9 @@
                                     </div>
                                 </div>
                                 <div class="action">
-                                    <input id="${item.oId}Num" type="number" max="99" min="1" value="1" onchange="sum(${item.productPoint?c}, this.value, ${item.oId})" />
-                                    <button id="${item.oId}Btn" class="green" onclick="Mall.buyProduct('${item.oId}', '${csrfToken}', '${confirmConsumeLabel}', this)">${item.productPoint?c} ${pointLabel} ${buyLabel}</button>
+                                    <input type="number" max="99" min="1" value="1" onchange="Mall.updateSum(this, '${item.productPoint?c}', ' ${pointLabel} ${buyLabel}')"
+                                           onkeyup="Mall.updateSum(this, '${item.productPoint?c}', ' ${pointLabel} ${buyLabel}')" />
+                                    <button class="green" onclick="Mall.buyProduct('${item.oId}', '${csrfToken}', '${confirmConsumeLabel}', this)">${item.productPoint?c} ${pointLabel} ${buyLabel}</button>
                                 </div>
                             </li>
                             </#list>
@@ -48,15 +49,6 @@
         </div>
         <#include "footer.ftl">
         <script type="text/javascript" src="${staticServePath}/js/mall${miniPostfix}.js?${staticResourceVersion}"></script>
-
-        <script>
-                                        function sum(singlePoint, num, productId) {
-                                        var sum = num * singlePoint;
-                                        console.log(productId)
-
-                                                $("#" + productId + "Btn").text(sum + ' ${pointLabel} ${buyLabel}');
-                                        }
-
-        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/2.2.2/isotope.pkgd.min.js"></script>
     </body>
 </html>

@@ -18,7 +18,7 @@
  *
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.2.8.10, Feb 14, 2016
+ * @version 1.2.9.10, Mar 7, 2016
  */
 /* start module */
 .index-module .index-module-list > li {
@@ -441,7 +441,7 @@
 }
 
 .mall .action .green {
-    width: 122px;
+    width: 138px;
 }
 /* end mall */
 

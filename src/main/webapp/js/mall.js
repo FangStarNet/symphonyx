@@ -19,7 +19,7 @@
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
- * @version 1.1.0.1, Mar 6, 2016
+ * @version 1.1.2.1, Mar 7, 2016
  */
 
 /**
@@ -28,17 +28,37 @@
  */
 var Mall = {
     /**
+     * 修改购买数量
+     * @param {type} it
+     * @param {type} singlePoint
+     * @param {type} label
+     * @returns {undefined}
+     */
+    updateSum: function (it, singlePoint, label) {
+        var count = parseInt($.trim($(it).val()));
+        if ($.trim($(it).val()) === '') {
+            $(it).val(1);
+            count = 1;
+        }
+        if (!/^[1-9][0-9]?$/.test(count)) {
+            $(it).val(99);
+        }
+
+        var sum = count * singlePoint;
+        $(it).next().text(sum + label);
+    },
+    /**
      * @description Buy product
      * @argument {String} productId product id
      * @argument {String} csrfToken CSRF token
      * @argument {String} tip confirm tip
      */
     buyProduct: function (productId, csrfToken, tip, it) {
-        if (confirm(tip)) {
+        if (confirm(tip + ' ' + $(it).text() + ' ' + $(it).prev().val() + ' 份 ' + $(it).parent().prev().find('font').text() + '?')) {
             $(it).prop('disabled', true);
             var requestJSONObject = {
                 "productId": productId,
-                "num": $("#" + productId + "Num").val()
+                "num": $(it).prev().val()
             };
 
             $.ajax({
