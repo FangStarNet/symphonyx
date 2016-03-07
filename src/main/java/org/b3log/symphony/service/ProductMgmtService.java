@@ -38,7 +38,7 @@ import org.json.JSONObject;
  * Product management service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.0.1, Mar 6, 2016
+ * @version 1.1.1.1, Mar 7, 2016
  * @since 1.4.0
  */
 @Service
@@ -128,7 +128,7 @@ public class ProductMgmtService {
         final JSONObject ret = Results.falseResult();
 
         try {
-            if (num < 0) {
+            if (num < 0 || num > 99) {
                 ret.put(Keys.MSG, langPropsService.get("invalidOrderStatusLabel"));
 
                 return ret;
