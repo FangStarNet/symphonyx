@@ -443,6 +443,10 @@
 .mall .action .green {
     width: 138px;
 }
+
+.mall .tag.selected {
+    color: #911;
+}
 /* end mall */
 
 /* start register */

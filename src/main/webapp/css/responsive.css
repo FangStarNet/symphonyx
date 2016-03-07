@@ -90,6 +90,10 @@
         height: 25px;
         width: 25px;
     }
+    
+    .list .icon-goods {
+        font-size: 24px;
+    }
 
     .wrapper .tag-artile-user {
         margin: 0.5rem 0 0.5rem 0.5rem;

@@ -28,6 +28,53 @@
  */
 var Mall = {
     /**
+     * 根据 tag 进行过滤
+     * @param {string} tag
+     * @param {bom} it
+     * @returns {undefined}
+     */
+    filter: function (tag, it) {
+        $('.list li').each(function () {
+            var $it = $(this),
+                    $tag = $it.find('.tag');
+            if (tag === $tag.text()) {
+                $it.show();
+            } else {
+                $it.hide();
+            }
+            $(it).parent().find('.tag').removeClass('selected');
+            $(it).addClass('selected');
+        });
+    },
+    /**
+     * 初始化前端过滤
+     * @returns {undefined}
+     */
+    initFilter: function () {
+        var tags = [];
+        $('.list li').each(function () {
+            var hasTag = false,
+                    $it = $(this),
+                    $tag = $it.find('.tag');
+            for (var j = 0; j < tags.length; j++) {
+                if (tags[j] === $tag.text()) {
+                    hasTag = true;
+                    break;
+                }
+            }
+            if (!hasTag) {
+                tags.push($tag.text());
+            }
+        });
+
+        var tagsHTML = '';
+        for (var a = 0, aMax = tags.length; a < aMax; a++) {
+            tagsHTML += '<span class="tag fn-pointer" onclick="Mall.filter(\'' + tags[a] + '\', this)">' + tags[a] + '</span> &nbsp;';
+        }
+
+        $('.list').before('<div class=tags>' + tagsHTML + '</div><br/>');
+    },
+    /**
      * 修改购买数量
      * @param {type} it
      * @param {type} singlePoint
@@ -84,3 +131,5 @@ var Mall = {
         }
     }
 };
+
+Mall.initFilter();
