@@ -23,7 +23,7 @@
                             <li class="fn-clear">
                                 <div class="avatar icon-goods fn-left" style="<#if item.productImgURL?? && item.productImgURL != ''>font-size: 0;background-image:url(${item.productImgURL})</#if>"></div>
                                 <div class="fn-left">
-                                    <h2 class="fn-left">
+                                    <h2>
                                         <font>${item.productName}</font>
                                         <span class="tag">${item.productCategory}</span>
                                     </h2>
