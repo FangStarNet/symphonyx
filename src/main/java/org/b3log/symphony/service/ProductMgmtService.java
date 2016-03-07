@@ -144,6 +144,12 @@ public class ProductMgmtService {
             final double price = product.optDouble(Product.PRODUCT_PRICE);
             final int point = (int) Math.floor(price * Symphonys.getInt("pointExchangeUnit"));
 
+            if (point * num < 0) {
+                ret.put(Keys.MSG, langPropsService.get("invalidOrderStatusLabel"));
+
+                return ret;
+            }
+
             final JSONObject user = userRepository.get(userId);
             final int balance = user.optInt(UserExt.USER_POINT);
 
