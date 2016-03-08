@@ -47,7 +47,9 @@ var Util = {
         editor.$it.attr('placeholder', '');
 
         if (keyupEvent && typeof (keyupEvent) === 'function') {
-            editor.$it.keyup(keyupEvent(editor));
+            editor.$it.keyup(function () {
+                keyupEvent(editor);
+            });
         }
         
         return editor;
@@ -1194,5 +1196,4 @@ function getUUID() {
     ret = ret.replace(new RegExp("-", 'g'), "");
 
     return ret;
-}
-;
+};
