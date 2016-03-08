@@ -306,7 +306,8 @@ public class UserMgmtService {
             oldUser.put(UserExt.USER_AVATAR_TYPE, requestJSONObject.optString(UserExt.USER_AVATAR_TYPE));
             oldUser.put(UserExt.USER_AVATAR_URL, requestJSONObject.optString(UserExt.USER_AVATAR_URL));
             oldUser.put(UserExt.USER_TEAM, requestJSONObject.optString(UserExt.USER_TEAM));
-
+            oldUser.put(UserExt.USER_JOIN_POINT_RANK, requestJSONObject.optString(UserExt.USER_JOIN_POINT_RANK));
+            oldUser.put(UserExt.USER_JOIN_USED_POINT_RANK, requestJSONObject.optString(UserExt.USER_JOIN_USED_POINT_RANK));
             oldUser.put(UserExt.USER_UPDATE_TIME, System.currentTimeMillis());
 
             userRepository.update(oldUserId, oldUser);
@@ -449,6 +450,9 @@ public class UserMgmtService {
             user.put(UserExt.USER_LONGEST_CHECKIN_STREAK, 0);
             user.put(UserExt.USER_CURRENT_CHECKIN_STREAK, 0);
             user.put(UserExt.USER_POINT, 0);
+            user.put(UserExt.USER_USED_POINT, 0);
+            user.put(UserExt.USER_JOIN_POINT_RANK, UserExt.USER_JOIN_POINT_RANK_C_JOIN);
+            user.put(UserExt.USER_JOIN_USED_POINT_RANK, UserExt.USER_JOIN_USED_POINT_RANK_C_JOIN);
             user.put(UserExt.USER_TAGS, "");
             user.put(UserExt.USER_SKIN, Symphonys.get("skinDirName")); // TODO: set default skin by app role
             user.put(UserExt.USER_COUNTRY, "");

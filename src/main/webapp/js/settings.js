@@ -19,7 +19,7 @@
  *
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.6.4.7, Feb 27, 2016
+ * @version 2.7.4.7, Mar 8, 2016
  */
 
 /**
@@ -134,7 +134,7 @@ var Settings = {
             success: function (result, textStatus) {
                 if (result.sc) {
                     $("#" + type.replace(/\//g, "") + "Tip").addClass("succ").removeClass("error").html('<ul><li>' + Label.updateSuccLabel + '</li></ul>');
-                    
+
                     if (type === 'profiles') {
                         $('#avatarURLDom').attr('style', 'background-image:url(' + requestJSONObject.userAvatarURL + ')');
                         $('#userIntroDom').text(requestJSONObject.userIntro);
@@ -189,7 +189,9 @@ var Settings = {
                 userURL: $("#userURL").val().replace(/(^\s*)|(\s*$)/g, ""),
                 userIntro: $("#userIntro").val().replace(/(^\s*)|(\s*$)/g, ""),
                 userTeam: $("#userTeam").val(),
-                userAvatarURL: $("#avatarURL").data("imageurl")
+                userAvatarURL: $("#avatarURL").data("imageurl"),
+                userJoinPointRank: $("#joinPointRank").prop("checked"),
+                userJoinUsedPointRank: $("#joinUsedPointRank").prop("checked"),
             };
         } else {
             return false;

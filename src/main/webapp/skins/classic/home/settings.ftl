@@ -32,6 +32,18 @@
         <label>${userIntroLabel}</label><br/>
         <textarea id="userIntro">${currentUser.userIntro}</textarea>
 
+        <div class="fn-clear"></div>
+        <label>
+            ${joinBalanceRankLabel}
+            <input id="joinPointRank" <#if 0 == currentUser.userJoinPointRank> checked="checked"</#if> type="checkbox" /> 
+        </label>
+
+        <label> &nbsp; &nbsp;
+            ${joinCosumptionRankLabel}
+            <input id="joinUsedPointRank" <#if 0 == currentUser.userJoinUsedPointRank> checked="checked"</#if> type="checkbox" /> 
+        </label>
+        <div class="fn-clear"></div>
+
         <label>${avatarLabel}</label><br/>
         <div class="fn-clear"></div>
         <form class="fn-right upload-file" id="avatarUpload" method="POST" enctype="multipart/form-data">
@@ -112,20 +124,20 @@
 </@home>
 <script type="text/javascript" src="${staticServePath}/js/lib/jquery/file-upload-9.10.1/jquery.fileupload.min.js"></script>
 <script>
-    Util.initUpload({
-        id: 'avatarUpload',
-        qiniuUploadToken: '${qiniuUploadToken}',
-        userId: '${currentUser.oId}'
-    }, function (data) {
-        var qiniuKey = data.result.key;
-        $('#avatarURL').css("background-image", 'url(' + qiniuKey + ')').data('imageurl', qiniuKey);
-        $('#avatarURLMid').css("background-image", 'url(' + qiniuKey + ')').data('imageurl', qiniuKey);
-        $('#avatarURLNor').css("background-image", 'url(' + qiniuKey + ')').data('imageurl', qiniuKey);
-    }, function (data) {
-        var qiniuKey = data.result.key,
-                t = new Date().getTime();
-        $('#avatarURL').css("background-image", 'url(${qiniuDomain}/' + qiniuKey + '?' + t + ')').data('imageurl', '${qiniuDomain}/' + qiniuKey);
-        $('#avatarURLMid').css("background-image", 'url(${qiniuDomain}/' + qiniuKey + '?' + t + ')').data('imageurl', '${qiniuDomain}/' + qiniuKey);
-        $('#avatarURLNor').css("background-image", 'url(${qiniuDomain}/' + qiniuKey + '?' + t + ')').data('imageurl', '${qiniuDomain}/' + qiniuKey);
-    });
+            Util.initUpload({
+                id: 'avatarUpload',
+                qiniuUploadToken: '${qiniuUploadToken}',
+                userId: '${currentUser.oId}'
+            }, function (data) {
+                var qiniuKey = data.result.key;
+                $('#avatarURL').css("background-image", 'url(' + qiniuKey + ')').data('imageurl', qiniuKey);
+                $('#avatarURLMid').css("background-image", 'url(' + qiniuKey + ')').data('imageurl', qiniuKey);
+                $('#avatarURLNor').css("background-image", 'url(' + qiniuKey + ')').data('imageurl', qiniuKey);
+            }, function (data) {
+                var qiniuKey = data.result.key,
+                        t = new Date().getTime();
+                $('#avatarURL').css("background-image", 'url(${qiniuDomain}/' + qiniuKey + '?' + t + ')').data('imageurl', '${qiniuDomain}/' + qiniuKey);
+                $('#avatarURLMid').css("background-image", 'url(${qiniuDomain}/' + qiniuKey + '?' + t + ')').data('imageurl', '${qiniuDomain}/' + qiniuKey);
+                $('#avatarURLNor').css("background-image", 'url(${qiniuDomain}/' + qiniuKey + '?' + t + ')').data('imageurl', '${qiniuDomain}/' + qiniuKey);
+            });
 </script>

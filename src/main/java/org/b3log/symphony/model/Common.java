@@ -23,7 +23,7 @@ package org.b3log.symphony.model;
  * @since 0.2.0
  */
 public final class Common {
-    
+
     /**
      * Key of number.
      */
@@ -613,6 +613,11 @@ public final class Common {
      * Key of top balance users.
      */
     public static final String TOP_BALANCE_USERS = "topBalanceUsers";
+
+    /**
+     * Key of top consumption users.
+     */
+    public static final String TOP_CONSUMPTION_USERS = "topConsumptionUsers";
 
     /**
      * Key of top checkin users.
