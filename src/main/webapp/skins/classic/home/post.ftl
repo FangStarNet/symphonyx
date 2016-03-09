@@ -55,7 +55,7 @@
                             <input type="radio" name="articleType" <#if 0 == articleType>checked="checked"</#if> value="0"/> 
                                    ${articleLabel}
                         </label>
-                        <label> &nbsp;
+                        <label id="articleType3"> &nbsp;
                             <input type="radio" name="articleType" <#if 3 == articleType>checked="checked"</#if> value="3"/> 
                                    ${thoughtLabel}
                         </label>

@@ -109,6 +109,7 @@ var AddArticle = {
     init: function () {
         var browser = Util.isMobile(true);
         if (browser.mobile && (browser.iPhone || browser.iPad || browser.windowsPhone)) {
+            $('#articleType3').hide();
             AddArticle.editor = Util.initTextarea('articleContent',
                     function (editor) {
                         if (window.localStorage) {
