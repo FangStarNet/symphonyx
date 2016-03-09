@@ -48,7 +48,6 @@ var Comment = {
                         }
                     }
             );
-
         } else {
             Util.initCodeMirror();
 

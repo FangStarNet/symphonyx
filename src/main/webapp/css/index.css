@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 /**
  * 前台样式.
  *
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.2.9.11, Mar 8, 2016
+ * @version 1.2.9.12, Mar 9, 2016
  */
 /* start module */
 .index-module .index-module-list > li {
@@ -179,7 +180,7 @@
     margin: 50px 0 0 0;
     overflow: hidden;
     padding: 4px;
-    height: 67px;
+    height: 88px;
 }
 
 .share {
@@ -211,7 +212,7 @@
 }
 
 .CodeMirror-scroll {
-    min-height: 65px;
+    min-height: 88px;
 }
 
 .editor-toolbar {
