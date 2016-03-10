@@ -93,54 +93,22 @@
                             </a>
                             </#if>
                             </#list>
-                        </ul>
-                    </div>
-                    <div class="fn-flex">
-                        <ul class="status fn-flex fn-flex-1">
-                            <li>
-                                <strong>${tag.tagReferenceCount?c}</strong>
-                                <span class="ft-gray">${referenceLabel}</span>
-                            </li>
-                            <li>
-                                <strong>${tag.tagCommentCount?c}</strong>
-                                <span class="ft-gray">${cmtLabel}</span>
-                            </li>
-                            <li>
-                                <strong>${tag.tagFollowerCount?c}</strong>
-                                <span class="ft-gray">${followLabel}</span>
-                            </li>
-                        </ul>
-                        <div class="tag-artile-user fn-clear">
-                            <a rel="nofollow" class="fn-left" title="${creatorLabel} ${tag.tagCreatorName}" 
-                               href="/member/${tag.tagCreatorName}">
-                                <div class="avatar" style="background-image:url('${tag.tagCreatorThumbnailURL}-64.jpg?${tag.tagCreatorThumbnailUpdateTime?c}')"></div>
-                            </a>
-                            <div class="fn-right">
-                                <#list tag.tagParticipants as commenter>
-                                <#if commenter_index < 4>
-                                <a rel="nofollow" class="fn-left" 
-                                   title="${contributorLabel} ${commenter.tagParticipantName}"
-                                   href="/member/${commenter.tagParticipantName}">
-                                    <div class="avatar" style="background-image:url('${commenter.tagParticipantThumbnailURL}-64.jpg?${commenter.tagParticipantThumbnailUpdateTime?c}')"></div>
-                                </a>
-                                </#if>
-                                </#list>
-                            </div>
                         </div>
                     </div>
-                    <div class="fn-clear">
-                        <@list listData=articles/>
-                        <@pagination url="/tags/${tag.tagTitle?url('utf-8')}"/>
-                    </div>
-                </div> 
-                <div class="side">
-                    <#include "side.ftl">
                 </div>
+                <div class="fn-clear">
+                    <@list listData=articles/>
+                    <@pagination url="/tags/${tag.tagTitle?url('utf-8')}"/>
+                </div>
+            </div> 
+            <div class="side">
+                <#include "side.ftl">
             </div>
         </div>
-        <#include "footer.ftl">
-        <script>
-            Util.initArticlePreview();
-        </script>
-    </body>
+    </div>
+    <#include "footer.ftl">
+    <script>
+        Util.initArticlePreview();
+    </script>
+</body>
 </html>
