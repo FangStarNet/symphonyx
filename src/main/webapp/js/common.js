@@ -19,7 +19,7 @@
  *
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.18.11.16, Mar 10, 2016
+ * @version 1.18.12.16, Mar 11, 2016
  */
 
 /**
@@ -847,9 +847,7 @@ var Util = {
                         return;
                     }
 
-                    if (!filename) {
-                        filename = " ";
-                    }
+                    var filename = new Date().getTime();
 
                     var cursor = obj.editor.getCursor();
                     obj.editor.replaceRange('![' + filename + '](' + qiniuKey + ') \n\n',
@@ -933,9 +931,7 @@ var Util = {
                     return;
                 }
 
-                if (!filename) {
-                    filename = " ";
-                }
+                var filename = new Date().getTime();
 
                 var cursor = obj.editor.getCursor();
                 obj.editor.replaceRange('![' + filename + '](' + obj.qiniuDomain + '/' + qiniuKey + ') \n\n',
@@ -1205,4 +1201,5 @@ function getUUID() {
     ret = ret.replace(new RegExp("-", 'g'), "");
 
     return ret;
-};
+}
+;
