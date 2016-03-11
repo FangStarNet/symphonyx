@@ -12,11 +12,7 @@
         <div class="main">
             <div class="wrapper">
                 <div class="content mall">
-                    <div>
-                        <font style="color: black;">♠</font> <a href="/top/balance">${pointLabel}${balanceLabel}</a> &nbsp;
-                        <font style="color: red;">♥</font> <a href="/charge/point">${chargePointLabel}</a> &nbsp;
-                        <font style="color: red;">♦</font> <a href="/top/consumption">${pointLabel}${consumptionLabel}</a>
-                    </div>
+                    <#include "common/ranking.ftl">
                     <br/>   
                     <div class="list form">
                         <ul>
