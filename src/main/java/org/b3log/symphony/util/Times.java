@@ -26,7 +26,7 @@ import org.b3log.latke.service.LangPropsServiceImpl;
  * Time utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.3.2.0, Feb 20, 2016
+ * @version 1.3.3.0, Mar 12, 2016
  * @since 1.3.0
  */
 public final class Times {
@@ -170,7 +170,7 @@ public final class Times {
         final Calendar cal1 = Calendar.getInstance();
         cal1.setFirstDayOfWeek(Calendar.MONDAY);
         cal1.setTime(date1);
-        
+
         final Calendar cal2 = Calendar.getInstance();
         cal2.setFirstDayOfWeek(Calendar.MONDAY);
         cal2.setTime(date2);
@@ -190,9 +190,10 @@ public final class Times {
         final Calendar start = Calendar.getInstance();
 
         start.setTimeInMillis(time);
-        start.set(Calendar.HOUR, 0);
-        start.set(Calendar.MINUTE, 0);
-        start.set(Calendar.SECOND, 0);
+        int year = start.get(Calendar.YEAR);
+        int month = start.get(Calendar.MONTH);
+        int day = start.get(Calendar.DATE);
+        start.set(year, month, day, 0, 0, 0);
         start.set(Calendar.MILLISECOND, 0);
 
         return start.getTime().getTime();
@@ -208,9 +209,10 @@ public final class Times {
         final Calendar end = Calendar.getInstance();
 
         end.setTimeInMillis(time);
-        end.set(Calendar.HOUR, 23);
-        end.set(Calendar.MINUTE, 59);
-        end.set(Calendar.SECOND, 59);
+        int year = end.get(Calendar.YEAR);
+        int month = end.get(Calendar.MONTH);
+        int day = end.get(Calendar.DATE);
+        end.set(year, month, day, 23, 59, 59);
         end.set(Calendar.MILLISECOND, 999);
 
         return end.getTime().getTime();
@@ -218,7 +220,7 @@ public final class Times {
 
     /**
      * Gets the week day with the specified time.
-     * 
+     *
      * @param time the specified time
      * @return week day
      */
