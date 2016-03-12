@@ -59,7 +59,7 @@ import org.jsoup.Jsoup;
  * Tag query service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.5.2.7, Mar 10, 2016
+ * @version 1.5.3.7, Mar 12, 2016
  * @since 0.2.0
  */
 @Service
@@ -470,6 +470,16 @@ public class TagQueryService {
             final Map<String, JSONObject> tags = tagRepository.get(tagIds);
             final Collection<JSONObject> values = tags.values();
             ret.addAll(values);
+
+            for (final JSONObject tag : ret) {
+                String description = tag.optString(Tag.TAG_DESCRIPTION);
+                if (StringUtils.isNotBlank(description)) {
+                    description = shortLinkQueryService.linkTag(description);
+                    description = Markdowns.toHTML(description);
+
+                    tag.put(Tag.TAG_DESCRIPTION, description);
+                }
+            }
 
             return ret;
         } catch (final RepositoryException e) {
