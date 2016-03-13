@@ -19,7 +19,7 @@
  *
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.18.12.16, Mar 11, 2016
+ * @version 1.18.13.16, Mar 13, 2016
  */
 
 /**
@@ -702,7 +702,7 @@ var Util = {
     _initNav: function () {
         var pathname = location.pathname;
         $(".nav div > a").each(function () {
-            if (pathname.indexOf($(this).attr("href")) > -1) {
+            if (pathname.indexOf($(this).attr("href")) === 0) {
                 // 用户下面有两个页面：用户的评论及文章列表
                 $(this).addClass("current");
             } else if (pathname === "/register") {
