@@ -2,13 +2,11 @@
     <div class="wrapper fn-clear">
         <div class="head-fn fn-clear">
             <h1 class="fn-left">
-                <a href="/">
-                    <img src="${staticServePath}/images/logo.png" alt="${symphonyLabel}" title="${symphonyLabel}" width="42" class="fn-pointer" />
-                </a>
+                <a href="/" style="background-image: url('${staticServePath}/images/hacpai.png')" alt="${symphonyLabel}" 
+                   title="${symphonyLabel}" width="42" class="fn-pointer"></a>
             </h1>
-            <!--
-            TODO: search
-            <form class="responsive-hide" target="_blank" action="http://search.hacpai.com/cse/search">
+            <#-- 百度站内搜索不支持 HTTPS 
+            <form class="responsive-hide" target="_blank" action="https://search.hacpai.com/cse/search">
                 <span class="icon-search"></span>
                 <input class="search" type="text" name="q">
                 <input type="hidden" value="11228953646196486415" name="s">
