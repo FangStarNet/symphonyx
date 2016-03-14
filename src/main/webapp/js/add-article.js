@@ -19,7 +19,7 @@
  *
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.11.8.6, Mar 8, 2016
+ * @version 2.12.8.6, Mar 14, 2016
  */
 
 /**
@@ -47,10 +47,6 @@ var AddArticle = {
                     "max": 1048576,
                     "min": 4,
                     "msg": Label.articleContentErrorLabel
-                }, {
-                    "type": "tags",
-                    "msg": Label.tagsErrorLabel,
-                    "target": $('#articleTags')
                 }]})) {
             var requestJSONObject = {
                 articleTitle: $("#articleTitle").val().replace(/(^\s*)|(\s*$)/g, ""),
@@ -117,6 +113,9 @@ var AddArticle = {
                         }
                     }
             );
+            $('#articleContent').before('<form id="fileUpload" method="POST" enctype="multipart/form-data"><label class="btn">'
+                    + Label.uploadLabel + '<input type="file"/></label></form>')
+                    .css('margin-top', 0);
         } else {
             Util.initCodeMirror();
             // 初始化文章编辑器
@@ -124,23 +123,6 @@ var AddArticle = {
                 element: document.getElementById('articleContent'),
                 dragDrop: false,
                 lineWrapping: true,
-                toolbar: [
-                    {name: 'bold'},
-                    {name: 'italic'},
-                    '|',
-                    {name: 'quote'},
-                    {name: 'unordered-list'},
-                    {name: 'ordered-list'},
-                    '|',
-                    {name: 'link'},
-                    {name: 'image', html: '<form id="fileUpload" method="POST" enctype="multipart/form-data"><input type="file" class="icon-image"/></form>'},
-                    '|',
-                    {name: 'redo'},
-                    {name: 'undo'},
-                    '|',
-                    {name: 'preview'},
-                    {name: 'fullscreen'}
-                ],
                 extraKeys: {
                     "Alt-/": "autocompleteUserName",
                     "Ctrl-/": "autocompleteEmoji",
@@ -153,13 +135,29 @@ var AddArticle = {
                         cm.setOption("fullScreen", false);
                     }
                 },
+                toolbar: [
+                    {name: 'bold'},
+                    {name: 'italic'},
+                    '|',
+                    {name: 'quote'},
+                    {name: 'unordered-list'},
+                    {name: 'ordered-list'},
+                    '|',
+                    {name: 'link'},
+                    {name: 'image', html: '<form id="fileUpload" method="POST" enctype="multipart/form-data"><label class="icon-image"><input type="file"/></label></form>'},
+                    '|',
+                    {name: 'redo'},
+                    {name: 'undo'},
+                    '|',
+                    {name: 'preview'},
+                    {name: 'fullscreen'}
+                ],
                 status: false
             });
             addArticleEditor.render();
 
             AddArticle.editor = addArticleEditor.codemirror;
         }
-
 
         if (window.localStorage && window.localStorage.articleContent && "" === AddArticle.editor.getValue()
                 && "" !== window.localStorage.articleContent.replace(/(^\s*)|(\s*$)/g, "")) {
@@ -186,10 +184,16 @@ var AddArticle = {
                 tagTitles += "," + tags;
             }
             $("#articleTags").val(tagTitles);
-        } else {
-            $("#articleTitle").focus();
         }
 
+        var title = getParameterByName("title");
+        if (title && title.length > 0) {
+            $("#articleTitle").val(title);
+        }
+
+        if ($("#articleTitle").val().length <= 0) {
+            $("#articleTitle").focus();
+        }
         if (!browser.mobile || !(browser.iPhone || browser.iPad || browser.windowsPhone)) {
             AddArticle.editor.on('keydown', function (cm, evt) {
                 if (8 === evt.keyCode) {
@@ -205,7 +209,6 @@ var AddArticle = {
                     }
                 }
             });
-
 
             var thoughtTime = '';
             AddArticle.editor.on('changes', function (cm, changes) {
@@ -282,6 +285,11 @@ var AddArticle = {
         if (browser.mobile && (browser.iPhone || browser.iPad || browser.windowsPhone)) {
             AddArticle.rewardEditor = Util.initTextarea('articleRewardContent');
             $('#articleRewardContent').prop('readOnly', readOnly);
+            if (readOnly === false) {
+                $('#articleRewardContent').before('<form id="rewardFileUpload" method="POST" enctype="multipart/form-data"><label class="btn">'
+                        + Label.uploadLabel + '<input type="file"/></label></form>')
+                        .css('margin-top', 0);
+            }
         } else {
             var addArticleRewardEditor = new Editor({
                 element: document.getElementById('articleRewardContent'),
@@ -297,7 +305,7 @@ var AddArticle = {
                     {name: 'ordered-list'},
                     '|',
                     {name: 'link'},
-                    {name: 'image', html: '<form id="rewardFileUpload" method="POST" enctype="multipart/form-data"><input type="file" class="icon-image"/></form>'},
+                    {name: 'image', html: '<form id="rewardFileUpload" method="POST" enctype="multipart/form-data"><label class="icon-image"><input type="file"/></label></form>'},
                     '|',
                     {name: 'redo'},
                     {name: 'undo'},
@@ -340,6 +348,7 @@ var AddArticle = {
                 }
             });
         }
+
         $("#articleRewardContent").next().next().height(100);
     },
     /**

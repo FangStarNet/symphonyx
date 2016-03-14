@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 /**
  * 后台样式.
  *
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.2.5.8, Mar 11, 2016
+ * @version 1.3.5.8, Mar 14, 2016
  */
 /* start home side */
 .user-name {
@@ -251,6 +252,15 @@
     vertical-align: bottom;
 }
 
+.admin .domains {
+    display: inline-block; 
+    width: 50%; 
+    text-overflow: ellipsis; 
+    white-space: nowrap; 
+    overflow: hidden;
+    vertical-align: bottom;
+}
+
 .admin .form input[type=text] {
     width: 50%;
     margin-right: 10px;
@@ -332,12 +342,7 @@
 /* end points */
 
 /* start settings */
-.upload-file input {
-    width: 1px;
-    opacity: 0.001;
-}
-
-.upload-file {
+#avatarUpload {
     overflow: hidden;
 }
 /* end settings */

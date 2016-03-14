@@ -3,8 +3,8 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <@head title="${article.articleTitle} - ${symphonyLabel}">
-        <meta name="description" content="${article.articleTitle}"/>
+        <@head title="${symphonyLabel} - ${article.articleTitle}">
+        <meta name="keywords" content="${article.articleTags}" />
         </@head>
         <link type="text/css" rel="stylesheet" href="${staticServePath}/js/lib/highlight.js-8.6/styles/github.css">
         <link type="text/css" rel="stylesheet" href="${staticServePath}/css/index${miniPostfix}.css?${staticResourceVersion}" />
@@ -110,7 +110,7 @@
                     <div id="thoughtProgress"><span class="bar"></span><span class="icon-video"></span><div data-text="" class="content-reset" id="thoughtProgressPreview"></div></div>
                     <div class="content-reset article-content"></div>
                     </#if>
-
+                    
                     <#if 0 < article.articleRewardPoint>
                     <div class="content-reset" id="articleRewardContent"<#if !article.rewarded> class="reward"</#if>>
                          <#if !article.rewarded>
@@ -173,11 +173,11 @@
                                                     <#assign hasRewarded = isLoggedIn && comment.commentAuthorId != currentUser.oId && comment.rewarded>
                                                     <#if hasRewarded>
                                                     <span title="${thankedLabel}">
-                                                    </#if>   
-                                                        <span class="icon-heart ft-smaller <#if hasRewarded>ft-red<#else>ft-fade</#if>"></span><span 
+                                                        </#if>   
+                                                        <span class="icon-heart ft-smaller <#if hasRewarded>ft-red<#else>ft-fade</#if>"></span><span
                                                             class="ft-smaller <#if hasRewarded>ft-red<#else>ft-fade</#if>" 
                                                             id='${comment.oId}RewardedCnt'>${comment.rewardedCnt}</span> 
-                                                    <#if hasRewarded>
+                                                        <#if hasRewarded>
                                                     </span>
                                                     </#if>
                                                     </#if>
@@ -277,6 +277,7 @@
             Label.csrfToken = "${csrfToken}";
             Label.upLabel = "${upLabel}";
             Label.downLabel = "${downLabel}";
+            Label.uploadLabel = "${uploadLabel}";
         </script>
         <script src="${staticServePath}/js/lib/jquery/jquery.bowknot.min.js"></script>
         <script src="${staticServePath}/js/lib/editor/codemirror.min.js?5120"></script>
@@ -296,7 +297,7 @@
             ArticleChannel.init("ws://${serverHost}:${serverPort}/article-channel?articleId=${article.oId}&articleType=${article.articleType}");
             // jQuery File Upload
             Util.uploadFile({
-            "type": "img",
+                    "type": "img",
                     "id": "fileUpload",
                     "pasteZone": $(".CodeMirror"),
                     "qiniuUploadToken": "${qiniuUploadToken}",

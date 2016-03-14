@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <@head title="${symphonyLabel} - ${addArticleLabel}">
+        <@head title="${addArticleLabel} - ${symphonyLabel}">
         <meta name="robots" content="none" />
         </@head>
         <link type="text/css" rel="stylesheet" href="${staticServePath}/css/home${miniPostfix}.css?${staticResourceVersion}" />
@@ -76,24 +76,25 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <#include "../footer.ftl">
-        <script src="${staticServePath}/js/lib/jquery/jquery.bowknot.min.js"></script>
-        <script src="${staticServePath}/js/lib/editor/codemirror.min.js?4.13"></script>
-        <script src="${staticServePath}/js/lib/editor/editor.js"></script>
-        <script type="text/javascript" src="${staticServePath}/js/lib/highlight.js-8.6/highlight.pack.js"></script>
-        <script type="text/javascript" src="${staticServePath}/js/lib/jquery/file-upload-9.10.1/jquery.fileupload.min.js"></script>
-        <script type="text/javascript" src="${staticServePath}/js/lib/sound-recorder/SoundRecorder.js"></script>
-        <script src="${staticServePath}/js/add-article${miniPostfix}.js?${staticResourceVersion}"></script>
-        <script type="text/javascript" src="${staticServePath}/js/audio${miniPostfix}.js?${staticResourceVersion}"></script>
-
-        <script>
-                            Label.articleTitleErrorLabel = "${articleTitleErrorLabel}";
-                            Label.articleContentErrorLabel = "${articleContentErrorLabel}";
-                            Label.tagsErrorLabel = "${tagsErrorLabel}";
-                            Label.userName = "${userName}";
-                            Label.recordDeniedLabel = "${recordDeniedLabel}";
-                            Label.recordDeviceNotFoundLabel = "${recordDeviceNotFoundLabel}";
+            <#include "../footer.ftl">
+            <script src="${staticServePath}/js/lib/jquery/jquery.bowknot.min.js"></script>
+            <script src="${staticServePath}/js/lib/editor/codemirror.min.js?4.13"></script>
+            <script src="${staticServePath}/js/lib/editor/editor.js"></script>
+            <script type="text/javascript" src="${staticServePath}/js/lib/highlight.js-8.6/highlight.pack.js"></script>
+            <script type="text/javascript" src="${staticServePath}/js/lib/jquery/file-upload-9.10.1/jquery.fileupload.min.js"></script>
+            <script type="text/javascript" src="${staticServePath}/js/lib/sound-recorder/SoundRecorder.js"></script>
+            <script>
+                           Label.articleTitleErrorLabel = "${articleTitleErrorLabel}";
+                           Label.articleContentErrorLabel = "${articleContentErrorLabel}";
+                           Label.tagsErrorLabel = "${tagsErrorLabel}";
+                           Label.userName = "${userName}";
+                           Label.recordDeniedLabel = "${recordDeniedLabel}";
+                           Label.recordDeviceNotFoundLabel = "${recordDeviceNotFoundLabel}";
+                           Label.uploadLabel = "${uploadLabel}";
+            </script>
+            <script src="${staticServePath}/js/add-article${miniPostfix}.js?${staticResourceVersion}"></script>
+            <script type="text/javascript" src="${staticServePath}/js/audio${miniPostfix}.js?${staticResourceVersion}"></script>
+            <script>
                             Util.uploadFile({
                             "id": "fileUpload",
                                     "pasteZone": $("#articleContent").next().next(),
@@ -114,12 +115,6 @@
                             var qiniuDomain = '${qiniuDomain}';
                             var audioRecordingLabel = '${audioRecordingLabel}';
                             var uploadingLabel = '${uploadingLabel}';
-                            
-                            if ("" === $("#articleTitle").val()) {
-                                $("#articleTitle").focus();
-                            } else {
-                                AddArticle.editor.focus();
-                            }
-        </script>
+            </script>
     </body>
 </html>

@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <@head title="${symphonyLabel} - ${userName} - ${messageLabel}">
+        <@head title="${userName} - ${messageLabel} - ${symphonyLabel}">
         <meta name="robots" content="none" />
         </@head>
         <link type="text/css" rel="stylesheet" href="${staticServePath}/css/home${miniPostfix}.css?${staticResourceVersion}" />
@@ -48,6 +48,7 @@
                             </a>
                         </li>
                     </ul>
+                    <br/>
                 </div>
                 <div class="list content">
                     <#nested>
