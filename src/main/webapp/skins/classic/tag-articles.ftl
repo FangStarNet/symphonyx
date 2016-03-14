@@ -109,6 +109,7 @@
     <#include "footer.ftl">
     <script>
         Util.initArticlePreview();
+        $('.person-info .btn.red').attr('onclick', 'window.location = "/post?tags=${tag.tagTitle?url('utf-8')}&type=0"');
     </script>
 </body>
 </html>
