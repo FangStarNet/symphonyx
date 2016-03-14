@@ -1053,11 +1053,11 @@ a[class*=" icon-"]:hover {
 }
 
 .nav .head-fn h1 a {
-    height: 48px;
-    width: 48px;
+    height: 36px;
+    width: 36px;
     display: block;
     background-size: cover;
-    margin-top: -9px;
+    margin-top: -4px;
 }
 
 .nav .user-nav {
