@@ -58,7 +58,7 @@ import org.json.JSONObject;
  * User query service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.5.5.5, Feb 4, 2016
+ * @version 1.6.5.5, Mar 14, 2016
  * @since 0.2.0
  */
 @Service
@@ -92,11 +92,12 @@ public class UserQueryService {
     public void loadUserNames() {
         userNames.clear();
 
-        final Query query = new Query().setPageCount(1);
-        query.setFilter(new PropertyFilter(User.USER_NAME, FilterOperator.NOT_EQUAL, UserExt.NULL_USER_NAME));
-        query.addProjection(User.USER_NAME, String.class);
-        query.addProjection(UserExt.USER_REAL_NAME, String.class);
-        query.addProjection(UserExt.USER_AVATAR_URL, String.class);
+        final Query query = new Query().setPageCount(1).
+                setFilter(new PropertyFilter(User.USER_NAME, FilterOperator.NOT_EQUAL, UserExt.NULL_USER_NAME)).
+                addProjection(User.USER_NAME, String.class).
+                addProjection(User.USER_EMAIL, String.class).
+                addProjection(UserExt.USER_REAL_NAME, String.class).
+                addProjection(UserExt.USER_AVATAR_URL, String.class);
 
         try {
             final JSONObject result = userRepository.get(query); // XXX: Performance Issue
@@ -107,6 +108,7 @@ public class UserQueryService {
                 final JSONObject u = new JSONObject();
                 u.put(User.USER_NAME, user.optString(User.USER_NAME));
                 u.put(UserExt.USER_REAL_NAME, user.optString(UserExt.USER_REAL_NAME));
+                u.put(User.USER_EMAIL, user.optString(User.USER_EMAIL));
 
                 String avatar = user.optString(UserExt.USER_AVATAR_URL);
                 if (StringUtils.isBlank(avatar)) {
@@ -120,8 +122,8 @@ public class UserQueryService {
             Collections.sort(userNames, new Comparator<JSONObject>() {
                 @Override
                 public int compare(final JSONObject u1, final JSONObject u2) {
-                    final String u1Name = u1.optString(User.USER_NAME);
-                    final String u2Name = u2.optString(User.USER_NAME);
+                    final String u1Name = u1.optString(User.USER_EMAIL);
+                    final String u2Name = u2.optString(User.USER_EMAIL);
 
                     return u2Name.compareToIgnoreCase(u1Name);
                 }
@@ -148,13 +150,13 @@ public class UserQueryService {
         final List<JSONObject> ret = new ArrayList<JSONObject>();
 
         final JSONObject nameToSearch = new JSONObject();
-        nameToSearch.put(User.USER_NAME, namePrefix);
+        nameToSearch.put(User.USER_EMAIL, namePrefix);
 
         final int index = Collections.binarySearch(userNames, nameToSearch, new Comparator<JSONObject>() {
             @Override
             public int compare(final JSONObject u1, final JSONObject u2) {
-                final String u1Name = u1.optString(User.USER_NAME).toLowerCase();
-                final String inputName = u2.optString(User.USER_NAME).toLowerCase();
+                final String u1Name = u1.optString(User.USER_EMAIL).toLowerCase();
+                final String inputName = u2.optString(User.USER_EMAIL).toLowerCase();
 
                 if (u1Name.startsWith(inputName)) {
                     return 0;
