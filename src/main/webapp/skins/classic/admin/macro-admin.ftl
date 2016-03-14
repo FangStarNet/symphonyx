@@ -22,16 +22,22 @@
         <@head title="${tagAdminLabel} - ${symphonyLabel}"></@head>
         </#if>
         <#if type == "orders">
-        <@head title="${symphonyLabel} - ${orderAdminLabel}"></@head>
+        <@head title="${orderAdminLabel} - ${symphonyLabel}"></@head>
         </#if>
         <#if type == "chargeRecords">
-        <@head title="${symphonyLabel} - ${chargePointLabel}"></@head>
+        <@head title="${chargePointLabel} - ${symphonyLabel}"></@head>
         </#if>
         <#if type == "pointCharge">
         <@head title="${chargePointLabel} - ${symphonyLabel}"></@head>
         </#if>
         <#if type == "misc">
         <@head title="${miscAdminLabel} - ${symphonyLabel}"></@head>
+        </#if>
+        <#if type == "products">
+        <@head title="${productAdminLabel} - ${symphonyLabel}"></@head>
+        </#if>
+        <#if type == "addProduct">
+        <@head title="${addProductLabel} - ${symphonyLabel}"></@head>
         </#if>
         <link type="text/css" rel="stylesheet" href="${staticServePath}/css/home${miniPostfix}.css?${staticResourceVersion}" />
     </head>
