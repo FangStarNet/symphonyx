@@ -75,7 +75,7 @@ import org.jsoup.safety.Whitelist;
  * Article query service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.13.8.16, Feb 18, 2016
+ * @version 2.13.8.17, Mar 14, 2016
  * @since 0.2.0
  */
 @Service
@@ -966,21 +966,20 @@ public class ArticleQueryService {
     }
 
     /**
-     * Generates the specified article author name, real name and thumbnail URL.
+     * Generates the specified article author name and thumbnail URL.
      *
      * @param article the specified article
      * @throws RepositoryException repository exception
      */
     private void genArticleAuthor(final JSONObject article) throws RepositoryException {
-        final String authorEmail = article.optString(Article.ARTICLE_AUTHOR_EMAIL);
-
-        if (Strings.isEmptyOrNull(authorEmail)) {
+        final String authorId = article.optString(Article.ARTICLE_AUTHOR_ID);
+        if (Strings.isEmptyOrNull(authorId)) {
             return;
         }
 
-        final JSONObject author = userRepository.getByEmail(authorEmail);
+        final JSONObject author = userRepository.get(authorId);
 
-        article.put(Article.ARTICLE_T_AUTHOR_THUMBNAIL_URL, avatarQueryService.getAvatarURL(authorEmail));
+        article.put(Article.ARTICLE_T_AUTHOR_THUMBNAIL_URL, avatarQueryService.getAvatarURLByUserId(authorId));
         article.put(Article.ARTICLE_T_AUTHOR, author);
 
         article.put(Article.ARTICLE_T_AUTHOR_NAME, author.optString(User.USER_NAME));
