@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <@head title="${symphonyLabel} - ${journalLabel}">
+        <@head title="${journalLabel} - ${symphonyLabel}">
         <meta name="description" content="${journalLabel}"/>
         </@head>
         <link type="text/css" rel="stylesheet" href="${staticServePath}/css/index${miniPostfix}.css?${staticResourceVersion}" />

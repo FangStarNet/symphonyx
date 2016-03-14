@@ -22,10 +22,10 @@
         <@head title="${tagAdminLabel} - ${symphonyLabel}"></@head>
         </#if>
         <#if type == "orders">
-        <@head title="${symphonyLabel} - ${orderAdminLabel}"></@head>
+        <@head title="${orderAdminLabel}"></@head>
         </#if>
         <#if type == "chargeRecords">
-        <@head title="${symphonyLabel} - ${chargePointLabel}"></@head>
+        <@head title="${chargePointLabel} - ${symphonyLabel}"></@head>
         </#if>
         <#if type == "pointCharge">
         <@head title="${chargePointLabel} - ${symphonyLabel}"></@head>
