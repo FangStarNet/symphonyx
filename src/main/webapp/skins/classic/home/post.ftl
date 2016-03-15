@@ -14,7 +14,21 @@
         <div class="main">
             <div class="wrapper post">
                 <div class="form fn-flex-1 fn-clear">
+                    <#if 0 == articleType>
+                        ${articleLabel} - <span class="ft-gray"><span class="ft-green">提问</span>或<span class="ft-green">分享</span>对别人有帮助的经验与见解</span>
+                    <#elseif 1 == articleType>
+                        ${discussionLabel} - <span class="ft-gray">@好友并在<span class="ft-red">私密</span>空间中进行交流</span>
+                    <#elseif 4 == articleType>
+                        ${journalLabel} - <span class="ft-gray"><span class="ft-green">记录</span>下今天的航海冒险经历</span>
+                    <#elseif 3 == articleType>
+                        ${thoughtLabel} - 
+                        <span class="ft-gray">
+                            写作过程的记录与重放，文字版的<span class="ft-red">沙画</span>表演
+                            <a href="https://hacpai.com/article/1441942422856" target="_blank">(?)</a>
+                        </span>
+                    </#if>
                     <div>
+                        <br/>
                         <input type="text" id="articleTitle" tabindex="1"
                                value="<#if article??>${article.articleTitle}<#else><#if 4 == articleType>${articleTitle}</#if></#if>" placeholder="${titleLabel}" />
                     </div>
@@ -49,7 +63,7 @@
                                <br/><br/>
                     </div>
                     <div class="tip" id="addArticleTip"></div>
-                    <div class="fn-clear">
+                    <div class="fn-clear fn-none">
                         <#if !article??>
                         <label> &nbsp;
                             <input type="radio" name="articleType" <#if 0 == articleType>checked="checked"</#if> value="0"/> 
