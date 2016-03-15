@@ -23,11 +23,6 @@
                                title="${tag.tagTitle?url('UTF-8')}" 
                                href="/tags/${tag.tagTitle?url('utf-8')}">${tag.tagTitle}</a>
                         </h1>
-                        <#if isLoggedIn>
-                        <#if !tag.isReserved || isAdminLoggedIn> &nbsp;
-                        <a class="btn red" href="/post?tags=${tag.tagTitle?url('utf-8')}&type=0">${addArticleLabel}</a>
-                        </#if>
-                        </#if>
                         <span class='fn-right'>
                             <#if isLoggedIn> &nbsp;
                             <#if isFollowing>
