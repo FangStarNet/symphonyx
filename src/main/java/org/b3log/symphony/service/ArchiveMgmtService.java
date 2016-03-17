@@ -45,7 +45,7 @@ import org.json.JSONObject;
  * Archive management service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Jan 29, 2016
+ * @version 1.0.0.1, Mar 17, 2016
  * @since 1.4.0
  */
 @Service
@@ -67,6 +67,12 @@ public class ArchiveMgmtService {
      */
     @Inject
     private UserRepository userRepository;
+    
+    /**
+     * Avatar query service.
+     */
+    @Inject
+    private AvatarQueryService avatarQueryService;
 
     /**
      * Adds the specified archive.
@@ -151,7 +157,7 @@ public class ArchiveMgmtService {
             final JSONArray users = result.optJSONArray(Keys.RESULTS);
             for (int i = 0; i < users.length(); i++) {
                 final JSONObject user = users.optJSONObject(i);
-                AvatarQueryService.fillUserAvatarURL(user);
+                avatarQueryService.fillUserAvatarURL(user);
             }
 
             return CollectionUtils.<JSONObject>jsonArrayToList(result.optJSONArray(Keys.RESULTS));
