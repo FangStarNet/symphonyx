@@ -981,7 +981,7 @@ public class ArticleQueryService {
 
         final JSONObject author = userRepository.get(authorId);
 
-        article.put(Article.ARTICLE_T_AUTHOR_THUMBNAIL_URL, avatarQueryService.getAvatarURLByUserId(authorId));
+        article.put(Article.ARTICLE_T_AUTHOR_THUMBNAIL_URL, avatarQueryService.getAvatarURLByUser(author));
         article.put(Article.ARTICLE_T_AUTHOR, author);
 
         article.put(Article.ARTICLE_T_AUTHOR_NAME, author.optString(User.USER_NAME));
@@ -1033,7 +1033,7 @@ public class ArticleQueryService {
                 final String email = comment.optString(Comment.COMMENT_AUTHOR_EMAIL);
                 final JSONObject commenter = userRepository.getByEmail(email);
 
-                final String thumbnailURL = avatarQueryService.getAvatarURL(email);
+                final String thumbnailURL = avatarQueryService.getAvatarURLByUser(commenter);
 
                 final JSONObject participant = new JSONObject();
                 participant.put(Article.ARTICLE_T_PARTICIPANT_NAME, commenter.optString(User.USER_NAME));
