@@ -84,6 +84,7 @@ import org.b3log.symphony.service.UserQueryService;
 import org.b3log.symphony.util.Filler;
 import org.b3log.symphony.util.Mails;
 import org.b3log.symphony.util.Symphonys;
+import org.b3log.symphony.util.Times;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -1451,6 +1452,8 @@ public class AdminProcessor {
         if (!Strings.isEmptyOrNull(category)) {
             requestJSONObject.put(Order.ORDER_PRODUCT_CATEGORY, category);
             dataModel.put(Common.CATEGORY, category);
+        } else {
+            dataModel.put(Common.CATEGORY, "");
         }
 
         final String status = request.getParameter(Common.STATUS);
@@ -1459,7 +1462,7 @@ public class AdminProcessor {
             dataModel.put(Common.STATUS, status);
         } else {
             requestJSONObject.put(Order.ORDER_STATUS, Order.ORDER_STATUS_C_INIT);
-            dataModel.put(Common.STATUS, Order.ORDER_STATUS_C_INIT);
+            dataModel.put(Common.STATUS, String.valueOf(Order.ORDER_STATUS_C_INIT));
         }
 
         final String from = request.getParameter(Common.FROM);
@@ -1468,17 +1471,18 @@ public class AdminProcessor {
             requestJSONObject.put(Common.FROM, date.getTime());
             dataModel.put(Common.FROM, DateFormatUtils.format(date, "yyyy-MM-dd"));
         } else {
-            requestJSONObject.put(Common.FROM, 0);
-            dataModel.put(Common.FROM, DateFormatUtils.format(DateUtils.addMonths(new Date(), -1), "yyyy-MM-dd"));
+            final Date date = DateUtils.addMonths(new Date(), -1);
+            requestJSONObject.put(Common.FROM, date.getTime());
+            dataModel.put(Common.FROM, DateFormatUtils.format(date, "yyyy-MM-dd"));
         }
 
         final String to = request.getParameter(Common.TO);
         if (!Strings.isEmptyOrNull(to)) {
             final Date date = DateUtils.parseDate(to, new String[]{"yyyy-MM-dd"});
-            requestJSONObject.put(Common.TO, date.getTime());
+            requestJSONObject.put(Common.TO, Times.getDayEndTime(date.getTime()));
             dataModel.put(Common.TO, DateFormatUtils.format(date, "yyyy-MM-dd"));
         } else {
-            requestJSONObject.put(Common.TO, 0);
+            requestJSONObject.put(Common.TO, Times.getDayEndTime(System.currentTimeMillis()));
             dataModel.put(Common.TO, DateFormatUtils.format(new Date(), "yyyy-MM-dd"));
         }
 

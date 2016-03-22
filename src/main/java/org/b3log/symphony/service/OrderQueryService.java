@@ -127,13 +127,8 @@ public class OrderQueryService {
             filters.add(new PropertyFilter(Order.ORDER_PRODUCT_CATEGORY, FilterOperator.NOT_EQUAL, ""));
         }
 
-        if (status != Order.ORDER_STATUS_C_INIT) {
-            filters.add(new PropertyFilter(Order.ORDER_CONFIRM_TIME, FilterOperator.GREATER_THAN_OR_EQUAL, requestJSONObject.optLong(Common.FROM)));
-            filters.add(new PropertyFilter(Order.ORDER_CONFIRM_TIME, FilterOperator.LESS_THAN_OR_EQUAL, requestJSONObject.optLong(Common.TO)));
-        } else {
-            filters.add(new PropertyFilter(Order.ORDER_CREATE_TIME, FilterOperator.GREATER_THAN_OR_EQUAL, requestJSONObject.optLong(Common.FROM)));
-            filters.add(new PropertyFilter(Order.ORDER_CREATE_TIME, FilterOperator.LESS_THAN_OR_EQUAL, requestJSONObject.optLong(Common.TO)));
-        }
+        filters.add(new PropertyFilter(Order.ORDER_CREATE_TIME, FilterOperator.GREATER_THAN_OR_EQUAL, requestJSONObject.optLong(Common.FROM)));
+        filters.add(new PropertyFilter(Order.ORDER_CREATE_TIME, FilterOperator.LESS_THAN_OR_EQUAL, requestJSONObject.optLong(Common.TO)));
 
         query.setFilter(new CompositeFilter(CompositeFilterOperator.AND, filters));
 

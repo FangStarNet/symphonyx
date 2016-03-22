@@ -862,6 +862,7 @@ a[class*=" icon-"]:hover {
 .form input[type=text],
 .form input[type=password],
 .form input[type=number],
+.form input[type=date],
 .form select,
 .form textarea {
     border: 1px solid #CCCCCC;

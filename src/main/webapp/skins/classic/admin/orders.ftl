@@ -2,17 +2,47 @@
 <#include "order-macro-pagination.ftl">
 <@admin "orders">
 <div class="list content admin">
-    <form method="GET" action="orders" class="form">
-        <input name="category" type="text" placeholder="${categoryLabel}" <#if category??>value="${category}"</#if> />
-        <select id="status" name="status">
-            <option value="0"<#if "0" == status> selected</#if>>${toHandleLabel}</option>
-            <option value="1"<#if "1" == status> selected</#if>>${buySuccLabel}</option>
-            <option value="2"<#if "2" == status> selected</#if>>${refundProcessLabel}</option>
-        </select>
-
-        <input name="from" type="date" value="${from}" />
-        <input name="to" type="date" value="${to}"/>
-        <button type="submit" class="green">${searchLabel}</button>
+    <form method="GET" action="orders" class="form fn-clear">
+        <table>
+            <tr>
+                <td width="70">
+                    <label>类型 </label>
+                </td>
+                <td>
+                    <select id="category" name="category">
+                        <option value=""<#if "" == category> selected</#if>></option>
+                        <option value="早餐"<#if "早餐" == category> selected</#if>>早餐</option>
+                        <option value="咖啡"<#if "咖啡" == category> selected</#if>>咖啡</option>
+                        <option value="娱乐"<#if "娱乐" == category> selected</#if>>娱乐</option>
+                    </select>
+                </td>
+                <td width="70">
+                    <label>状态 </label> 
+                </td>
+                <td>
+                    <select id="status" name="status">
+                        <option value="0"<#if "0" == status> selected</#if>>${toHandleLabel}</option>
+                        <option value="1"<#if "1" == status> selected</#if>>${buySuccLabel}</option>
+                        <option value="2"<#if "2" == status> selected</#if>>${refundProcessLabel}</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label>开始时间</label> 
+                </td>
+                <td>
+                    <input name="from" type="date" value="${from}" />
+                </td>
+                <td>
+                    <label>结束时间</label> 
+                </td>
+                <td>
+                    <input name="to" type="date" value="${to}"/>
+                </td>
+            </tr>
+        </table><br/>
+        <button type="submit" class="green fn-right">${searchLabel}</button>
     </form>
     <br/>
     <ul>

@@ -38,7 +38,7 @@ import org.json.JSONObject;
  * Product management service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.1.1, Mar 7, 2016
+ * @version 1.1.1.2, Mar 22, 2016
  * @since 1.4.0
  */
 @Service
@@ -168,6 +168,7 @@ public class ProductMgmtService {
                 order.put(Order.ORDER_POINT, point);
                 order.put(Order.ORDER_PRICE, price);
                 order.put(Order.ORDER_PRODUCT_NAME, product.optString(Product.PRODUCT_NAME));
+                order.put(Order.ORDER_PRODUCT_CATEGORY, product.optString(Product.PRODUCT_CATEGORY));
                 order.put(Order.ORDER_BUYER_ID, userId);
 
                 final String orderId = orderMgmtService.addOrder(order);
