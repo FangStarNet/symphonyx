@@ -1,6 +1,6 @@
 {
     "description": "Description of repository structures, for generation (DDL: http://en.wikipedia.org/wiki/Data_Definition_Language) of the relational database table and persistence validation.",
-    "version": "3.16.5.4, Mar 8, 2016",
+    "version": "3.17.5.4, Mar 22, 2016",
     "authors": ["Liang Ding"],
     "since": "0.2.0",
     "repositories": [
@@ -19,6 +19,11 @@
                 },
                 {
                     "name": "orderProductName",
+                    "type": "String",
+                    "length": 20
+                },
+                {
+                    "name": "orderProductCategory",
                     "type": "String",
                     "length": 20
                 },

@@ -19,7 +19,7 @@ package org.b3log.symphony.model;
  * This class defines order model relevant keys.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Feb 24, 2016
+ * @version 1.1.0.0, Mar 22, 2016
  * @since 1.4.0
  */
 public final class Order {
@@ -43,6 +43,11 @@ public final class Order {
      * Key of order product name.
      */
     public static final String ORDER_PRODUCT_NAME = "orderProductName";
+
+    /**
+     * Key of order product category.
+     */
+    public static final String ORDER_PRODUCT_CATEGORY = "orderProductCategory";
 
     /**
      * Key of order price.

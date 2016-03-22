@@ -1,7 +1,20 @@
 <#include "macro-admin.ftl">
-<#include "../macro-pagination.ftl">
+<#include "order-macro-pagination.ftl">
 <@admin "orders">
 <div class="list content admin">
+    <form method="GET" action="orders" class="form">
+        <input name="category" type="text" placeholder="${categoryLabel}" <#if category??>value="${category}"</#if> />
+        <select id="status" name="status">
+            <option value="0"<#if "0" == status> selected</#if>>${toHandleLabel}</option>
+            <option value="1"<#if "1" == status> selected</#if>>${buySuccLabel}</option>
+            <option value="2"<#if "2" == status> selected</#if>>${refundProcessLabel}</option>
+        </select>
+
+        <input name="from" type="date" value="${from}" />
+        <input name="to" type="date" value="${to}"/>
+        <button type="submit" class="green">${searchLabel}</button>
+    </form>
+    <br/>
     <ul>
         <#list orders as item>
         <li class="fn-clear">
@@ -38,7 +51,7 @@
         </li>
         </#list>
     </ul>
-    <@pagination url="/admin/orders"/>
+    <@pagination url="/admin/orders" query="status=${status}&from=${from}&to=${to}&category=${category}" />
 </div>
 </@admin>
 

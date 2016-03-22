@@ -15,6 +15,7 @@
  */
 package org.b3log.symphony.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,11 @@ import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.Pagination;
 import org.b3log.latke.model.User;
+import org.b3log.latke.repository.CompositeFilter;
+import org.b3log.latke.repository.CompositeFilterOperator;
+import org.b3log.latke.repository.Filter;
+import org.b3log.latke.repository.FilterOperator;
+import org.b3log.latke.repository.PropertyFilter;
 import org.b3log.latke.repository.Query;
 import org.b3log.latke.repository.RepositoryException;
 import org.b3log.latke.repository.SortDirection;
@@ -32,6 +38,7 @@ import org.b3log.latke.service.ServiceException;
 import org.b3log.latke.service.annotation.Service;
 import org.b3log.latke.util.CollectionUtils;
 import org.b3log.latke.util.Paginator;
+import org.b3log.symphony.model.Common;
 import org.b3log.symphony.model.Order;
 import org.b3log.symphony.model.UserExt;
 import org.b3log.symphony.repository.OrderRepository;
@@ -109,6 +116,26 @@ public class OrderQueryService {
         for (final Map.Entry<String, Class<?>> field : orderFields.entrySet()) {
             query.addProjection(field.getKey(), field.getValue());
         }
+
+        final List<Filter> filters = new ArrayList<Filter>();
+        final int status = requestJSONObject.optInt(Order.ORDER_STATUS);
+        filters.add(new PropertyFilter(Order.ORDER_STATUS, FilterOperator.EQUAL, status));
+
+        if (requestJSONObject.has(Order.ORDER_PRODUCT_CATEGORY)) {
+            filters.add(new PropertyFilter(Order.ORDER_PRODUCT_CATEGORY, FilterOperator.EQUAL, requestJSONObject.optString(Order.ORDER_PRODUCT_CATEGORY)));
+        } else {
+            filters.add(new PropertyFilter(Order.ORDER_PRODUCT_CATEGORY, FilterOperator.NOT_EQUAL, ""));
+        }
+
+        if (status != Order.ORDER_STATUS_C_INIT) {
+            filters.add(new PropertyFilter(Order.ORDER_CONFIRM_TIME, FilterOperator.GREATER_THAN_OR_EQUAL, requestJSONObject.optLong(Common.FROM)));
+            filters.add(new PropertyFilter(Order.ORDER_CONFIRM_TIME, FilterOperator.LESS_THAN_OR_EQUAL, requestJSONObject.optLong(Common.TO)));
+        } else {
+            filters.add(new PropertyFilter(Order.ORDER_CREATE_TIME, FilterOperator.GREATER_THAN_OR_EQUAL, requestJSONObject.optLong(Common.FROM)));
+            filters.add(new PropertyFilter(Order.ORDER_CREATE_TIME, FilterOperator.LESS_THAN_OR_EQUAL, requestJSONObject.optLong(Common.TO)));
+        }
+
+        query.setFilter(new CompositeFilter(CompositeFilterOperator.AND, filters));
 
         JSONObject result = null;
 

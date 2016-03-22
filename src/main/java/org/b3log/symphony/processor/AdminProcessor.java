@@ -26,6 +26,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateFormatUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.logging.Logger;
@@ -1444,6 +1446,41 @@ public class AdminProcessor {
         requestJSONObject.put(Pagination.PAGINATION_CURRENT_PAGE_NUM, pageNum);
         requestJSONObject.put(Pagination.PAGINATION_PAGE_SIZE, pageSize);
         requestJSONObject.put(Pagination.PAGINATION_WINDOW_SIZE, windowSize);
+
+        final String category = request.getParameter(Common.CATEGORY);
+        if (!Strings.isEmptyOrNull(category)) {
+            requestJSONObject.put(Order.ORDER_PRODUCT_CATEGORY, category);
+            dataModel.put(Common.CATEGORY, category);
+        }
+
+        final String status = request.getParameter(Common.STATUS);
+        if (!Strings.isEmptyOrNull(status)) {
+            requestJSONObject.put(Order.ORDER_STATUS, status);
+            dataModel.put(Common.STATUS, status);
+        } else {
+            requestJSONObject.put(Order.ORDER_STATUS, Order.ORDER_STATUS_C_INIT);
+            dataModel.put(Common.STATUS, Order.ORDER_STATUS_C_INIT);
+        }
+
+        final String from = request.getParameter(Common.FROM);
+        if (!Strings.isEmptyOrNull(from)) {
+            final Date date = DateUtils.parseDate(from, new String[]{"yyyy-MM-dd"});
+            requestJSONObject.put(Common.FROM, date.getTime());
+            dataModel.put(Common.FROM, DateFormatUtils.format(date, "yyyy-MM-dd"));
+        } else {
+            requestJSONObject.put(Common.FROM, 0);
+            dataModel.put(Common.FROM, DateFormatUtils.format(DateUtils.addMonths(new Date(), -1), "yyyy-MM-dd"));
+        }
+
+        final String to = request.getParameter(Common.TO);
+        if (!Strings.isEmptyOrNull(to)) {
+            final Date date = DateUtils.parseDate(to, new String[]{"yyyy-MM-dd"});
+            requestJSONObject.put(Common.TO, date.getTime());
+            dataModel.put(Common.TO, DateFormatUtils.format(date, "yyyy-MM-dd"));
+        } else {
+            requestJSONObject.put(Common.TO, 0);
+            dataModel.put(Common.TO, DateFormatUtils.format(new Date(), "yyyy-MM-dd"));
+        }
 
         final Map<String, Class<?>> fields = new HashMap<String, Class<?>>();
         fields.put(Keys.OBJECT_ID, String.class);
