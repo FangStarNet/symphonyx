@@ -75,7 +75,7 @@ import org.jsoup.safety.Whitelist;
  * Article query service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.13.8.17, Mar 14, 2016
+ * @version 2.13.8.18, Mar 23, 2016
  * @since 0.2.0
  */
 @Service
@@ -196,7 +196,7 @@ public class ArticleQueryService {
                     articleIds.add(articleId);
                     fetchedArticleIds.add(articleId);
                 }
-                
+
                 articleIds.remove(article.optString(Keys.OBJECT_ID));
 
                 final Query query = new Query().setFilter(new PropertyFilter(Keys.OBJECT_ID, FilterOperator.IN, articleIds));
@@ -1021,13 +1021,35 @@ public class ArticleQueryService {
     private List<JSONObject> getArticleLatestParticipants(final String articleId, final int fetchSize) {
         final Query query = new Query().addSort(Comment.COMMENT_CREATE_TIME, SortDirection.DESCENDING)
                 .setFilter(new PropertyFilter(Comment.COMMENT_ON_ARTICLE_ID, FilterOperator.EQUAL, articleId))
-                .addProjection(Comment.COMMENT_AUTHOR_EMAIL, String.class).addProjection(Keys.OBJECT_ID, String.class)
+                .addProjection(Comment.COMMENT_AUTHOR_EMAIL, String.class)
+                .addProjection(Keys.OBJECT_ID, String.class)
+                .addProjection(Comment.COMMENT_AUTHOR_ID, String.class)
                 .setPageCount(1).setCurrentPageNum(1).setPageSize(fetchSize);
         final List<JSONObject> ret = new ArrayList<JSONObject>();
 
         try {
             final JSONObject result = commentRepository.get(query);
-            final List<JSONObject> comments = CollectionUtils.<JSONObject>jsonArrayToList(result.optJSONArray(Keys.RESULTS));
+
+            final List<JSONObject> comments = new ArrayList<JSONObject>();
+            final JSONArray records = result.optJSONArray(Keys.RESULTS);
+            for (int i = 0; i < records.length(); i++) {
+                final JSONObject comment = records.optJSONObject(i);
+
+                boolean exist = false;
+                // deduplicate
+                for (final JSONObject c : comments) {
+                    if (comment.optString(Comment.COMMENT_AUTHOR_ID).equals(
+                            c.optString(Comment.COMMENT_AUTHOR_ID))) {
+                        exist = true;
+
+                        break;
+                    }
+                }
+
+                if (!exist) {
+                    comments.add(comment);
+                }
+            }
 
             for (final JSONObject comment : comments) {
                 final String email = comment.optString(Comment.COMMENT_AUTHOR_EMAIL);
