@@ -57,7 +57,7 @@ import org.jsoup.safety.Whitelist;
  * Comment management service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.3.4.17, Aug 18, 2015
+ * @version 1.3.5.17, Mar 28, 2016
  * @since 0.2.0
  */
 @Service
@@ -518,8 +518,8 @@ public class CommentQueryService {
 
         commentContent = shortLinkQueryService.linkArticle(commentContent);
         commentContent = shortLinkQueryService.linkTag(commentContent);
-        commentContent = Markdowns.toHTML(commentContent);
         commentContent = Emotions.convert(commentContent);
+        commentContent = Markdowns.toHTML(commentContent);
         commentContent = Markdowns.clean(commentContent, "");
 
         comment.put(Comment.COMMENT_CONTENT, commentContent);
