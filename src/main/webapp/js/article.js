@@ -19,7 +19,7 @@
  *
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.13.15.9, Mar 26, 2016
+ * @version 1.13.15.10, Mar 30, 2016
  */
 
 /**
@@ -292,6 +292,13 @@ var Article = {
             $('#journalSide').width($('.side').width())
                     .height($(window).height() - 230);
         }
+        
+        $(".content-reset.article-content").on('dblclick', 'img', function () {
+            if ($(this).hasClass('emoji')) {
+                return false;
+            }
+            window.open($(this).attr('src'));
+        });
     },
     /**
      * @description 初始化航海日记
