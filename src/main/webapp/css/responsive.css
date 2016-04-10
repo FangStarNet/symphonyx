@@ -17,7 +17,7 @@
  * Base style.
  *
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
- * @version 1.0.2.9, Mar 12, 2016
+ * @version 1.0.2.9, Apr 10, 2016
  */
 @media (max-width: 1016px) {
     .avatar-big {
@@ -84,7 +84,7 @@
         height: 25px;
         width: 25px;
     }
-    
+
     .list .icon-goods {
         font-size: 24px;
     }
@@ -136,7 +136,7 @@
         font-size: 20px;
         margin-bottom: 10px;
     }
-    
+
     .wrapper.pre-post div.ft-fade,
     .wrapper.pre-post a div {
         margin: 20px 0;
@@ -147,6 +147,11 @@
     .person-info .avatar {
         display: inherit;
     }
+
+    #comments li .thx {
+        display: initial
+    }
+
 
     .responsive-hide,
     .wrapper .tags > li:hover > div {
