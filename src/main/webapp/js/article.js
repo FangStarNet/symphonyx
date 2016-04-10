@@ -19,7 +19,7 @@
  *
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.13.15.10, Mar 30, 2016
+ * @version 1.13.16.10, Apr 10, 2016
  */
 
 /**
@@ -267,6 +267,43 @@ var Comment = {
      */
     replay: function (userName) {
         Comment.editor.focus();
+        var browser = Util.isMobile(true);
+        if (browser.mobile && (browser.iPhone || browser.iPad || browser.windowsPhone)) {
+            var $it = $('#commentContent'),
+                    it = $it[0],
+                    index = 0;
+            if (document.selection) { // IE
+                try {
+                    var cuRange = document.selection.createRange();
+                    var tbRange = it.createTextRange();
+                    tbRange.collapse(true);
+                    tbRange.select();
+                    var headRange = document.selection.createRange();
+                    headRange.setEndPoint("EndToEnd", cuRange);
+                    index = headRange.text.length;
+                    cuRange.select();
+                } catch (e) {
+                    delete e;
+                }
+            } else {
+                index = it.selectionStart;
+            }
+
+            $it.val($it.val().substr(0, index) + userName + ' ' + $it.val().substr(index));
+            var insertIndex = ($it.val().substr(0, index) + userName).length;
+            if (it.setSelectionRange) {
+                it.focus();
+                it.setSelectionRange(insertIndex, insertIndex);
+            } else if (it.createTextRange) {
+                var range = it.createTextRange();
+                range.collapse(true);
+                range.moveEnd('character', insertIndex);
+                range.moveStart('character', insertIndex);
+                range.select();
+            }
+            return false;
+        }
+
         var cursor = Comment.editor.getCursor();
 
         Comment.editor.doc.replaceRange(userName, cursor, cursor);
