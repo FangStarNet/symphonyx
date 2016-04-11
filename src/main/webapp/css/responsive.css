@@ -149,7 +149,7 @@
     }
 
     #comments li .thx {
-        display: initial
+        display: inline-block;
     }
 
 
