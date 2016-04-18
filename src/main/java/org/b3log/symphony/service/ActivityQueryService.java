@@ -29,6 +29,7 @@ import org.b3log.latke.repository.RepositoryException;
 import org.b3log.latke.repository.SortDirection;
 import org.b3log.latke.service.annotation.Service;
 import org.b3log.latke.util.CollectionUtils;
+import org.b3log.symphony.cache.UserCache;
 import org.b3log.symphony.model.Pointtransfer;
 import org.b3log.symphony.model.UserExt;
 import org.b3log.symphony.repository.UserRepository;
@@ -39,7 +40,7 @@ import org.json.JSONObject;
  * Activity query service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.3.1.0, Sep 16, 2015
+ * @version 1.3.1.1, Apr 18, 2016
  * @since 1.3.0
  */
 @Service
@@ -67,6 +68,12 @@ public class ActivityQueryService {
      */
     @Inject
     private AvatarQueryService avatarQueryService;
+
+    /**
+     * User cache.
+     */
+    @Inject
+    private UserCache userCache;
 
     /**
      * Gets the top checkin users with the specified fetch size.
@@ -118,6 +125,18 @@ public class ActivityQueryService {
         }
 
         final Date now = new Date();
+
+        JSONObject user = userCache.getUser(userId);
+
+        try {
+            if (null == user) {
+                user = userRepository.get(userId);
+            }
+        } catch (final RepositoryException e) {
+            LOGGER.log(Level.ERROR, "Checks checkin failed", e);
+
+            return true;
+        }
 
         final List<JSONObject> records = pointtransferQueryService.getLatestPointtransfers(userId,
                 Pointtransfer.TRANSFER_TYPE_C_ACTIVITY_CHECKIN, 1);
