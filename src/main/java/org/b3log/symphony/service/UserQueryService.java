@@ -28,6 +28,7 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
 import org.b3log.latke.logging.Level;
@@ -58,7 +59,7 @@ import org.json.JSONObject;
  * User query service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.6.5.5, Mar 14, 2016
+ * @version 1.6.5.6, Apr 18, 2016
  * @since 0.2.0
  */
 @Service
@@ -125,7 +126,7 @@ public class UserQueryService {
                     final String u1Name = u1.optString(User.USER_EMAIL);
                     final String u2Name = u2.optString(User.USER_EMAIL);
 
-                    return u2Name.compareToIgnoreCase(u1Name);
+                    return u1Name.compareToIgnoreCase(u2Name);
                 }
             });
         } catch (final RepositoryException e) {
@@ -147,33 +148,49 @@ public class UserQueryService {
      * </pre>
      */
     public List<JSONObject> getUserNamesByPrefix(final String namePrefix) {
-        final List<JSONObject> ret = new ArrayList<JSONObject>();
-
         final JSONObject nameToSearch = new JSONObject();
         nameToSearch.put(User.USER_EMAIL, namePrefix);
 
-        final int index = Collections.binarySearch(userNames, nameToSearch, new Comparator<JSONObject>() {
+        int index = Collections.binarySearch(userNames, nameToSearch, new Comparator<JSONObject>() {
             @Override
             public int compare(final JSONObject u1, final JSONObject u2) {
-                final String u1Name = u1.optString(User.USER_EMAIL).toLowerCase();
-                final String inputName = u2.optString(User.USER_EMAIL).toLowerCase();
+                String u1Name = u1.optString(User.USER_EMAIL);
+                final String inputName = u2.optString(User.USER_EMAIL);
 
-                if (u1Name.startsWith(inputName)) {
-                    return 0;
-                } else {
-                    return namePrefix.compareTo(u1Name);
+                if (u1Name.length() < inputName.length()) {
+                    return u1Name.compareTo(inputName);
                 }
+
+                u1Name = u1Name.substring(0, inputName.length());
+
+                return u1Name.compareTo(inputName);
             }
         });
-        if (index >= 0) {
-            final int max = index + 5 <= userNames.size() - 1 ? index + 5 : userNames.size() - 1;
 
-            for (int i = index; i < max; i++) {
-                ret.add(userNames.get(i));
+        final List<JSONObject> ret = new ArrayList<JSONObject>();
+
+        if (index < 0) {
+            return ret;
+        }
+
+        int start = index;
+        int end = index;
+
+        while (start > -1 && userNames.get(start).optString(User.USER_EMAIL).startsWith(namePrefix.toLowerCase())) {
+            start--;
+        }
+
+        start++;
+
+        if (start < index - 5) {
+            end = start + 5;
+        } else {
+            while (end < userNames.size() && end < index + 5 && userNames.get(end).optString(User.USER_EMAIL).startsWith(namePrefix.toLowerCase())) {
+                end++;
             }
         }
 
-        return ret;
+        return userNames.subList(start, end);
     }
 
     /**
