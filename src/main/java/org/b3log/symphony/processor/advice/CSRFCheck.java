@@ -20,7 +20,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.Latkes;
@@ -37,7 +36,7 @@ import org.json.JSONObject;
  * CSRF check.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Feb 6, 2016
+ * @version 1.0.0.2, Apr 19, 2016
  * @since 1.3.0
  */
 @Named
@@ -49,13 +48,19 @@ public class CSRFCheck extends BeforeRequestProcessAdvice {
      */
     private static final Logger LOGGER = Logger.getLogger(CSRFCheck.class.getName());
 
+    /**
+     * Language service.
+     */
+    @Inject
+    private LangPropsService langPropsService;
+
     @Override
     public void doAdvice(final HTTPRequestContext context, final Map<String, Object> args) throws RequestProcessAdviceException {
         final HttpServletRequest request = context.getRequest();
 
         final JSONObject exception = new JSONObject();
-        exception.put(Keys.MSG, "Security check failed, please refresh this page then try again");
-        exception.put(Keys.STATUS_CODE, HttpServletResponse.SC_FORBIDDEN);
+        exception.put(Keys.MSG, langPropsService.get("csrfCheckFailedLabel"));
+        exception.put(Keys.STATUS_CODE, false);
 
         // 1. Check Referer
         final String referer = request.getHeader("Referer");
