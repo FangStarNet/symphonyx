@@ -127,7 +127,7 @@ import org.json.JSONObject;
  * </ul>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.14.2.1, Feb 26, 2016
+ * @version 2.14.3.1, Apr 19, 2016
  * @since 1.1.0
  */
 @RequestProcessor
@@ -1333,6 +1333,19 @@ public class AdminProcessor {
             imgURL = "";
         }
 
+        if (StringUtils.isBlank(category) || StringUtils.length(category) > 20) {
+            final AbstractFreeMarkerRenderer renderer = new SkinRenderer();
+            context.setRenderer(renderer);
+            renderer.setTemplateName("admin/error.ftl");
+            final Map<String, Object> dataModel = renderer.getDataModel();
+
+            dataModel.put(Keys.MSG, langPropsService.get("invalidProductCategoryLabel"));
+
+            filler.fillHeaderAndFooter(request, response, dataModel);
+
+            return;
+        }
+
         try {
             final JSONObject product = new JSONObject();
             product.put(Product.PRODUCT_CATEGORY, category);
@@ -1408,6 +1421,22 @@ public class AdminProcessor {
 
             if (name.equals(Product.PRODUCT_STATUS)) {
                 product.put(name, Integer.valueOf(value));
+            }
+
+            if (name.equals(Product.PRODUCT_CATEGORY)) {
+                final String category = value;
+                if (StringUtils.isBlank(category) || StringUtils.length(category) > 20) {
+                    final AbstractFreeMarkerRenderer renderer = new SkinRenderer();
+                    context.setRenderer(renderer);
+                    renderer.setTemplateName("admin/error.ftl");
+                    final Map<String, Object> dataModel = renderer.getDataModel();
+
+                    dataModel.put(Keys.MSG, langPropsService.get("invalidProductCategoryLabel"));
+
+                    filler.fillHeaderAndFooter(request, response, dataModel);
+
+                    return;
+                }
             }
         }
 
