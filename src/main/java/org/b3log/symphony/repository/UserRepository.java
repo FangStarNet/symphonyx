@@ -36,7 +36,7 @@ import org.json.JSONObject;
  * User repository.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.0.4, Apr 18, 2015
+ * @version 1.1.0.5, Apr 20, 2015
  * @since 0.2.0
  */
 @Repository
@@ -57,7 +57,12 @@ public class UserRepository extends AbstractRepository {
 
     @Override
     public JSONObject get(final String id) throws RepositoryException {
-        final JSONObject ret = super.get(id);
+        JSONObject ret = userCache.getUser(id);
+        if (null != ret) {
+            return ret;
+        }
+
+        ret = super.get(id);
 
         if (null == ret) {
             return null;
@@ -72,6 +77,7 @@ public class UserRepository extends AbstractRepository {
     public void update(final String id, final JSONObject user) throws RepositoryException {
         super.update(id, user);
 
+        user.put(Keys.OBJECT_ID, id);
         userCache.putUser(user);
     }
 
@@ -83,6 +89,11 @@ public class UserRepository extends AbstractRepository {
      * @throws RepositoryException repository exception
      */
     public JSONObject getByName(final String name) throws RepositoryException {
+        JSONObject ret = userCache.getUserByName(name);
+        if (null != ret) {
+            return ret;
+        }
+
         final Query query = new Query().setPageCount(1);
         query.setFilter(new PropertyFilter(User.USER_NAME, FilterOperator.EQUAL, name));
 
@@ -93,7 +104,11 @@ public class UserRepository extends AbstractRepository {
             return null;
         }
 
-        return array.optJSONObject(0);
+        ret = array.optJSONObject(0);
+
+        userCache.putUser(ret);
+
+        return ret;
     }
 
     /**
