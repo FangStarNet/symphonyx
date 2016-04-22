@@ -13,6 +13,7 @@
                     <h2 class="fn-left">
                         ${item.productName}
                         <span class="tag">${item.productCategory}</span>
+                        <span class="ft-smaller ft-red">${remainCountLabel} ${item.productCount}</span>
                     </h2>
                     <a href="/admin/product/${item.oId}" class="fn-right icon-edit" title="${editLabel}"></a> 
                 </div>

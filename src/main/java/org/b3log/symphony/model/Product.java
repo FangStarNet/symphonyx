@@ -19,7 +19,7 @@ package org.b3log.symphony.model;
  * This class defines product model relevant keys.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.2, Mar 1, 2016
+ * @version 1.1.0.2, Apr 22, 2016
  * @since 1.4.0
  */
 public final class Product {
@@ -58,6 +58,11 @@ public final class Product {
      * Key of product image URL.
      */
     public static final String PRODUCT_IMG_URL = "productImgURL";
+
+    /**
+     * Key of product count.
+     */
+    public static final String PRODUCT_COUNT = "productCount";
 
     /**
      * Key of product status.

@@ -21,8 +21,9 @@
                                 <div class="avatar icon-goods fn-left" style="<#if item.productImgURL?? && item.productImgURL != ''>font-size: 0;background-image:url(${item.productImgURL})</#if>"></div>
                                 <div class="fn-left">
                                     <h2>
-                                        <font>${item.productName}</font>
+                                        ${item.productName}
                                         <span class="tag">${item.productCategory}</span>
+                                        <span class="ft-smaller ft-red">${remainCountLabel} ${item.productCount}</span>
                                     </h2>
                                     <div class="ft-gray">
                                         ${item.productDescription}

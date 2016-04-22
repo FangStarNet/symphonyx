@@ -19,6 +19,9 @@
                 <label>${categoryLabel}</label>
                 <input name="productCategory" type="text" value="${product.productCategory}"/>
 
+                <label>${remainCountLabel}</label>
+                <input name="productCount" type="number" value="${product.productCount}"/>
+
                 <label>${statusLabel}</label>
                 <select id="productStatus" name="productStatus">
                     <option value="0"<#if 0 == product.productStatus> selected</#if>>${onShelfLabel}</option>
@@ -63,5 +66,5 @@
         });
         $('#goodsImgInput').val('<#if qiniuDomain??>${qiniuDomain}</#if>/' + qiniuKey);
     });
-    
+
 </script>

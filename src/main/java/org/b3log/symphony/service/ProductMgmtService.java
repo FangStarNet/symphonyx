@@ -20,6 +20,7 @@ import org.b3log.latke.Keys;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.RepositoryException;
+import org.b3log.latke.repository.Transaction;
 import org.b3log.latke.repository.annotation.Transactional;
 import org.b3log.latke.service.LangPropsService;
 import org.b3log.latke.service.ServiceException;
@@ -38,7 +39,7 @@ import org.json.JSONObject;
  * Product management service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.1.2, Mar 22, 2016
+ * @version 1.2.1.2, Apr 22, 2016
  * @since 1.4.0
  */
 @Service
@@ -136,7 +137,19 @@ public class ProductMgmtService {
 
             final JSONObject product = productRepository.get(productId);
             if (Product.PRODUCT_STATUS_C_ONSHELF != product.optInt(Product.PRODUCT_STATUS)) {
-                ret.put(Keys.MSG, langPropsService.get("invalidProductStatusLabel"));
+                ret.put(Keys.MSG, langPropsService.get("productOffShelfLabel"));
+
+                return ret;
+            }
+
+            if (product.optInt(Product.PRODUCT_COUNT) < 1) {
+                ret.put(Keys.MSG, langPropsService.get("productSellOutLabel"));
+
+                return ret;
+            }
+
+            if (num > product.optInt(Product.PRODUCT_COUNT)) {
+                ret.put(Keys.MSG, langPropsService.get("insufficientProductCountLabel"));
 
                 return ret;
             }
@@ -162,6 +175,7 @@ public class ProductMgmtService {
                 return ret;
             }
 
+            int sellCount = 0;
             for (int i = 0; i < num; i++) {
                 final JSONObject order = new JSONObject();
 
@@ -180,6 +194,27 @@ public class ProductMgmtService {
                     LOGGER.log(Level.ERROR, "Order [id=" + orderId + "] failed");
 
                     return ret;
+                }
+
+                sellCount++;
+            }
+
+            if (sellCount > 0) {
+                final Transaction transaction = productRepository.beginTransaction();
+
+                try {
+                    final int remainCount = product.optInt(Product.PRODUCT_COUNT);
+                    product.put(Product.PRODUCT_COUNT, remainCount - sellCount);
+
+                    productRepository.update(productId, product);
+
+                    transaction.commit();
+                } catch (final Exception e) {
+                    if (null != transaction && transaction.isActive()) {
+                        transaction.rollback();
+                    }
+
+                    LOGGER.log(Level.ERROR, "Decreas product count failed", e);
                 }
             }
         } catch (final Exception e) {

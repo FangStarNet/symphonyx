@@ -1271,6 +1271,7 @@ public class AdminProcessor {
         fields.put(Product.PRODUCT_NAME, String.class);
         fields.put(Product.PRODUCT_PRICE, Double.class);
         fields.put(Product.PRODUCT_IMG_URL, String.class);
+        fields.put(Product.PRODUCT_COUNT, Integer.class);
         fields.put(Product.PRODUCT_STATUS, Integer.class);
 
         final JSONObject result = productQueryService.getProducts(requestJSONObject, fields);
@@ -1327,6 +1328,7 @@ public class AdminProcessor {
         final String name = request.getParameter(Product.PRODUCT_NAME);
         final String price = request.getParameter(Product.PRODUCT_PRICE);
         String imgURL = request.getParameter(Product.PRODUCT_IMG_URL);
+        final String count = request.getParameter(Product.PRODUCT_COUNT);
         final String status = request.getParameter(Product.PRODUCT_STATUS);
 
         if (StringUtils.isBlank(imgURL)) {
@@ -1353,6 +1355,7 @@ public class AdminProcessor {
             product.put(Product.PRODUCT_NAME, name);
             product.put(Product.PRODUCT_PRICE, price);
             product.put(Product.PRODUCT_IMG_URL, imgURL);
+            product.put(Product.PRODUCT_COUNT, count);
             product.put(Product.PRODUCT_STATUS, status);
 
             productMgmtService.addProduct(product);
@@ -1419,7 +1422,7 @@ public class AdminProcessor {
 
             product.put(name, value);
 
-            if (name.equals(Product.PRODUCT_STATUS)) {
+            if (name.equals(Product.PRODUCT_STATUS) || name.equals(Product.PRODUCT_COUNT)) {
                 product.put(name, Integer.valueOf(value));
             }
 
