@@ -22,7 +22,7 @@
  */
 var gulp = require("gulp");
 var concat = require('gulp-concat');
-var minifyCSS = require('gulp-minify-css');
+var cleanCSS = require('gulp-clean-css');
 var uglify = require('gulp-uglify');
 var sourcemaps = require("gulp-sourcemaps");
 
@@ -36,10 +36,13 @@ gulp.task('cc', function () {
     //     './static/js/lib/codemirror-5.1/addon/dialog/dialog.css',
     //     './static/js/overwrite/codemirror/theme/*.css'];
     // gulp.src(cssLibs)
-    //         .pipe(minifyCSS())
+    //         .pipe(cleanCSS())
     //         .pipe(concat('lib.min.css'))
     //         .pipe(gulp.dest('./static/css/'));
-
+    gulp.src('./src/main/webapp/js/lib/editor/codemirror.css')
+        .pipe(cleanCSS())
+        .pipe(concat('codemirror.min.css'))
+        .pipe(gulp.dest('./src/main/webapp/js/lib/editor/'));
 
     // js
     var jsJqueryUpload = ['./src/main/webapp/js/lib/jquery/file-upload-9.10.1/vendor/jquery.ui.widget.js',
@@ -52,9 +55,11 @@ gulp.task('cc', function () {
             .pipe(concat('jquery.fileupload.min.js'))
             .pipe(gulp.dest('./src/main/webapp/js/lib/jquery/file-upload-9.10.1/'));
 
-    var jsCodemirror = ['./src/main/webapp/js/lib/editor/codemirror.js',
+    var jsCodemirror = ['./src/main/webapp/js/lib/editor/diff_match_patch.js',
+        './src/main/webapp/js/lib/editor/codemirror.js',
         './src/main/webapp/js/lib/editor/fullscreen.js',
         './src/main/webapp/js/lib/editor/placeholder.js',
+        './src/main/webapp/js/lib/editor/merge.js',
         './src/main/webapp/js/overwrite/codemirror/addon/hint/show-hint.js'];
     gulp.src(jsCodemirror)
             .pipe(uglify())
