@@ -64,7 +64,7 @@ import org.json.JSONObject;
  * Article management service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.7.15.13, Feb 20, 2016
+ * @version 2.7.16.13, Apr 28, 2016
  * @since 0.2.0
  */
 @Service
@@ -228,6 +228,8 @@ public class ArticleMgmtService {
             throw new ServiceException(langPropsService.get("invalidRewardPointLabel"));
         }
 
+        final int articleType = requestJSONObject.optInt(Article.ARTICLE_TYPE, Article.ARTICLE_TYPE_C_NORMAL);
+
         try {
             // check if admin allow to add article
             final JSONObject option = optionRepository.get(Option.ID_C_MISC_ALLOW_ADD_ARTICLE);
@@ -246,14 +248,23 @@ public class ArticleMgmtService {
             }
 
             // Point
-            final long followerCnt = followQueryService.getFollowerCount(authorId, Follow.FOLLOWING_TYPE_C_USER);
-            final int addition = (int) Math.round(Math.sqrt(followerCnt));
+            boolean checkPoint = true;
+            if ((Article.ARTICLE_TYPE_C_JOURNAL_PARAGRAPH == articleType && !journalQueryService.hasPostParagraphToday(authorId))
+                    || Article.ARTICLE_TYPE_C_JOURNAL_CHAPTER == articleType
+                    || Article.ARTICLE_TYPE_C_JOURNAL_SECTION == articleType) {
+                checkPoint = false;
+            }
 
-            final int sum = Pointtransfer.TRANSFER_SUM_C_ADD_ARTICLE + addition + rewardPoint;
-            final int balance = author.optInt(UserExt.USER_POINT);
+            if (checkPoint) {
+                final long followerCnt = followQueryService.getFollowerCount(authorId, Follow.FOLLOWING_TYPE_C_USER);
+                final int addition = (int) Math.round(Math.sqrt(followerCnt));
 
-            if (balance - sum < 0) {
-                throw new ServiceException(langPropsService.get("insufficientBalanceLabel"));
+                final int sum = Pointtransfer.TRANSFER_SUM_C_ADD_ARTICLE + addition + rewardPoint;
+                final int balance = author.optInt(UserExt.USER_POINT);
+
+                if (balance - sum < 0) {
+                    throw new ServiceException(langPropsService.get("insufficientBalanceLabel"));
+                }
             }
         } catch (final RepositoryException e) {
             throw new ServiceException(e);
@@ -294,7 +305,6 @@ public class ArticleMgmtService {
             article.put(Article.ARTICLE_RANDOM_DOUBLE, Math.random());
             article.put(Article.REDDIT_SCORE, 0);
             article.put(Article.ARTICLE_STATUS, Article.ARTICLE_STATUS_C_VALID);
-            final int articleType = requestJSONObject.optInt(Article.ARTICLE_TYPE, Article.ARTICLE_TYPE_C_NORMAL);
             article.put(Article.ARTICLE_TYPE, articleType);
             article.put(Article.ARTICLE_REWARD_POINT, rewardPoint);
             String city = "";
