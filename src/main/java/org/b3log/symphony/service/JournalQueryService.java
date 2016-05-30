@@ -58,7 +58,7 @@ import org.json.JSONObject;
  * Journal query service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.3.3.8, Feb 20, 2016
+ * @version 1.3.4.8, May 30, 2016
  * @since 1.4.0
  */
 @Service
@@ -332,6 +332,10 @@ public class JournalQueryService {
 
                 final String pAuthorId = paragraph.optString(Article.ARTICLE_AUTHOR_ID);
                 final JSONObject pAuthor = userRepository.get(pAuthorId);
+                if (UserExt.USER_STATUS_C_VALID != pAuthor.optInt(UserExt.USER_STATUS)) {
+                    continue;
+                }
+
                 final String userName = pAuthor.optString(User.USER_NAME);
                 final String teamName = getTeamName(archive, pAuthorId);
 
