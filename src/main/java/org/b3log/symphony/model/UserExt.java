@@ -233,6 +233,11 @@ public final class UserExt {
      */
     public static final int USER_STATUS_C_NOT_VERIFIED = 2;
 
+    /**
+     * User status - invalid login.
+     */
+    public static final int USER_STATUS_C_INVALID_LOGIN = 3;
+
     //// Join point rank constants
     /**
      * User join point rank - join.

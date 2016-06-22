@@ -81,7 +81,7 @@ import org.json.JSONObject;
  * User management service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.10.12.7, Feb 2, 2016
+ * @version 2.10.12.8, Jun 21, 2016
  * @since 0.2.0
  */
 @Service
@@ -185,7 +185,8 @@ public class UserMgmtService {
 
                 final String ip = Requests.getRemoteAddr(request);
 
-                if (UserExt.USER_STATUS_C_INVALID == user.optInt(UserExt.USER_STATUS)) {
+                if (UserExt.USER_STATUS_C_INVALID == user.optInt(UserExt.USER_STATUS)
+                        || UserExt.USER_STATUS_C_INVALID_LOGIN == user.optInt(UserExt.USER_STATUS)) {
                     Sessions.logout(request, response);
 
                     updateOnlineStatus(userId, ip, false);
