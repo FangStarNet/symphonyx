@@ -2,7 +2,7 @@
     <div class="wrapper fn-clear">
         <div class="head-fn fn-clear">
             <h1 class="fn-left">
-                <a href="/" style="background-image: url('${staticServePath}/images/logo.png')" alt="${symphonyLabel}" 
+                <a href="/" style="background-image: url('${staticServePath}/images/logo.jpg')" alt="${symphonyLabel}" 
                    title="${symphonyLabel}" width="42" class="fn-pointer"></a>
             </h1>
             <#-- 百度站内搜索不支持 HTTPS 

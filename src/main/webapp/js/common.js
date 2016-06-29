@@ -19,7 +19,7 @@
  *
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.19.13.16, Mar 14, 2016
+ * @version 1.19.13.17, Jun 29, 2016
  */
 
 /**
@@ -393,7 +393,7 @@ var Util = {
                             var msg = Label.desktopNotificationTemplateLabel;
                             msg = msg.replace("${count}", count);
                             var options = {
-                                iconUrl: '/images/logo.png',
+                                iconUrl: '/images/logo.jpg',
                                 title: '房星内网',
                                 body: msg,
                                 timeout: 5000,

@@ -76,7 +76,7 @@ import org.jsoup.safety.Whitelist;
  * Article query service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.13.8.19, Apr 18, 2016
+ * @version 2.13.8.20, Jun 29, 2016
  * @since 0.2.0
  */
 @Service
@@ -993,7 +993,13 @@ public class ArticleQueryService {
             author = userRepository.get(authorId);
         }
 
-        article.put(Article.ARTICLE_T_AUTHOR_THUMBNAIL_URL, avatarQueryService.getAvatarURLByUser(author));
+        final int articleType = article.optInt(Article.ARTICLE_TYPE);
+        if (Article.ARTICLE_TYPE_C_JOURNAL_CHAPTER == articleType
+                || Article.ARTICLE_TYPE_C_JOURNAL_SECTION == articleType) {
+            article.put(Article.ARTICLE_T_AUTHOR_THUMBNAIL_URL, AvatarQueryService.DEFAULT_AVATAR_URL);
+        } else {
+            article.put(Article.ARTICLE_T_AUTHOR_THUMBNAIL_URL, avatarQueryService.getAvatarURLByUser(author));
+        }
         article.put(Article.ARTICLE_T_AUTHOR, author);
 
         article.put(Article.ARTICLE_T_AUTHOR_NAME, author.optString(User.USER_NAME));
