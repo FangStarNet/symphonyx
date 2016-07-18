@@ -102,7 +102,9 @@ public class FileUploadServlet extends HttpServlet {
         try {
             final JSONObject option = optionQueryService.getOption(Option.ID_C_MISC_ALLOW_ANONYMOUS_VIEW);
             if (!"0".equals(option.optString(Option.OPTION_VALUE))) {
-                if (null == userQueryService.getCurrentUser(req) && !userMgmtService.tryLogInWithCookie(req, resp)) {
+                final String key = req.getParameter("key");
+                if (null == userQueryService.getCurrentUser(req) && !userMgmtService.tryLogInWithCookie(req, resp)
+                        && !StringUtils.equals(key, Symphonys.get("keyOfSymphony"))) {
                     resp.sendError(HttpServletResponse.SC_FORBIDDEN);
 
                     return;
