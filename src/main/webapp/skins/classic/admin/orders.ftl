@@ -12,6 +12,7 @@
                     <select id="category" name="category">
                         <option value=""<#if "" == category> selected</#if>></option>
                         <option value="早餐"<#if "早餐" == category> selected</#if>>早餐</option>
+                        <option value="下午茶"<#if "下午茶" == category> selected</#if>>下午茶</option>
                         <option value="咖啡"<#if "咖啡" == category> selected</#if>>咖啡</option>
                         <option value="娱乐"<#if "娱乐" == category> selected</#if>>娱乐</option>
                     </select>
