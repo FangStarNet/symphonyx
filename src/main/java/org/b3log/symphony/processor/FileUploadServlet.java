@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import jodd.io.FileUtil;
 import jodd.upload.MultipartRequestInputStream;
+import jodd.util.Base64;
 import jodd.util.MimeTypes;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -51,7 +52,7 @@ import org.json.JSONObject;
  * File upload.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.0.2, Jul 18, 2016
+ * @version 1.2.1.2, Jul 27, 2016
  * @since 1.4.0
  */
 @WebServlet(urlPatterns = {"/upload", "/upload/*"}, loadOnStartup = 2)
@@ -103,18 +104,34 @@ public class FileUploadServlet extends HttpServlet {
             final JSONObject option = optionQueryService.getOption(Option.ID_C_MISC_ALLOW_ANONYMOUS_VIEW);
             if (!"0".equals(option.optString(Option.OPTION_VALUE))) {
                 if (null == userQueryService.getCurrentUser(req) && !userMgmtService.tryLogInWithCookie(req, resp)) {
-                    final String host = req.getHeader("Host");
-                    if (!StringUtils.contains(host, "fangstar.net")) {
-                        resp.sendError(HttpServletResponse.SC_FORBIDDEN);
-                        
-                        return;
+                    final String referer = req.getHeader("Referer");
+                    if (!StringUtils.contains(referer, "fangstar.net")) {
+                        String authorization = req.getHeader("Authorization");
+                        if (!StringUtils.contains(authorization, "Basic ")) {
+                            resp.sendError(HttpServletResponse.SC_FORBIDDEN);
+
+                            return;
+                        } else {
+                            String usernamePwd = StringUtils.substringAfter(authorization, "Basic ");
+                            usernamePwd = Base64.decodeToString(usernamePwd);
+
+                            final String username = usernamePwd.split(":")[0];
+                            final String password = usernamePwd.split(":")[1];
+
+                            if (!StringUtils.equals(username, Symphonys.get("http.basic.auth.username"))
+                                    || !StringUtils.equals(password, Symphonys.get("http.basic.auth.password"))) {
+                                resp.sendError(HttpServletResponse.SC_FORBIDDEN);
+
+                                return;
+                            }
+                        }
                     }
                 }
             }
-        } catch (final ServiceException e) {
+        } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Gets file failed", e);
 
-            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            resp.sendError(HttpServletResponse.SC_FORBIDDEN);
 
             return;
         }
