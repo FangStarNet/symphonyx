@@ -106,7 +106,10 @@ public class FileUploadServlet extends HttpServlet {
                 if (null == userQueryService.getCurrentUser(req) && !userMgmtService.tryLogInWithCookie(req, resp)) {
                     final String referer = req.getHeader("Referer");
                     if (!StringUtils.contains(referer, "fangstar.net")) {
-                        String authorization = req.getHeader("Authorization");
+                        final String authorization = req.getHeader("Authorization");
+
+                        LOGGER.debug("Referer [" + referer + "], Authorization [" + authorization + "]");
+
                         if (!StringUtils.contains(authorization, "Basic ")) {
                             resp.sendError(HttpServletResponse.SC_FORBIDDEN);
 
