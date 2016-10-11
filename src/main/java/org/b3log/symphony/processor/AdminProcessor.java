@@ -127,7 +127,7 @@ import org.json.JSONObject;
  * </ul>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.14.3.1, Apr 19, 2016
+ * @version 2.14.3.2, Oct 11, 2016
  * @since 1.1.0
  */
 @RequestProcessor
@@ -400,6 +400,7 @@ public class AdminProcessor {
     public void addUser(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response)
             throws Exception {
         final String userName = request.getParameter(User.USER_NAME);
+        final String userRealName = request.getParameter(UserExt.USER_REAL_NAME);
         final String email = request.getParameter(User.USER_EMAIL);
         final String password = request.getParameter(User.USER_PASSWORD);
         final String team = request.getParameter(UserExt.USER_TEAM);
@@ -431,6 +432,7 @@ public class AdminProcessor {
         try {
             final JSONObject user = new JSONObject();
             user.put(User.USER_NAME, userName);
+            user.put(UserExt.USER_REAL_NAME, userRealName);
             user.put(User.USER_EMAIL, email);
             user.put(User.USER_PASSWORD, MD5.hash(password));
             user.put(UserExt.USER_APP_ROLE, UserExt.USER_APP_ROLE_C_HACKER);
