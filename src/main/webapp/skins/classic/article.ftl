@@ -173,8 +173,8 @@
                                             <div class="fn-clear comment-info">
                                                 <span class="fn-left">
                                                     <a rel="nofollow" href="/member/${comment.commentAuthorName}"
-                                                       title="${comment.commentAuthorRealName}">${comment.commentAuthorName}</a>
-                                                    <span class="ft-fade ft-smaller">&nbsp;•&nbsp;${comment.timeAgo}</span>
+                                                       title="${comment.commentAuthorRealName}">${comment.commentAuthorName}/<span class="ft-smaller">${comment.commentAuthorRealName}</span></a>
+                                                    <span class="ft-fade ft-smaller">•&nbsp;${comment.timeAgo}</span>
                                                     <#if comment.rewardedCnt gt 0>
                                                     <#assign hasRewarded = isLoggedIn && comment.commentAuthorId != currentUser.oId && comment.rewarded>
                                                     <#if hasRewarded>
