@@ -76,7 +76,7 @@ import org.jsoup.safety.Whitelist;
  * Article query service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.13.8.20, Jun 29, 2016
+ * @version 2.13.8.21, Nov 3, 2016
  * @since 0.2.0
  */
 @Service
@@ -666,7 +666,7 @@ public class ArticleQueryService {
      */
     private Query makeTopQuery(final int currentPageNum, final int fetchSize) {
         final Query query = new Query()
-                .addSort(Article.REDDIT_SCORE, SortDirection.DESCENDING)
+                .addSort(Keys.OBJECT_ID, SortDirection.DESCENDING)
                 .addSort(Article.ARTICLE_LATEST_CMT_TIME, SortDirection.DESCENDING)
                 .setPageCount(1).setPageSize(fetchSize).setCurrentPageNum(currentPageNum);
 
@@ -1302,8 +1302,8 @@ public class ArticleQueryService {
 
             content = Jsoup.clean(content, Latkes.getServePath() + article.optString(Article.ARTICLE_PERMALINK),
                     Whitelist.relaxed().addAttributes(":all", "id", "target", "class").
-                    addTags("span", "hr").addAttributes("iframe", "src", "width", "height")
-                    .addAttributes("audio", "controls", "src"), outputSettings);
+                            addTags("span", "hr").addAttributes("iframe", "src", "width", "height")
+                            .addAttributes("audio", "controls", "src"), outputSettings);
 
             content = content.replace("\n", "\\n").replace("'", "\\'")
                     .replace("\"", "\\\"");
