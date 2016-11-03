@@ -17,11 +17,13 @@
 
             <#list user.weekDays as day>
             <div class="journal-day<#if day.paragraphs?size == 0 && day_index == user.weekDays?size - 1> last</#if>">
+                <#if day.paragraphs?size != 0>
                 <span class="ft-red">${day.weekDayName}</span>
-
-                <#if day.paragraphs?size == 0>
+                <#--
+                <#else>
                 <span class="ft-fade">&nbsp;•&nbsp;</span>
                 <i>本日没有记录</i>
+                -->
                 </#if>
             </div>
 
