@@ -103,7 +103,7 @@ import org.jsoup.safety.Whitelist;
  * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.14.11.26, Feb 15, 2016
+ * @version 2.14.11.27, Nov 3, 2016
  * @since 0.2.0
  */
 @RequestProcessor
@@ -233,6 +233,8 @@ public class ArticleProcessor {
             dataModel.put("qiniuUploadToken", "");
         }
 
+        final JSONObject currentUser = (JSONObject) request.getAttribute(User.USER);
+
         String tags = request.getParameter(Tag.TAGS);
         if (StringUtils.isBlank(tags)) {
             tags = "";
@@ -258,7 +260,6 @@ public class ArticleProcessor {
                     continue;
                 }
 
-                final JSONObject currentUser = (JSONObject) request.getAttribute(User.USER);
                 if (!Role.ADMIN_ROLE.equals(currentUser.optString(User.USER_ROLE))
                         && ArrayUtils.contains(Symphonys.RESERVED_TAGS, tagTitle)) {
                     continue;
@@ -294,7 +295,9 @@ public class ArticleProcessor {
 
         // Default title for journal
         if (Article.ARTICLE_TYPE_C_JOURNAL_PARAGRAPH == (Integer) dataModel.get(Article.ARTICLE_TYPE)) {
-            dataModel.put(Article.ARTICLE_TITLE, DateFormatUtils.format(System.currentTimeMillis(), "yyyy-MM-dd"));
+            dataModel.put(Article.ARTICLE_TITLE,
+                    currentUser.optString(UserExt.USER_REAL_NAME) + " "
+                    + DateFormatUtils.format(System.currentTimeMillis(), "yyyy-MM-dd"));
         }
 
         final String at = request.getParameter(Common.AT);
