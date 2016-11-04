@@ -52,7 +52,6 @@ import org.json.JSONObject;
  * File upload.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.2.1.2, Jul 27, 2016
  * @since 1.4.0
  */
 @WebServlet(urlPatterns = {"/upload", "/upload/*"}, loadOnStartup = 2)
@@ -207,7 +206,7 @@ public class FileUploadServlet extends HttpServlet {
 
         String suffix;
         String[] exts = MimeTypes.findExtensionsByMimeTypes(mimeType, false);
-        if (null == exts || 0 == exts.length) {
+        if (null == exts || 0 == exts.length || exts.length > 1) {
             suffix = StringUtils.substringAfterLast(multipartRequestInputStream.getLastHeader().getFileName(), ".");
         } else {
             suffix = exts[0];
