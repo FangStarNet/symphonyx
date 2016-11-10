@@ -7,6 +7,7 @@
                 <a href="/tags/系统公告">${symAnnouncementLabel}</a>
                 <a href="/tags/Q%26A">${qnaLabel}</a>
                 <a href="/tags" class="last">${tagLabel}</a>
+                <a href="/statistic">${dataStatLabel}</a>
 
                 <div class="fn-right">
                     <span class="ft-gray">&COPY; ${year}</span>
