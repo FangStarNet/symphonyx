@@ -26,7 +26,7 @@ import org.b3log.latke.service.LangPropsServiceImpl;
  * Time utilities.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.3.3.0, Mar 12, 2016
+ * @version 1.4.3.0, Nov 10, 2016
  * @since 1.3.0
  */
 public final class Times {
@@ -269,6 +269,43 @@ public final class Times {
 
         end.setTimeInMillis(time);
         end.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+        end.set(Calendar.HOUR, 23);
+        end.set(Calendar.MINUTE, 59);
+        end.set(Calendar.SECOND, 59);
+        end.set(Calendar.MILLISECOND, 999);
+
+        return end.getTime().getTime();
+    }
+
+    /**
+     * Gets the month start time with the specified time.
+     *
+     * @param time the specified time
+     * @return month start time
+     */
+    public static long getMonthStartTime(final long time) {
+        final Calendar start = Calendar.getInstance();
+
+        start.setTimeInMillis(time);
+        int year = start.get(Calendar.YEAR);
+        int month = start.get(Calendar.MONTH);
+        start.set(year, month, 1, 0, 0, 0);
+        start.set(Calendar.MILLISECOND, 0);
+
+        return start.getTime().getTime();
+    }
+
+    /**
+     * Gets the month end time with the specified time.
+     *
+     * @param time the specified time
+     * @return month end time
+     */
+    public static long getMonthEndTime(final long time) {
+        final Calendar end = Calendar.getInstance();
+
+        end.setTimeInMillis(time);
+        end.set(Calendar.DAY_OF_MONTH, end.getActualMaximum(Calendar.DAY_OF_MONTH));
         end.set(Calendar.HOUR, 23);
         end.set(Calendar.MINUTE, 59);
         end.set(Calendar.SECOND, 59);

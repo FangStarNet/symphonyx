@@ -76,7 +76,7 @@ import org.jsoup.safety.Whitelist;
  * Article query service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 2.13.8.21, Nov 3, 2016
+ * @version 2.13.8.22, Nov 10, 2016
  * @since 0.2.0
  */
 @Service
@@ -157,6 +157,58 @@ public class ArticleQueryService {
      * Count to fetch article tags for relevant articles.
      */
     private static final int RELEVANT_ARTICLE_RANDOM_FETCH_TAG_CNT = 3;
+
+    /**
+     * Gets article count of the specified day.
+     *
+     * @param day the specified day
+     * @return article count
+     */
+    public int getArticleCntInDay(final Date day) {
+        final long time = day.getTime();
+        final long start = Times.getDayStartTime(time);
+        final long end = Times.getDayEndTime(time);
+
+        final Query query = new Query().setFilter(CompositeFilterOperator.and(
+                new PropertyFilter(Keys.OBJECT_ID, FilterOperator.GREATER_THAN_OR_EQUAL, start),
+                new PropertyFilter(Keys.OBJECT_ID, FilterOperator.LESS_THAN, end),
+                new PropertyFilter(Article.ARTICLE_STATUS, FilterOperator.EQUAL, Article.ARTICLE_STATUS_C_VALID)
+        ));
+
+        try {
+            return (int) articleRepository.count(query);
+        } catch (final RepositoryException e) {
+            LOGGER.log(Level.ERROR, "Count day article failed", e);
+
+            return 1;
+        }
+    }
+
+    /**
+     * Gets article count of the specified month.
+     *
+     * @param day the specified month
+     * @return article count
+     */
+    public int getArticleCntInMonth(final Date day) {
+        final long time = day.getTime();
+        final long start = Times.getMonthStartTime(time);
+        final long end = Times.getMonthEndTime(time);
+
+        final Query query = new Query().setFilter(CompositeFilterOperator.and(
+                new PropertyFilter(Keys.OBJECT_ID, FilterOperator.GREATER_THAN_OR_EQUAL, start),
+                new PropertyFilter(Keys.OBJECT_ID, FilterOperator.LESS_THAN, end),
+                new PropertyFilter(Article.ARTICLE_STATUS, FilterOperator.EQUAL, Article.ARTICLE_STATUS_C_VALID)
+        ));
+
+        try {
+            return (int) articleRepository.count(query);
+        } catch (final RepositoryException e) {
+            LOGGER.log(Level.ERROR, "Count month article failed", e);
+
+            return 1;
+        }
+    }
 
     /**
      * Gets the relevant articles of the specified article with the specified fetch size.
