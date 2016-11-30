@@ -28,7 +28,7 @@ SymX 是 [Sym](https://github.com/b3log/symphony) 的企业版，实现企业内
  * 商品管理
  * 订单管理
 
-#### 搜索
+#### 搜索 TBD
 
  * 去除百度站内搜索
  * 实现新的搜索，过滤条件：
@@ -38,6 +38,4 @@ SymX 是 [Sym](https://github.com/b3log/symphony) 的企业版，实现企业内
 
 ### 其他
 
- * 文件上传改为可配置保存到服务器本地
  * 去除 [B3log 构思](https://hacpai.com/b3log)
- * 等等（去除一些内网上不用的特性）
