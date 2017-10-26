@@ -1,3 +1,7 @@
+# ！！！这个项目目前已经暂停维护，请使用 [Sym](https://github.com/b3log/symphony)！！！
+
+----
+
 # [SymphonyX](https://github.com/FangStarNet/symphonyx) [![Build Status](https://img.shields.io/travis/FangStarNet/symphonyx.svg?style=flat)](https://travis-ci.org/FangStarNet/symphonyx)
 
 ## 简介
